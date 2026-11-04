@@ -125,11 +125,7 @@ export function EditorEfeitos({ efeitos, onChange }: Props) {
 
   return (
     <div className="space-y-2.5">
-<<<<<<< Updated upstream
-      <span className="block text-xs font-black uppercase tracking-wider text-black/70">
-=======
       <span className="block text-[11px] font-black uppercase tracking-wider text-black/70">
->>>>>>> Stashed changes
         Efeitos / modificadores (opcional)
       </span>
       {efeitos.map((e, i) => (

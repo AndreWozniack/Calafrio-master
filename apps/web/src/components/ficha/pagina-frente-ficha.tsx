@@ -154,7 +154,7 @@ export function PaginaFrenteFicha({
             <strong className="ml-[0.5cqw] font-extrabold">(APT)</strong>:
           </>
         }
-        legenda="= Concedido pelo MdJ"
+        legenda=""
       >
         <div
           className="flex size-full items-center justify-between"
@@ -226,7 +226,7 @@ export function PaginaFrenteFicha({
       <LinhaVital
         indice={4}
         rotulo="Velocidade:"
-        legenda="= 6 + Bônus diversos"
+        legenda=""
       >
         <NumeroFixo>{derivada.velocidade}</NumeroFixo>
       </LinhaVital>
