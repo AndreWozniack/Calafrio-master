@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: "3001"
+    expose:
+      - "3001"
+    ports:
+      - "${HOST_PORT:-3001}:3001"
+    networks:
+      - default
+      - dokploy-network
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.calafrio-web.rule=Host(`${DOMAIN:-calafrio.localhost}`)
+      - traefik.http.routers.calafrio-web.entrypoints=web
+      - traefik.http.routers.calafrio-web.middlewares=redirect-to-https@file
+      - traefik.http.routers.calafrio-web.service=calafrio-web
+      - traefik.http.services.calafrio-web.loadbalancer.server.port=3001
+      - traefik.http.routers.calafrio-websecure.rule=Host(`${DOMAIN:-calafrio.localhost}`)
+      - traefik.http.routers.calafrio-websecure.entrypoints=websecure
+      - traefik.http.routers.calafrio-websecure.tls.certresolver=letsencrypt
+      - traefik.http.routers.calafrio-websecure.service=calafrio-websecure
+      - traefik.http.services.calafrio-websecure.loadbalancer.server.port=3001
+
+networks:
+  dokploy-network:
+    external: true

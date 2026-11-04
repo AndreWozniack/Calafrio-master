@@ -1,0 +1,19 @@
+{
+  "name": "calafrio-master",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "dev": "pnpm --filter @calafrio/web dev",
+    "build": "pnpm --filter @calafrio/web build",
+    "start": "pnpm --filter @calafrio/web start",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write",
+    "type-check": "pnpm -r --no-bail type-check",
+    "test": "pnpm -r --no-bail test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.5",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}
