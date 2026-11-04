@@ -59,9 +59,9 @@ export function PalavrasChavePapel({
       </EtiquetaPapel>
       <LinhaSeta area={{ x: 556, y: 36, w: 92, h: 14 }} />
       <Posicionado
-        area={{ x: 560, y: 52, w: 88, h: 9 }}
-        className="text-right uppercase italic"
-        style={{ fontSize: u(6) }}
+        area={{ x: 556, y: 51, w: 92, h: 11 }}
+        className="text-right uppercase italic font-bold"
+        style={{ fontSize: u(7.8) }}
       >
         = 2 + APT ({derivada.palavrasChaveOcupadas}/
         {derivada.limitePalavrasChave})
@@ -127,8 +127,8 @@ export function PalavrasChavePapel({
                 type="button"
                 onClick={() => setModalAberto(true)}
                 title="Adicionar palavra-chave"
-                className="flex size-full cursor-pointer items-center text-black/35 transition-colors hover:bg-black/5 hover:text-black"
-                style={{ paddingLeft: u(8), gap: u(4), fontSize: u(10.5) }}
+                className="flex size-full cursor-pointer items-center text-black/45 font-bold transition-colors hover:bg-black/5 hover:text-black"
+                style={{ paddingLeft: u(8), gap: u(4), fontSize: u(11.8) }}
               >
                 <Plus style={{ width: u(11), height: u(11) }} strokeWidth={3} />
                 Adicionar
@@ -137,7 +137,7 @@ export function PalavrasChavePapel({
             {linha.rotulo && (
               <span
                 className="pointer-events-none absolute font-bold uppercase italic text-black/70"
-                style={{ right: u(40), bottom: u(1.5), fontSize: u(5.8) }}
+                style={{ right: u(40), bottom: u(1.5), fontSize: u(7.5) }}
               >
                 {linha.rotulo}
               </span>

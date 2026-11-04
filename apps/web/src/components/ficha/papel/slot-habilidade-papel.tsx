@@ -122,7 +122,7 @@ export function SlotHabilidadePapel({
               top: u(30),
               width: u(112),
               height: u(18),
-              fontSize: u(12.5),
+              fontSize: u(13.5),
             }}
           >
             {dados.cor && (
@@ -141,8 +141,8 @@ export function SlotHabilidadePapel({
         )}
         {dados && (
           <div
-            className="pointer-events-none absolute font-bold uppercase italic"
-            style={{ left: u(22), top: u(51), fontSize: u(6.6) }}
+            className="pointer-events-none absolute font-bold uppercase italic text-black/85"
+            style={{ left: u(22), top: u(50), fontSize: u(8.2) }}
           >
             {dados.tipoAcao} · {dados.custo}
           </div>
@@ -157,7 +157,7 @@ export function SlotHabilidadePapel({
             width: u(160),
             height: u(PASSO_LINHA * 6),
             backgroundImage: `repeating-linear-gradient(to bottom, transparent 0, transparent calc(${u(PASSO_LINHA)} - 1px), rgba(0,0,0,0.28) calc(${u(PASSO_LINHA)} - 1px), rgba(0,0,0,0.28) ${u(PASSO_LINHA)})`,
-            fontSize: u(9.4),
+            fontSize: u(10.5),
             lineHeight: u(PASSO_LINHA),
             fontWeight: 600,
           }}
@@ -166,8 +166,8 @@ export function SlotHabilidadePapel({
         </div>
         {!dados && (
           <div
-            className="pointer-events-none absolute flex items-center font-bold text-black/40 transition-colors group-hover:text-black"
-            style={{ left: u(22), top: u(60), gap: u(4), fontSize: u(11) }}
+            className="pointer-events-none absolute flex items-center font-bold text-black/50 transition-colors group-hover:text-black"
+            style={{ left: u(22), top: u(59), gap: u(4), fontSize: u(12) }}
           >
             <Plus style={{ width: u(12), height: u(12) }} strokeWidth={3} />
             Escolher habilidade
@@ -250,7 +250,7 @@ function FocoCadeado({
           top: u(40),
           width: u(28),
           height: u(17),
-          fontSize: u(9),
+          fontSize: u(10),
         }}
       >
         <Lock style={{ width: u(9), height: u(9) }} />

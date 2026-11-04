@@ -2,27 +2,51 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { buscarUsuarioPorGoogleId } from "@/db/queries/usuarios";
+import { ehAmbienteDev } from "@/lib/auth/ambiente";
 import { provisionarConta } from "@/services/conta-service";
 
 /**
- * Login sem senha, só no ambiente de desenvolvimento.
+ * Login sem senha, estritamente no ambiente de desenvolvimento local.
  */
-const isDev =
-  process.env.NODE_ENV !== "production" ||
-  process.env.ALLOW_DEV_LOGIN === "true";
+const isDev = ehAmbienteDev();
+
+const googleClientId =
+  process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID;
+const googleClientSecret =
+  process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET;
+const authSecret =
+  process.env.AUTH_SECRET ??
+  process.env.NEXTAUTH_SECRET ??
+  (isDev ? "calafrio-dev-secret-jwt-key-super-secure-token-2026" : undefined);
+
+if (!authSecret && !isDev) {
+  console.error(
+    "⚠️ [AUTH CONFIG] AUTH_SECRET ausente em produção! Configure AUTH_SECRET nas variáveis de ambiente da VPS/Dokploy.",
+  );
+}
+if ((!googleClientId || !googleClientSecret) && !isDev) {
+  console.error(
+    "⚠️ [AUTH CONFIG] Credenciais do Google ausentes! Configure AUTH_GOOGLE_ID e AUTH_GOOGLE_SECRET nas variáveis de ambiente.",
+  );
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
-  secret:
-    process.env.AUTH_SECRET ??
-    process.env.NEXTAUTH_SECRET ??
-    (isDev ? "calafrio-dev-secret-jwt-key-super-secure-token-2026" : undefined),
+  secret: authSecret,
   providers: [
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID,
-      clientSecret:
-        process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET,
-    }),
+    ...(googleClientId && googleClientSecret
+      ? [
+          Google({
+            clientId: googleClientId,
+            clientSecret: googleClientSecret,
+          }),
+        ]
+      : [
+          Google({
+            clientId: googleClientId ?? "missing-google-client-id",
+            clientSecret: googleClientSecret ?? "missing-google-client-secret",
+          }),
+        ]),
     ...(isDev
       ? [
           Credentials({
@@ -33,6 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               email: { label: "Email", type: "text" },
             },
             async authorize(credentials) {
+              if (!ehAmbienteDev()) return null;
               const email = String(credentials?.email ?? "")
                 .trim()
                 .toLowerCase();
@@ -45,6 +70,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       : []),
   ],
   session: { strategy: "jwt" },
+  logger: {
+    error(error) {
+      console.error("🔴 [AUTH ERROR]:", error);
+    },
+    warn(code) {
+      console.warn("🟡 [AUTH WARN]:", code);
+    },
+  },
   pages: {
     signIn: "/login",
     error: "/login",

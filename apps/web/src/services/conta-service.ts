@@ -6,6 +6,7 @@ import {
   promoverAdmin,
   type UsuarioRow,
 } from "@/db/queries/usuarios";
+import { ehAmbienteDev } from "@/lib/auth/ambiente";
 
 /**
  * Allowlist opcional de contas. Vazia (variável não definida) = cadastro
@@ -13,9 +14,7 @@ import {
  * `EMAILS_PERMITIDOS` com e-mails separados por vírgula pra fechar.
  */
 export function podeEntrar(email: string): boolean {
-  const isDev =
-    process.env.NODE_ENV !== "production" ||
-    process.env.ALLOW_DEV_LOGIN === "true";
+  const isDev = ehAmbienteDev();
 
   if (isDev) {
     return true;

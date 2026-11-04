@@ -30,7 +30,7 @@ export default async function MesaPage() {
           <h1 className="text-2xl font-black font-heading uppercase tracking-wide text-white flex items-center gap-2">
             <Swords className="size-6 text-amber-400" /> Suas Mesas
           </h1>
-          <p className="text-xs text-white/70 font-semibold mt-1">
+          <p className="text-sm text-white/80 font-semibold mt-1">
             Campanhas e mesas ativas no submundo paranormal de Curitiba.
           </p>
         </div>
@@ -46,11 +46,11 @@ export default async function MesaPage() {
           name="nome"
           placeholder="Nome da nova mesa (ex: Mistérios do Batel)..."
           required
-          className="flex-1 bg-muted/60 text-xs p-2.5 rounded-lg border border-border focus:border-amber-400 outline-none"
+          className="flex-1 bg-muted/60 text-sm p-2.5 rounded-lg border border-border focus:border-amber-400 outline-none"
         />
         <button
           type="submit"
-          className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-black font-black text-xs uppercase tracking-wider rounded-lg cursor-pointer transition-colors shadow-sm"
+          className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-black font-black text-sm uppercase tracking-wider rounded-lg cursor-pointer transition-colors shadow-sm"
         >
           <Plus className="size-4" /> Criar Mesa
         </button>
@@ -72,10 +72,10 @@ export default async function MesaPage() {
                   <span className="font-black text-base text-foreground group-hover:text-amber-300 transition-colors">
                     {mesa.nome}
                   </span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold uppercase bg-amber-400/15 text-amber-300 border border-amber-400/30">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-extrabold uppercase bg-amber-400/15 text-amber-300 border border-amber-400/30">
                     <Shield className="size-3" /> Mestre
                   </span>
-                  <span className="text-[10px] font-mono text-muted-foreground">
+                  <span className="text-xs font-mono text-muted-foreground">
                     Código:{" "}
                     <strong className="text-foreground">
                       {mesa.codigoConvite}
@@ -102,7 +102,7 @@ export default async function MesaPage() {
 
                 <Link
                   href={`/mesa/${mesa.id}`}
-                  className="flex items-center gap-1.5 px-3.5 py-2 bg-amber-400 hover:bg-amber-300 text-black font-black text-xs rounded-lg cursor-pointer shadow-sm transition-colors"
+                  className="flex items-center gap-1.5 px-3.5 py-2 bg-amber-400 hover:bg-amber-300 text-black font-black text-sm rounded-lg cursor-pointer shadow-sm transition-colors"
                 >
                   <span>Entrar</span>
                   <ArrowRight className="size-3.5" />
@@ -115,10 +115,10 @@ export default async function MesaPage() {
         {mesas.length === 0 && (
           <div className="py-12 text-center border-2 border-dashed border-border rounded-xl bg-card/30 space-y-2">
             <Swords className="size-8 mx-auto text-muted-foreground/60" />
-            <p className="text-sm font-bold text-foreground">
+            <p className="text-base font-bold text-foreground">
               Nenhuma mesa encontrada.
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Crie uma mesa no campo acima para começar a mestrar Calafrio.
             </p>
           </div>

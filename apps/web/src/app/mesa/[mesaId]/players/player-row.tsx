@@ -20,9 +20,9 @@ export function PlayerRow({ player: p, mesaId, onExcluir }: PlayerRowProps) {
       <div className="space-y-1.5 flex-1 min-w-[200px]">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="font-black text-base text-foreground flex items-center gap-1.5">
-            <User className="size-4 text-amber-400" /> {p.nome}
+            <User className="size-4 text-accent-ink" /> {p.nome}
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30">
+          <span className="text-xs font-bold uppercase tracking-wide px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30">
             {ocupacao}
           </span>
           {p.jogador && (

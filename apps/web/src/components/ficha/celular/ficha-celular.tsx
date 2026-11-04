@@ -141,10 +141,19 @@ export function FichaCelular({
 }) {
   const [aba, setAba] = useState<Aba>("ficha");
 
+  const trocarAba = (novaAba: Aba) => {
+    if (novaAba === aba) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: "instant" });
+    setAba(novaAba);
+  };
+
   return (
     <div
       data-papel
-      className="-mx-3 -mt-3 min-h-screen space-y-5 overflow-x-clip px-3 pb-28 pt-4 text-black"
+      className="min-h-dvh space-y-5 overflow-x-clip px-3.5 pb-28 pt-[max(1rem,env(safe-area-inset-top))] text-black"
       style={{
         fontFamily: "var(--font-alegreya), Georgia, serif",
         fontWeight: 600,
@@ -152,7 +161,7 @@ export function FichaCelular({
         backgroundSize: "40vw",
       }}
     >
-      <div key={aba} className="entrada-lista space-y-5">
+      <div key={aba} className="transicao-aba space-y-5 min-h-[calc(100dvh-12rem)]">
       {aba === "ficha" && (
         <>
           <div className="flex items-center justify-between gap-3">
@@ -189,15 +198,12 @@ export function FichaCelular({
       {aba === "ecos" && <EcosCelular f={f} />}
       </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t-[3px] border-black bg-white pb-[env(safe-area-inset-bottom)]">
+      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t-[3px] border-black bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.08)] pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         {ABAS.map(({ id, rotulo, Icone }) => (
           <button
             key={id}
             type="button"
-            onClick={() => {
-              setAba(id);
-              window.scrollTo({ top: 0 });
-            }}
+            onClick={() => trocarAba(id)}
             className={`pressionavel flex min-h-16 cursor-pointer flex-col items-center justify-center gap-0.5 text-xs font-extrabold transition-colors duration-200 ${
               aba === id ? "bg-black text-white" : "text-black"
             }`}

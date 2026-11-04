@@ -34,7 +34,7 @@ export function InventarioPapel({
       <Posicionado
         area={{ x: 26, y: 384, w: 610, h: 494 }}
         className="overflow-y-auto"
-        style={{ columnCount: 2, columnGap: u(22), fontSize: u(13) }}
+        style={{ columnCount: 2, columnGap: u(22), fontSize: u(14.5) }}
       >
         {inventario.map((item) => (
           <div
@@ -56,13 +56,13 @@ export function InventarioPapel({
                 )}
                 <span className="truncate">{item.nome}</span>
                 {item.dano && (
-                  <span className="italic" style={{ fontSize: u(10) }}>
+                  <span className="italic" style={{ fontSize: u(11.5) }}>
                     [{item.dano} {item.espectroDano}]
                   </span>
                 )}
               </div>
               {item.descricao && (
-                <p className="font-medium text-black/70" style={{ fontSize: u(10.5) }}>
+                <p className="font-medium text-black/70" style={{ fontSize: u(12) }}>
                   {item.descricao}
                 </p>
               )}
@@ -84,7 +84,7 @@ export function InventarioPapel({
           type="button"
           onClick={() => setModalAberto(true)}
           className="flex size-full cursor-pointer items-center justify-center gap-[0.5cqw] bg-black text-white transition-opacity hover:opacity-80"
-          style={{ fontSize: u(11) }}
+          style={{ fontSize: u(12) }}
         >
           <Plus style={{ width: u(10), height: u(10) }} strokeWidth={3} /> Novo item
         </button>

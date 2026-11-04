@@ -84,19 +84,19 @@ export function PainelPalavrasChave({
                   ehDaFicha ? "Clique para editar palavra-chave" : undefined
                 }
               >
-                <span className="text-[10px] font-black uppercase px-1.5 py-0.5 rounded bg-black/60 text-muted-foreground">
+                <span className="text-xs font-black uppercase px-2 py-0.5 rounded bg-black/60 text-muted-foreground">
                   {pc.categoria}
                 </span>
                 <span className="font-bold truncate text-foreground hover:underline">
                   {pc.nome}
                 </span>
                 {pc.concedidaPor && (
-                  <span className="text-[10px] text-accent-ink font-semibold truncate">
+                  <span className="text-xs text-accent-ink font-semibold truncate">
                     (concedida por {pc.concedidaPor})
                   </span>
                 )}
                 {pc.notas && (
-                  <span className="text-[10px] text-muted-foreground truncate hidden sm:inline">
+                  <span className="text-xs text-muted-foreground truncate hidden sm:inline">
                     — {pc.notas}
                   </span>
                 )}

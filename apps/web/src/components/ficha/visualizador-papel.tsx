@@ -2,7 +2,13 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { FichaViva, ModoVisualizacao, PaginaFicha } from "./fichas-tipos";
+import {
+  type FichaViva,
+  type ModoVisualizacao,
+  type NivelZoomFicha,
+  type PaginaFicha,
+  obterConfigZoomFicha,
+} from "./fichas-tipos";
 import { PaginaEcosAprimoramentos } from "./pagina-ecos-aprimoramentos";
 import { PaginaFrenteFicha } from "./pagina-frente-ficha";
 import { PaginaVersoMatriz } from "./pagina-verso-matriz";
@@ -13,6 +19,7 @@ interface VisualizadorPapelProps {
   pagina: PaginaFicha;
   onMudarPagina: (pagina: PaginaFicha) => void;
   onAbrirRolagem: (nome?: string) => void;
+  zoom?: NivelZoomFicha;
 }
 
 const LIMITE_SWIPE_PX = 60;
@@ -66,21 +73,56 @@ const ORDEM_PAGINAS: Record<PaginaFicha, number> = {
   ecos: 3,
 };
 
+type TransicaoPilha =
+  | {
+      tipo: "avancar";
+      baixo: PaginaFicha;
+      cima: PaginaFicha;
+    }
+  | {
+      tipo: "voltar";
+      baixo: PaginaFicha;
+      cima: PaginaFicha;
+    }
+  | null;
+
 export function VisualizadorPapel({
   f,
   modo,
   pagina,
   onMudarPagina,
   onAbrirRolagem,
+  zoom = "100",
 }: VisualizadorPapelProps) {
-  const [direcao, setDirecao] = useState<"avancar" | "voltar" | null>(null);
+  const [transicao, setTransicao] = useState<TransicaoPilha>(null);
   const inicioToque = useRef<number | null>(null);
 
   const virar = (destino: PaginaFicha) => {
-    if (destino === pagina) return;
-    setDirecao(ORDEM_PAGINAS[destino] > ORDEM_PAGINAS[pagina] ? "avancar" : "voltar");
+    if (destino === pagina || transicao !== null) return;
+    const avancando = ORDEM_PAGINAS[destino] > ORDEM_PAGINAS[pagina];
+    if (avancando) {
+      setTransicao({
+        tipo: "avancar",
+        baixo: pagina,
+        cima: destino,
+      });
+    } else {
+      setTransicao({
+        tipo: "voltar",
+        baixo: destino,
+        cima: pagina,
+      });
+    }
     onMudarPagina(destino);
   };
+
+  useEffect(() => {
+    if (!transicao) return;
+    const timer = setTimeout(() => {
+      setTransicao(null);
+    }, 360);
+    return () => clearTimeout(timer);
+  }, [transicao]);
 
   useEffect(() => {
     const aoTeclar = (e: KeyboardEvent) => {
@@ -100,23 +142,109 @@ export function VisualizadorPapel({
 
   const duas = modo === "duas";
   const controlesVisiveis = duas ? "lg:hidden" : "";
-  const animacao =
-    direcao === null ? "" : direcao === "avancar" ? "folheada-avancar" : "folheada-voltar";
+<<<<<<< Updated upstream
+  const configZoom = obterConfigZoomFicha(zoom);
+=======
+>>>>>>> Stashed changes
 
-  const mostrar = (alvo: PaginaFicha) => {
-    if (pagina === alvo) return "block";
-    if (!duas) return "hidden";
-    if (pagina === "ecos") {
-      return alvo === "verso" ? "hidden lg:block" : "hidden";
+  const renderPagina = (alvo: PaginaFicha) => {
+    switch (alvo) {
+      case "frente":
+        return (
+          <PaginaFrenteFicha
+            ficha={f.ficha}
+            derivada={f.derivada}
+<<<<<<< Updated upstream
+            zoom={zoom}
+=======
+>>>>>>> Stashed changes
+            onDefinirNome={f.definirNome}
+            onDefinirApt={f.definirApt}
+            onDefinirRetrato={(url) =>
+              f.dispatch({ tipo: "definirRetrato", url })
+            }
+            onDefinirPvAtual={f.definirPvAtual}
+            onDefinirPaAtual={f.definirPaAtual}
+            onAdicionarPalavraChave={f.adicionarPalavraChave}
+            onRemoverPalavraChave={f.removerPalavraChave}
+            onAdicionarItem={f.adicionarItem}
+            onAlternarEquipado={(id) =>
+              f.dispatch({ tipo: "alternarEquipadoItem", id })
+            }
+            onRemoverItem={f.removerItem}
+            onAtualizarCarteira={f.definirCarteira}
+            onAbrirRolagem={onAbrirRolagem}
+          />
+        );
+      case "verso":
+        return (
+          <PaginaVersoMatriz
+            ficha={f.ficha}
+            derivada={f.derivada}
+            catalogo={f.catalogo}
+<<<<<<< Updated upstream
+            zoom={zoom}
+=======
+>>>>>>> Stashed changes
+            onAlocarSlot={(slot, alocacao) =>
+              f.alocarSlotMatriz(slot, alocacao.tipo, alocacao.id)
+            }
+            onLimparSlot={f.limparSlotMatriz}
+            onAdicionarHabilidadeUnica={(unica) =>
+              f.dispatch({ tipo: "adicionarHabilidadeUnica", unica })
+            }
+            onAtualizarHabilidadeUnica={(id, dados) =>
+              f.dispatch({ tipo: "atualizarHabilidadeUnica", id, dados })
+            }
+            onRemoverHabilidadeUnica={(id) =>
+              f.dispatch({ tipo: "removerHabilidadeUnica", id })
+            }
+            onAdicionarCustomizacaoEco={(customizacao) =>
+              f.dispatch({ tipo: "adicionarCustomizacaoEco", customizacao })
+            }
+            onRemoverCustomizacaoEco={(id) =>
+              f.dispatch({ tipo: "removerCustomizacaoEco", id })
+            }
+            focoAtivoId={f.estado.focoAtivoId}
+            onAlternarFoco={f.alternarFoco}
+            onDefinirAnotacoes={f.definirAnotacoes}
+          />
+        );
+      case "ecos":
+        return (
+          <PaginaEcosAprimoramentos
+            ficha={f.ficha}
+            derivada={f.derivada}
+            catalogo={f.catalogo}
+<<<<<<< Updated upstream
+            zoom={zoom}
+=======
+>>>>>>> Stashed changes
+            onAdicionarHabilidadeUnica={(unica) =>
+              f.dispatch({ tipo: "adicionarHabilidadeUnica", unica })
+            }
+            onAtualizarHabilidadeUnica={(id, dados) =>
+              f.dispatch({ tipo: "atualizarHabilidadeUnica", id, dados })
+            }
+            onRemoverHabilidadeUnica={(id) =>
+              f.dispatch({ tipo: "removerHabilidadeUnica", id })
+            }
+            onAdicionarCustomizacaoEco={(customizacao) =>
+              f.dispatch({ tipo: "adicionarCustomizacaoEco", customizacao })
+            }
+            onRemoverCustomizacaoEco={(id) =>
+              f.dispatch({ tipo: "removerCustomizacaoEco", id })
+            }
+            onDefinirAnotacoes={f.definirAnotacoes}
+          />
+        );
     }
-    return alvo === (pagina === "frente" ? "verso" : "frente")
-      ? "hidden lg:block"
-      : "hidden";
   };
 
   return (
     <div
-      className={`relative ${duas ? "w-full" : "mx-auto max-w-[880px]"}`}
+      className={`relative ${duas ? "w-full" : "mx-auto w-full transition-[max-width] duration-200 ease-out"}`}
+      style={duas ? undefined : { maxWidth: `${configZoom.larguraMaximaFolhaPx}px` }}
       onTouchStart={(e) => {
         inicioToque.current = e.touches[0].clientX;
       }}
@@ -222,110 +350,131 @@ export function VisualizadorPapel({
         />
       )}
 
-      {/* Grade de Páginas */}
-      <div className={`grid items-start gap-6 ${duas ? "lg:grid-cols-2" : ""}`}>
-        {/* Página 1: Frente */}
-        <div
-          key={`frente-${pagina}`}
-          className={`${mostrar("frente")} ${pagina === "frente" && !duas ? animacao : ""}`}
-        >
-          <PaginaFrenteFicha
-            ficha={f.ficha}
-            derivada={f.derivada}
-            onDefinirNome={f.definirNome}
-            onDefinirApt={f.definirApt}
-            onDefinirRetrato={(url) =>
-              f.dispatch({ tipo: "definirRetrato", url })
-            }
-            onDefinirPvAtual={f.definirPvAtual}
-            onDefinirPaAtual={f.definirPaAtual}
-            onAdicionarPalavraChave={f.adicionarPalavraChave}
-            onRemoverPalavraChave={f.removerPalavraChave}
-            onAdicionarItem={f.adicionarItem}
-            onAlternarEquipado={(id) =>
-              f.dispatch({ tipo: "alternarEquipadoItem", id })
-            }
-            onRemoverItem={f.removerItem}
-            onAtualizarCarteira={f.definirCarteira}
-            onAbrirRolagem={onAbrirRolagem}
+      {/* Visualização de Páginas com Sobreposição Física */}
+      {!duas ? (
+<<<<<<< Updated upstream
+        <div className="relative w-full">
+          {/* Bordas decorativas da pilha de folhas embaixo (Stack Paper Effect) */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 translate-x-1 translate-y-1 rounded-sm border border-black/25 bg-[#eaeae5] shadow-xs pointer-events-none -z-10"
           />
-        </div>
-
-        {/* Página 2: Verso (Matriz) */}
-        <div
-          key={`verso-${pagina}`}
-          className={`${mostrar("verso")} ${pagina === "verso" && !duas ? animacao : ""}`}
-        >
-          <PaginaVersoMatriz
-            ficha={f.ficha}
-            derivada={f.derivada}
-            catalogo={f.catalogo}
-            onAlocarSlot={(slot, alocacao) =>
-              f.alocarSlotMatriz(slot, alocacao.tipo, alocacao.id)
-            }
-            onLimparSlot={f.limparSlotMatriz}
-            onAdicionarHabilidadeUnica={(unica) =>
-              f.dispatch({ tipo: "adicionarHabilidadeUnica", unica })
-            }
-            onAtualizarHabilidadeUnica={(id, dados) =>
-              f.dispatch({ tipo: "atualizarHabilidadeUnica", id, dados })
-            }
-            onRemoverHabilidadeUnica={(id) =>
-              f.dispatch({ tipo: "removerHabilidadeUnica", id })
-            }
-            onAdicionarCustomizacaoEco={(customizacao) =>
-              f.dispatch({ tipo: "adicionarCustomizacaoEco", customizacao })
-            }
-            onRemoverCustomizacaoEco={(id) =>
-              f.dispatch({ tipo: "removerCustomizacaoEco", id })
-            }
-            focoAtivoId={f.estado.focoAtivoId}
-            onAlternarFoco={f.alternarFoco}
-            onDefinirAnotacoes={f.definirAnotacoes}
-            onNavegarParaEcos={() => virar("ecos")}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 translate-x-2 translate-y-2 rounded-sm border border-black/15 bg-[#dfdfd8] shadow-xs pointer-events-none -z-20"
           />
-        </div>
 
-        {/* Página 3: Ecos & Aprimoramentos */}
-        <div
-          key={`ecos-${pagina}`}
-          className={`${mostrar("ecos")} ${pagina === "ecos" && !duas ? animacao : ""}`}
-        >
-          <PaginaEcosAprimoramentos
-            ficha={f.ficha}
-            derivada={f.derivada}
-            catalogo={f.catalogo}
-            onAdicionarHabilidadeUnica={(unica) =>
-              f.dispatch({ tipo: "adicionarHabilidadeUnica", unica })
-            }
-            onAtualizarHabilidadeUnica={(id, dados) =>
-              f.dispatch({ tipo: "atualizarHabilidadeUnica", id, dados })
-            }
-            onRemoverHabilidadeUnica={(id) =>
-              f.dispatch({ tipo: "removerHabilidadeUnica", id })
-            }
-            onAdicionarCustomizacaoEco={(customizacao) =>
-              f.dispatch({ tipo: "adicionarCustomizacaoEco", customizacao })
-            }
-            onRemoverCustomizacaoEco={(id) =>
-              f.dispatch({ tipo: "removerCustomizacaoEco", id })
-            }
-            onDefinirAnotacoes={f.definirAnotacoes}
-          />
+          <div className="relative w-full overflow-x-clip rounded-sm shadow-xl">
+            {transicao ? (
+              transicao.tipo === "avancar" ? (
+                <>
+                  {/* Folha de baixo (fica no lugar e recebe leve sombra de profundidade) */}
+                  <div
+                    key={`baixo-${transicao.baixo}`}
+                    className="relative z-10 w-full pointer-events-none folha-camada-baixo-avancar"
+                  >
+                    {renderPagina(transicao.baixo)}
+                  </div>
+                  {/* Folha de cima (entra deslizando por cima com borda e sombra) */}
+                  <div
+                    key={`cima-${transicao.cima}`}
+                    className="absolute inset-0 z-20 w-full folha-camada-cima-entrar pointer-events-none"
+                  >
+                    {renderPagina(transicao.cima)}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Folha de baixo (já está no lugar, sendo revelada) */}
+                  <div
+                    key={`baixo-${transicao.baixo}`}
+                    className="relative z-10 w-full pointer-events-none folha-camada-baixo-voltar"
+                  >
+                    {renderPagina(transicao.baixo)}
+                  </div>
+                  {/* Folha de cima (desliza para a direita saindo de cima) */}
+                  <div
+                    key={`cima-${transicao.cima}`}
+                    className="absolute inset-0 z-20 w-full folha-camada-cima-sair pointer-events-none"
+                  >
+                    {renderPagina(transicao.cima)}
+                  </div>
+                </>
+              )
+            ) : (
+              /* Em repouso (interativa) */
+              <div key={`atual-${pagina}`} className="relative z-10 w-full">
+                {renderPagina(pagina)}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        /* Modo 2 páginas lado a lado */
+        <div className="grid items-start gap-6 lg:grid-cols-2">
+          <div>{renderPagina("frente")}</div>
+          <div>{renderPagina(pagina === "ecos" ? "ecos" : "verso")}</div>
+        </div>
+      )}
 
-      {/* Controles de Paginação Rodapé */}
+=======
+        <div className="relative w-full overflow-x-clip rounded-sm">
+          {transicao ? (
+            transicao.tipo === "avancar" ? (
+              <>
+                {/* Folha de baixo (fica parada no lugar) */}
+                <div
+                  key={`baixo-${transicao.baixo}`}
+                  className="relative z-10 w-full pointer-events-none"
+                >
+                  {renderPagina(transicao.baixo)}
+                </div>
+                {/* Folha de cima (entra deslizando da direita por cima) */}
+                <div
+                  key={`cima-${transicao.cima}`}
+                  className="absolute inset-0 z-20 w-full folha-sobrepor-entrar pointer-events-none"
+                >
+                  {renderPagina(transicao.cima)}
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Folha de baixo (já está no lugar esperando, sendo revelada) */}
+                <div
+                  key={`baixo-${transicao.baixo}`}
+                  className="relative z-10 w-full pointer-events-none"
+                >
+                  {renderPagina(transicao.baixo)}
+                </div>
+                {/* Folha de cima (desliza para a direita saindo de cima) */}
+                <div
+                  key={`cima-${transicao.cima}`}
+                  className="absolute inset-0 z-20 w-full folha-sobrepor-sair pointer-events-none"
+                >
+                  {renderPagina(transicao.cima)}
+                </div>
+              </>
+            )
+          ) : (
+            /* Em repouso (interativa) */
+            <div key={`atual-${pagina}`} className="relative z-10 w-full">
+              {renderPagina(pagina)}
+            </div>
+          )}
+        </div>
+      ) : (
+        /* Modo 2 páginas lado a lado */
+        <div className="grid items-start gap-6 lg:grid-cols-2">
+          <div>{renderPagina("frente")}</div>
+          <div>{renderPagina(pagina === "ecos" ? "ecos" : "verso")}</div>
+        </div>
+      )}
+
+>>>>>>> Stashed changes
       <div
         className={`mt-4 flex items-center justify-center gap-2.5 text-xs font-bold ${controlesVisiveis}`}
       >
-        {(
-          [
-            ["frente", "1 · Frente (Identidade)"],
-            ["verso", "2 · Verso (Matriz)"],
-            ["ecos", "3 · Ecos & Aprimoramentos"],
-          ] as const
-        ).map(([alvo, rotulo]) => (
+        {(["frente", "verso", "ecos"] as const).map((alvo) => (
           <button
             key={alvo}
             type="button"
@@ -336,7 +485,11 @@ export function VisualizadorPapel({
                 : "bg-white text-black hover:bg-black/10"
             }`}
           >
-            {rotulo}
+            {alvo === "frente"
+              ? "1 · Identidade"
+              : alvo === "verso"
+                ? "2 · Matriz"
+                : "3 · Ecos"}
           </button>
         ))}
       </div>

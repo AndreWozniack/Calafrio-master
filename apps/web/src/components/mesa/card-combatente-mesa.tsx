@@ -45,7 +45,7 @@ export function CardCombatenteMesa({
       <div>
         <div className="flex items-center justify-between mb-1">
           <span
-            className={`text-[10px] font-black uppercase px-2 py-0.5 rounded ${
+            className={`text-xs font-black uppercase px-2 py-0.5 rounded ${
               c.tipo === "jogador"
                 ? "bg-blue-500/20 text-blue-300 border border-blue-500/40"
                 : "bg-red-500/20 text-red-300 border border-red-500/40"
@@ -54,7 +54,7 @@ export function CardCombatenteMesa({
             {c.tipo}
           </span>
           {ehVezDeste && (
-            <span className="text-[10px] font-black px-2 py-0.5 rounded bg-amber-400 text-black animate-pulse">
+            <span className="text-xs font-black px-2 py-0.5 rounded bg-amber-400 text-black animate-pulse">
               TURNO ATUAL
             </span>
           )}
@@ -68,7 +68,7 @@ export function CardCombatenteMesa({
         {/* Vitais */}
         <div className="grid grid-cols-2 gap-2 mt-3 text-xs text-center font-bold">
           <div className="p-2 rounded bg-red-950/30 border border-red-800/40">
-            <span className="text-red-300 block text-[10px] uppercase">
+            <span className="text-red-300 block text-xs uppercase font-extrabold">
               Vida (PV)
             </span>
             <span className="text-lg font-black text-red-400">
@@ -76,7 +76,7 @@ export function CardCombatenteMesa({
             </span>
           </div>
           <div className="p-2 rounded bg-info/10 border border-info/40">
-            <span className="text-info block text-[10px] uppercase">
+            <span className="text-info block text-xs uppercase font-extrabold">
               ÂNIMUM (PA)
             </span>
             <span className="text-lg font-black text-info">

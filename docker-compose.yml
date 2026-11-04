@@ -9,6 +9,7 @@ services:
         required: false
     environment:
       NODE_ENV: production
+      ALLOW_DEV_LOGIN: "false"
     entrypoint:
       - /app/docker/migrate.sh
     command: []
@@ -26,7 +27,9 @@ services:
         required: false
     environment:
       NODE_ENV: production
+      ALLOW_DEV_LOGIN: "false"
       PORT: "3001"
+      AUTH_TRUST_HOST: "true"
     expose:
       - "3001"
     ports:
