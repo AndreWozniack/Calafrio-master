@@ -60,10 +60,19 @@ export default async function LoginPage({
           <div className="p-2.5 bg-red-50 border border-red-300 text-red-900 text-xs font-medium space-y-1">
             <p className="font-bold flex items-center gap-1">⚠️ Falha no login:</p>
             {error === "Configuration" ? (
-              <p className="text-[11px] leading-relaxed">
-                Para autenticar com o Google localmente, use o endereço{" "}
-                <strong className="underline">http://localhost:3001</strong>. O Google proíbe URLs de redirecionamento com <code className="bg-red-100 px-1 font-mono">0.0.0.0</code>.
-              </p>
+              <div className="text-[11px] leading-relaxed space-y-1">
+                <p>
+                  Erro de configuração de autenticação (<strong>Configuration</strong>). Possíveis causas:
+                </p>
+                <ul className="list-disc list-inside space-y-0.5 text-neutral-800">
+                  <li>
+                    Variáveis <code>AUTH_SECRET</code>, <code>AUTH_GOOGLE_ID</code> ou <code>AUTH_GOOGLE_SECRET</code> não preenchidas no Dokploy/VPS.
+                  </li>
+                  <li>
+                    Falta da URI de redirecionamento no Google Cloud Console: adicione <code>https://seu-dominio/api/auth/callback/google</code> (e <code>http://localhost:3001/api/auth/callback/google</code> para local).
+                  </li>
+                </ul>
+              </div>
             ) : error === "AccessDenied" ? (
               <p className="text-[11px]">
                 Acesso negado. Sua conta não consta na allowlist de e-mails.

@@ -27,6 +27,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: "3001"
+      AUTH_TRUST_HOST: "true"
     expose:
       - "3001"
     ports:
