@@ -10,13 +10,17 @@ import {
   Sun,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FichaCelular } from "@/components/ficha/celular/ficha-celular";
-import type {
-  PaginaFicha,
+import {
+  CHAVE_STORAGE_ZOOM_FICHA,
+  type NivelZoomFicha,
+  obterConfigZoomFicha,
+  type PaginaFicha,
 } from "@/components/ficha/fichas-tipos";
 import { ModalDanoCura } from "@/components/ficha/modal-dano-cura";
 import { ModalRolagemCalafrio } from "@/components/ficha/modal-rolagem-calafrio";
+import { SeletorZoomFicha } from "@/components/ficha/seletor-zoom-ficha";
 import { VisualizadorPapel } from "@/components/ficha/visualizador-papel";
 import {
   formatarContestacao,
@@ -48,6 +52,29 @@ export function FichaLiveClient({
   const [mostrarRolagem, setMostrarRolagem] = useState(false);
   const [mostrarDanoCura, setMostrarDanoCura] = useState(false);
   const [palavraChaveRolagem, setPalavraChaveRolagem] = useState<string>();
+  const [zoom, setZoom] = useState<NivelZoomFicha>("100");
+
+  useEffect(() => {
+    try {
+      const salvo = localStorage.getItem(CHAVE_STORAGE_ZOOM_FICHA);
+      if (salvo && ["90", "100", "115", "130"].includes(salvo)) {
+        setZoom(salvo as NivelZoomFicha);
+      }
+    } catch {
+      // Ignora erro de localStorage
+    }
+  }, []);
+
+  const mudarZoom = (novo: NivelZoomFicha) => {
+    setZoom(novo);
+    try {
+      localStorage.setItem(CHAVE_STORAGE_ZOOM_FICHA, novo);
+    } catch {
+      // Ignora erro de localStorage
+    }
+  };
+
+  const configZoom = obterConfigZoomFicha(zoom);
 
   const abrirRolagem = (nome?: string) => {
     setPalavraChaveRolagem(nome);
@@ -56,12 +83,16 @@ export function FichaLiveClient({
 
   return (
     <div className="w-full">
-      <div className="hidden sm:block space-y-5 mx-auto max-w-[920px]">
+      <div
+        className="hidden sm:block space-y-5 mx-auto transition-[max-width] duration-200 ease-out"
+        style={{ maxWidth: `${configZoom.larguraMaximaUmaPaginaPx}px` }}
+      >
         <div className="mb-5 flex w-full flex-wrap items-center justify-between gap-2 rounded-sm border-2 border-black bg-[#f7f7f5] p-2.5 shadow-[2px_2px_0px_#000]">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Link href={`/mesa/${mesaId}/players`} className={botaoClaro}>
               <ArrowLeft className="size-4" /> Players
             </Link>
+            <SeletorZoomFicha zoom={zoom} onMudarZoom={mudarZoom} />
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -103,6 +134,7 @@ export function FichaLiveClient({
           pagina={pagina}
           onMudarPagina={setPagina}
           onAbrirRolagem={abrirRolagem}
+          zoom={zoom}
         />
       </div>
 
