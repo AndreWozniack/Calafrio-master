@@ -2,8 +2,8 @@
 
 import type { FichaCalafrio, ItemNaFichaCalafrio } from "@calafrio/core";
 import { Plus, Shield, Sparkles, Trash2 } from "lucide-react";
-import type React from "react";
 import { useState } from "react";
+import { ModalItem } from "./modal-item";
 
 interface PainelInventarioProps {
   ficha: FichaCalafrio;
@@ -20,28 +20,7 @@ export function PainelInventario({
   onRemoverItem,
   onAtualizarCarteira,
 }: PainelInventarioProps) {
-  const [nome, setNome] = useState("");
-  const [categoria, setCategoria] =
-    useState<ItemNaFichaCalafrio["categoria"]>("arma_curto");
-  const [paranormal, setParanormal] = useState(false);
-  const [dano, setDano] = useState<number | undefined>(undefined);
-
-  const lidarAdicionar = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!nome.trim()) return;
-    onAdicionarItem({
-      id: `item-${Date.now()}`,
-      nome: nome.trim(),
-      categoria,
-      paranormal,
-      equipado: true,
-      dano,
-      espectroDano: paranormal ? "rubro" : "fisico",
-      efeitos: [],
-    });
-    setNome("");
-    setDano(undefined);
-  };
+  const [modalAberto, setModalAberto] = useState(false);
 
   return (
     <div className="calafrio-card p-4 space-y-4">
@@ -153,46 +132,20 @@ export function PainelInventario({
         ))}
       </div>
 
-      {/* Adicionar Item Rápido */}
-      <form
-        onSubmit={lidarAdicionar}
-        className="flex flex-wrap items-center gap-2 pt-2 border-t border-border"
-      >
-        <input
-          type="text"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          placeholder="Nome do item/arma..."
-          className="flex-1 min-w-[140px] bg-muted/60 text-xs px-2.5 py-1.5 rounded border border-border"
-        />
-        <select
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value as any)}
-          className="bg-muted text-xs p-1.5 rounded border border-border"
-        >
-          <option value="arma_curto">Arma Curto Alcance</option>
-          <option value="arma_longo">Arma Longo Alcance</option>
-          <option value="arma_misto">Arma Misto</option>
-          <option value="vestimenta">Vestimenta</option>
-          <option value="consumivel">Consumível</option>
-          <option value="ferramenta">Ferramenta</option>
-          <option value="bugiganga">Bugiganga</option>
-        </select>
-        <label className="flex items-center gap-1 text-xs text-muted-foreground cursor-pointer">
-          <input
-            type="checkbox"
-            checked={paranormal}
-            onChange={(e) => setParanormal(e.target.checked)}
-          />
-          <span>Parartefato</span>
-        </label>
+      <div className="pt-2 border-t border-border">
         <button
-          type="submit"
+          type="button"
+          onClick={() => setModalAberto(true)}
           className="flex items-center gap-1 bg-foreground text-background font-bold text-xs px-3 py-1.5 rounded hover:opacity-90 cursor-pointer"
         >
-          <Plus className="size-3.5" /> Adicionar
+          <Plus className="size-3.5" /> Novo item
         </button>
-      </form>
+      </div>
+      <ModalItem
+        aberto={modalAberto}
+        onSalvar={onAdicionarItem}
+        onFechar={() => setModalAberto(false)}
+      />
     </div>
   );
 }

@@ -40,10 +40,15 @@ export function NovoPlayerClient({ mesaId }: { mesaId: string }) {
         derivada={f.derivada}
         catalogo={f.catalogo}
         onDefinirNome={f.definirNome}
+        onDefinirJogador={f.definirJogador}
         onDefinirApt={f.definirApt}
         onAdicionarPalavraChave={f.adicionarPalavraChave}
         onRemoverPalavraChave={f.removerPalavraChave}
+        onAlocarSlot={f.alocarSlotMatriz}
+        onLimparSlot={f.limparSlotMatriz}
         onAtualizarCarteira={f.definirCarteira}
+        onAdicionarItem={f.adicionarItem}
+        onRemoverItem={f.removerItem}
         onFechar={handleConcluir}
       />
     </div>

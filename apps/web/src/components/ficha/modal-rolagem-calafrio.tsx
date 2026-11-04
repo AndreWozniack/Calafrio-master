@@ -16,6 +16,12 @@ interface ModalRolagemCalafrioProps {
   derivada: FichaDerivadaCalafrio;
   palavraChaveInicial?: string;
   onFechar: () => void;
+  onRolou?: (
+    resultado:
+      | { tipo: "acao"; dados: ResultadoTesteAcao }
+      | { tipo: "contestacao"; dados: ResultadoContestacao },
+    nomeAcao: string,
+  ) => void;
 }
 
 export function ModalRolagemCalafrio({
@@ -23,6 +29,7 @@ export function ModalRolagemCalafrio({
   derivada,
   palavraChaveInicial,
   onFechar,
+  onRolou,
 }: ModalRolagemCalafrioProps) {
   const [tipoRolagem, setTipoRolagem] = useState<"acao" | "contestacao">(
     "acao",
@@ -54,6 +61,7 @@ export function ModalRolagemCalafrio({
     });
     setResultadoAcao(res);
     setResultadoContestacao(null);
+    onRolou?.({ tipo: "acao", dados: res }, nomeAcao);
   };
 
   const lidarRolarContestacao = () => {
@@ -67,6 +75,7 @@ export function ModalRolagemCalafrio({
     });
     setResultadoContestacao(res);
     setResultadoAcao(null);
+    onRolou?.({ tipo: "contestacao", dados: res }, nomeAcao);
   };
 
   return (

@@ -24,9 +24,33 @@ export interface PlayerCalafrio {
   criadaEm: string;
 }
 
-interface DadosStore {
+export interface RolagemMesa {
+  id: string;
+  mesaId: string;
+  autor: string;
+  acao: string;
+  tipo: "acao" | "contestacao";
+  total: number;
+  detalhe: string;
+  veredito: string;
+  desfecho: "sucesso" | "falha" | "critico" | "desastre";
+  criadaEm: string;
+}
+
+export interface AnotacaoMesa {
+  id: string;
+  mesaId: string;
+  titulo: string;
+  texto: string;
+  fixada: boolean;
+  criadaEm: string;
+}
+
+export interface DadosStore {
   mesas: MesaCalafrio[];
   players: PlayerCalafrio[];
+  rolagens: RolagemMesa[];
+  anotacoes: AnotacaoMesa[];
 }
 
 const CAMINHO_ARQUIVO = path.join(process.cwd(), "data", "calafrio-store.json");
@@ -42,12 +66,18 @@ function gerarCodigoConvite(): string {
 
 let storeEmMemoria: DadosStore | null = null;
 
-async function carregarStore(): Promise<DadosStore> {
+export async function carregarStore(): Promise<DadosStore> {
   if (storeEmMemoria) return storeEmMemoria;
 
   try {
     const conteudo = await fs.readFile(CAMINHO_ARQUIVO, "utf-8");
-    storeEmMemoria = JSON.parse(conteudo) as DadosStore;
+    const lido = JSON.parse(conteudo) as Partial<DadosStore>;
+    storeEmMemoria = {
+      mesas: lido.mesas ?? [],
+      players: lido.players ?? [],
+      rolagens: lido.rolagens ?? [],
+      anotacoes: lido.anotacoes ?? [],
+    };
     return storeEmMemoria;
   } catch {
     // Inicializar store padrão
@@ -61,13 +91,15 @@ async function carregarStore(): Promise<DadosStore> {
         },
       ],
       players: [],
+      rolagens: [],
+      anotacoes: [],
     };
     await salvarStore(storeEmMemoria);
     return storeEmMemoria;
   }
 }
 
-async function salvarStore(dados: DadosStore): Promise<void> {
+export async function salvarStore(dados: DadosStore): Promise<void> {
   storeEmMemoria = dados;
   try {
     const dir = path.dirname(CAMINHO_ARQUIVO);
@@ -111,6 +143,8 @@ export async function excluirMesa(id: string): Promise<void> {
   const s = await carregarStore();
   s.mesas = s.mesas.filter((m) => m.id !== id);
   s.players = s.players.filter((p) => p.mesaId !== id);
+  s.rolagens = s.rolagens.filter((r) => r.mesaId !== id);
+  s.anotacoes = s.anotacoes.filter((a) => a.mesaId !== id);
   await salvarStore(s);
 }
 

@@ -8,6 +8,11 @@ import { useState } from "react";
 import { ModalRolagemCalafrio } from "@/components/ficha/modal-rolagem-calafrio";
 import { PaginaFrenteFicha } from "@/components/ficha/pagina-frente-ficha";
 import { PaginaVersoMatriz } from "@/components/ficha/pagina-verso-matriz";
+import {
+  formatarContestacao,
+  formatarTesteAcao,
+} from "@/components/mesa/formatar-rolagem";
+import { registrarRolagemAction } from "../../../dados/actions";
 import { salvarFichaPlayerAction } from "../../actions";
 
 interface FichaLiveClientProps {
@@ -158,6 +163,14 @@ export function FichaLiveClient({
           derivada={f.derivada}
           palavraChaveInicial={palavraChaveRolagem}
           onFechar={() => setMostrarRolagem(false)}
+          onRolou={(resultado, acao) => {
+            const ctx = { mesaId, autor: f.ficha.nome || "Investigador", acao };
+            const rolagem =
+              resultado.tipo === "acao"
+                ? formatarTesteAcao(resultado.dados, ctx)
+                : formatarContestacao(resultado.dados, ctx);
+            void registrarRolagemAction(rolagem);
+          }}
         />
       )}
     </div>

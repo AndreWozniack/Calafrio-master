@@ -1,0 +1,29 @@
+# Dev com hot reload: docker compose -f docker-compose.dev.yml up
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "${HOST_PORT:-3001}:3001"
+    environment:
+      NODE_ENV: development
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - .:/app
+      # node_modules do container (não sobrescreve com o do macOS)
+      - node_modules_root:/app/node_modules
+      - node_modules_web:/app/apps/web/node_modules
+      - node_modules_core:/app/packages/core/node_modules
+      - node_modules_ficha:/app/packages/ficha-app/node_modules
+      - node_modules_tema:/app/packages/tema/node_modules
+      - next_cache:/app/apps/web/.next
+
+volumes:
+  node_modules_root:
+  node_modules_web:
+  node_modules_core:
+  node_modules_ficha:
+  node_modules_tema:
+  next_cache:
