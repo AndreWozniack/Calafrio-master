@@ -6,7 +6,7 @@ export function CalafrioLogo({ className = "h-8" }: { className?: string }) {
       <span className="text-xl sm:text-2xl font-black bg-black text-white px-2 py-0.5 border border-white/20 calafrio-tag">
         CALAFRIO
       </span>
-      <span className="text-[10px] text-amber-400 font-bold tracking-widest border border-amber-400/40 px-1 py-0.5 rounded-xs">
+      <span className="text-[10px] text-accent-ink font-bold tracking-widest border border-amber-400/40 px-1 py-0.5 rounded-xs">
         2e TTRPG
       </span>
     </div>
@@ -14,7 +14,7 @@ export function CalafrioLogo({ className = "h-8" }: { className?: string }) {
 }
 
 export function DiamanteOrnamento({
-  className = "size-3 text-amber-400",
+  className = "size-3 text-accent-ink",
 }: {
   className?: string;
 }) {
@@ -60,7 +60,7 @@ export function CadeadoFocoIcon({
       }
       className={`inline-flex items-center gap-0.5 px-1 py-0.5 rounded text-[10px] font-bold ${
         foco === "sim"
-          ? "bg-amber-500/20 text-amber-400 border border-amber-500/40"
+          ? "bg-amber-500/20 text-accent-ink border border-amber-500/40"
           : "bg-blue-500/20 text-blue-300 border border-blue-500/40"
       }`}
     >

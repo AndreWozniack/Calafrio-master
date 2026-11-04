@@ -5,6 +5,7 @@ import {
   carregarCatalogoCalafrio,
   motorBestiarioUnificado,
 } from "@calafrio/core";
+import { useBestiarioSalvo } from "@calafrio/ficha-app";
 import { Skull, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { FichaCriaturaAtiva } from "./ficha-criatura-ativa";
@@ -13,37 +14,43 @@ import { FormularioCriarCriatura } from "./formulario-criar-criatura";
 export function VisaoBestiario() {
   const catalogo = carregarCatalogoCalafrio();
 
-  const [criaturas, setCriaturas] = useState<CriaturaCalafrio[]>(() =>
-    catalogo.lacaios.map((l) => ({
-      id: `lacaio-${l.dado}`,
-      nome: l.nome,
-      categoria: "lacaio",
-      apt: l.aptBonus,
-      pvMax: l.pv,
-      pvAtual: l.pv,
-      pd: l.pd,
-      paMax: 3 + 3 * l.aptBonus,
-      paAtual: 3 + 3 * l.aptBonus,
-      velocidade: l.velocidade,
-      palavrasChave: [l.nome],
-      resistencias: l.dado === 1 ? { rubro: "resistente" } : {},
-      acoes: [
-        {
-          id: `acao-${l.dado}`,
-          nome: "Ataque",
-          tipoAcao: "padrao",
-          dano: l.aptBonus,
-          espectroDano: "fisico",
-          descricao: l.propriedades,
-        },
-      ],
-      notas: l.descricao,
-    })),
-  );
+  const { criaturas, carregado, adicionar, atualizar, remover } =
+    useBestiarioSalvo();
 
-  const [criaturaSelecionadaId, setCriaturaSelecionadaId] = useState<string>(
-    criaturas[0]?.id ?? "",
-  );
+  const importarPresetsLacaios = () => {
+    for (const l of catalogo.lacaios) {
+      const id = `lacaio-${l.dado}`;
+      if (criaturas.some((c) => c.id === id)) continue;
+      adicionar({
+        id,
+        nome: l.nome,
+        categoria: "lacaio",
+        apt: l.aptBonus,
+        pvMax: l.pv,
+        pvAtual: l.pv,
+        pd: l.pd,
+        paMax: 3 + 3 * l.aptBonus,
+        paAtual: 3 + 3 * l.aptBonus,
+        velocidade: l.velocidade,
+        palavrasChave: [l.nome],
+        resistencias: {},
+        acoes: [
+          {
+            id: `acao-${l.dado}`,
+            nome: "Ataque",
+            tipoAcao: "padrao",
+            dano: l.aptBonus,
+            espectroDano: "fisico",
+            descricao: l.propriedades,
+          },
+        ],
+        notas: l.descricao,
+      });
+    }
+  };
+
+  const [criaturaSelecionadaId, setCriaturaSelecionadaId] =
+    useState<string>("");
 
   const criaturaAtiva =
     criaturas.find((c) => c.id === criaturaSelecionadaId) ?? criaturas[0];
@@ -62,15 +69,13 @@ export function VisaoBestiario() {
       pvAtual: base.pvMax,
       paAtual: base.paMax,
     };
-    setCriaturas((prev) => [...prev, nova]);
+    adicionar(nova);
     setCriaturaSelecionadaId(nova.id);
   };
 
   const atualizarCriaturaAtiva = (dados: Partial<CriaturaCalafrio>) => {
     if (!criaturaAtiva) return;
-    setCriaturas((prev) =>
-      prev.map((c) => (c.id === criaturaAtiva.id ? { ...c, ...dados } : c)),
-    );
+    atualizar(criaturaAtiva.id, dados);
   };
 
   return (
@@ -93,6 +98,19 @@ export function VisaoBestiario() {
           {/* Lista de Criaturas */}
           <div className="calafrio-card p-4 space-y-2">
             <span className="calafrio-tag-sm">CRIATURAS CADASTRADAS</span>
+            {carregado && criaturas.length === 0 && (
+              <p className="text-xs text-muted-foreground">
+                Nenhuma criatura ainda. Crie uma acima ou importe os presets
+                oficiais.
+              </p>
+            )}
+            <button
+              type="button"
+              onClick={importarPresetsLacaios}
+              className="w-full px-2 py-1.5 border border-border rounded text-[11px] font-bold hover:bg-muted cursor-pointer"
+            >
+              Importar presets oficiais de Lacaios
+            </button>
             <div className="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
               {criaturas.map((c) => (
                 <div
@@ -100,13 +118,13 @@ export function VisaoBestiario() {
                   onClick={() => setCriaturaSelecionadaId(c.id)}
                   className={`flex items-center justify-between p-2.5 rounded border text-xs cursor-pointer transition-colors ${
                     criaturaAtiva?.id === c.id
-                      ? "border-amber-400 bg-amber-950/30 text-amber-200"
+                      ? "border-amber-400 bg-accent/20 text-accent-ink"
                       : "border-border bg-card/60 hover:bg-muted/40"
                   }`}
                 >
                   <div>
                     <div className="font-bold flex items-center gap-1.5">
-                      <Skull className="size-3 text-amber-400" />
+                      <Skull className="size-3 text-accent-ink" />
                       <span>{c.nome}</span>
                       <span className="text-[10px] text-muted-foreground font-semibold uppercase">
                         ({c.categoria})
@@ -120,9 +138,7 @@ export function VisaoBestiario() {
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setCriaturas((prev) =>
-                        prev.filter((item) => item.id !== c.id),
-                      );
+                      remover(c.id);
                     }}
                     className="p-1 text-muted-foreground hover:text-red-400 cursor-pointer"
                   >

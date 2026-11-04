@@ -75,7 +75,7 @@ export function ModalRolagemCalafrio({
         <div className="flex items-center justify-between border-b border-border pb-2">
           <div className="flex items-center gap-2">
             <span className="calafrio-tag">ROLAGEM DE DADOS</span>
-            <span className="text-xs text-amber-400 font-bold">
+            <span className="text-xs text-accent-ink font-bold">
               d20 + APT ({derivada.apt})
             </span>
           </div>

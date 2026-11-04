@@ -32,7 +32,7 @@ export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
                   <td className="py-2 text-muted-foreground">
                     {arma.tipoAlcance}
                   </td>
-                  <td className="py-2 font-bold text-amber-400">
+                  <td className="py-2 font-bold text-accent-ink">
                     {arma.precoFundos} F$
                   </td>
                   <td className="py-2 font-black">{arma.dano}</td>
@@ -58,7 +58,7 @@ export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
                 key={f.dado}
                 className="p-2 rounded bg-muted/40 border border-border"
               >
-                <div className="font-bold text-amber-300">
+                <div className="font-bold text-accent-ink">
                   {f.dado}. {f.nome}
                 </div>
                 <p className="text-[11px] text-foreground/80 mt-1">
@@ -77,7 +77,7 @@ export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
                 key={l.dado}
                 className="p-2 rounded bg-muted/40 border border-border"
               >
-                <div className="font-bold text-amber-300">
+                <div className="font-bold text-accent-ink">
                   {l.dado}. {l.nome}
                 </div>
                 <div className="text-[10px] text-muted-foreground font-bold">
@@ -100,7 +100,7 @@ export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
                 key={d.dado}
                 className="p-2 rounded bg-muted/40 border border-border"
               >
-                <div className="font-bold text-amber-300">
+                <div className="font-bold text-accent-ink">
                   {d.dado}. {d.nome}
                 </div>
                 <p className="text-[11px] text-foreground/80 mt-1">

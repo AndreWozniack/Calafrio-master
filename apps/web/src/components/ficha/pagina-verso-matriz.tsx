@@ -91,7 +91,7 @@ export function PaginaVersoMatriz({
         {/* Alinhamentos Ativos Atualmente */}
         {derivada.alinhamentosAtivos.length > 0 && (
           <div className="flex flex-wrap gap-2 p-2.5 bg-amber-500/10 border border-amber-500/30 rounded">
-            <span className="text-xs font-bold text-amber-300 flex items-center gap-1">
+            <span className="text-xs font-bold text-accent-ink flex items-center gap-1">
               <Sparkles className="size-3.5" /> Alinhamentos Ativos:
             </span>
             {derivada.alinhamentosAtivos.map((ali, idx) => (
@@ -191,7 +191,7 @@ export function PaginaVersoMatriz({
               {/* Opções de Habilidades Únicas */}
               {ficha.habilidadesUnicas.length > 0 && (
                 <div className="space-y-1 mb-3">
-                  <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-accent-ink uppercase tracking-wider">
                     Suas Habilidades Únicas:
                   </span>
                   {ficha.habilidadesUnicas.map((u) => (
@@ -205,17 +205,17 @@ export function PaginaVersoMatriz({
                         });
                         setSlotSelecionado(null);
                       }}
-                      className="p-2.5 rounded border border-amber-500/40 bg-card hover:bg-amber-950/30 cursor-pointer flex items-center justify-between transition-colors"
+                      className="p-2.5 rounded border border-amber-500/40 bg-card hover:bg-accent/20 cursor-pointer flex items-center justify-between transition-colors"
                     >
                       <div>
-                        <div className="font-bold text-sm text-amber-300">
+                        <div className="font-bold text-sm text-accent-ink">
                           {u.nome}
                         </div>
                         <p className="text-xs text-foreground/80 line-clamp-1">
                           {u.descricao}
                         </p>
                       </div>
-                      <span className="text-xs font-bold text-amber-400">
+                      <span className="text-xs font-bold text-accent-ink">
                         {u.custo} {u.recurso.toUpperCase()}
                       </span>
                     </div>
@@ -268,7 +268,7 @@ export function PaginaVersoMatriz({
                     </div>
 
                     <div className="text-right shrink-0">
-                      <span className="font-bold text-xs text-amber-400">
+                      <span className="font-bold text-xs text-accent-ink">
                         {hab.custoPA === 0 ? "0 PA" : `${hab.custoPA} PA`}
                       </span>
                     </div>

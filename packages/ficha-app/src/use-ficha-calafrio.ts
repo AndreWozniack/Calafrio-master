@@ -7,6 +7,7 @@ import {
   type CatalogoCalafrio,
   carregarCatalogoCalafrio,
   criarEstadoDeJogoInicial,
+  criarFichaCalafrioVazia,
   type EspectroDeDano,
   type EstadoDeJogoCalafrio,
   type FichaCalafrio,
@@ -14,39 +15,39 @@ import {
   montarFichaCalafrio,
 } from "@calafrio/core";
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
-import { obterFichaInicial } from "./ficha-inicial";
 import { fichaCalafrioReducer } from "./ficha-reducer";
 
-const CHAVE_LOCAL_STORAGE = "calafrio:ficha-ativa:v1";
-
-export function useFichaCalafrio() {
+export function useFichaCalafrio(
+  fichaParam?: FichaCalafrio,
+  onSalvar?: (ficha: FichaCalafrio) => void,
+) {
   const catalogo: CatalogoCalafrio = useMemo(
     () => carregarCatalogoCalafrio(),
     [],
   );
 
-  const [ficha, dispatch] = useReducer(fichaCalafrioReducer, undefined, () => {
-    if (typeof window !== "undefined") {
-      try {
-        const salvo = localStorage.getItem(CHAVE_LOCAL_STORAGE);
-        if (salvo) return JSON.parse(salvo) as FichaCalafrio;
-      } catch {}
-    }
-    return obterFichaInicial();
-  });
+  const [ficha, dispatch] = useReducer(
+    fichaCalafrioReducer,
+    fichaParam,
+    (inicial) => inicial ?? criarFichaCalafrioVazia("sem-ficha", ""),
+  );
 
   const [estado, setEstado] = useState<EstadoDeJogoCalafrio>(() =>
     criarEstadoDeJogoInicial(),
   );
 
-  // Salvar no localStorage sempre que mudar
+  // Sincronizar se a fichaParam mudar externamente
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem(CHAVE_LOCAL_STORAGE, JSON.stringify(ficha));
-      } catch {}
+    if (fichaParam && fichaParam.id !== ficha.id) {
+      dispatch({ tipo: "carregarFicha", ficha: fichaParam });
+      setEstado(criarEstadoDeJogoInicial());
     }
-  }, [ficha]);
+  }, [fichaParam, ficha.id]);
+
+  // Propaga edições para o gerenciador (que persiste a coleção inteira).
+  useEffect(() => {
+    if (onSalvar && fichaParam && fichaParam.id === ficha.id) onSalvar(ficha);
+  }, [ficha, onSalvar, fichaParam]);
 
   // Recalcular a FichaDerivada de forma determinística
   const derivada: FichaDerivadaCalafrio = useMemo(
@@ -112,15 +113,6 @@ export function useFichaCalafrio() {
     }));
   }, []);
 
-  const resetarCombate = useCallback(() => {
-    setEstado((prev) => ({
-      ...prev,
-      acoesPadraoRestantes: 2,
-      acaoLivreRestante: 1,
-      reflexoRestante: 1,
-    }));
-  }, []);
-
   const alternarFoco = useCallback((focoId: string) => {
     setEstado((prev) => ({
       ...prev,
@@ -128,19 +120,55 @@ export function useFichaCalafrio() {
     }));
   }, []);
 
+  const carregarFicha = useCallback((novaFicha: FichaCalafrio) => {
+    dispatch({ tipo: "carregarFicha", ficha: novaFicha });
+    setEstado(criarEstadoDeJogoInicial());
+  }, []);
+
   return {
-    catalogo,
     ficha,
     derivada,
     estado,
+    catalogo,
     dispatch,
-    // Ações de jogo
+    carregarFicha,
+    curarPv,
+    curarPa,
+    alternarFoco,
+    // Atalhos
+    definirNome: (nome: string) => dispatch({ tipo: "definirNome", nome }),
+    definirJogador: (jogador: string) =>
+      dispatch({ tipo: "definirJogador", jogador }),
+    definirApt: (apt: number) => dispatch({ tipo: "definirApt", apt }),
+    definirCarteira: (fundos: number, espirions: number) =>
+      dispatch({ tipo: "definirCarteira", fundos, espirions }),
+    alocarSlotMatriz: (
+      slot: number,
+      tipo: "paranormal" | "unica",
+      id: string,
+    ) =>
+      dispatch({
+        tipo: "alocarSlotMatriz",
+        slot,
+        alocacao: { slot, tipo, id },
+      }),
+    limparSlotMatriz: (slot: number) =>
+      dispatch({ tipo: "limparSlotMatriz", slot }),
+    adicionarItem: (item: any) => dispatch({ tipo: "adicionarItem", item }),
+    removerItem: (id: string) => dispatch({ tipo: "removerItem", id }),
+    adicionarPalavraChave: (palavra: any) =>
+      dispatch({ tipo: "adicionarPalavraChave", palavra }),
+    removerPalavraChave: (id: string) =>
+      dispatch({ tipo: "removerPalavraChave", id }),
+    definirSuporteTabela: (
+      tipoTabela: "djanho" | "familiar" | "lacaio",
+      dado: number,
+    ) => dispatch({ tipo: "definirSuporteTabela", tipoTabela, dado }),
+    definirAnotacoes: (anotacoes: string) =>
+      dispatch({ tipo: "definirAnotacoes", anotacoes }),
+    // Ações de Combate / Sobrevivência
     sofrerDano,
     usarHabilidade,
     descansar,
-    curarPv,
-    curarPa,
-    resetarCombate,
-    alternarFoco,
   };
 }

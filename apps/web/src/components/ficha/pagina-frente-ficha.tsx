@@ -92,7 +92,7 @@ export function PaginaFrenteFicha({
               >
                 -
               </button>
-              <span className="text-2xl font-black text-amber-400 min-w-8 text-center">
+              <span className="text-2xl font-black text-accent-ink min-w-8 text-center">
                 {derivada.apt}
               </span>
               <button
@@ -135,11 +135,11 @@ export function PaginaFrenteFicha({
             </div>
 
             {/* Ânimum */}
-            <div className="p-3 bg-card border border-cyan-900/40 rounded text-center">
-              <span className="calafrio-tag-sm mb-1 bg-cyan-950 text-cyan-200">
+            <div className="p-3 bg-card border border-info/40 rounded text-center">
+              <span className="calafrio-tag-sm mb-1 bg-info/10 text-info">
                 ÂNIMUM (PA)
               </span>
-              <div className="text-2xl font-black text-cyan-400 mt-1">
+              <div className="text-2xl font-black text-info mt-1">
                 {derivada.paAtual}{" "}
                 <span className="text-xs text-muted-foreground">
                   / {derivada.paMax}
@@ -164,7 +164,7 @@ export function PaginaFrenteFicha({
 
           {/* Ecos & Alertas */}
           <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-amber-500/10 border border-amber-500/30 rounded text-xs">
-            <span className="font-bold text-amber-300">
+            <span className="font-bold text-accent-ink">
               Ecos Totais: {derivada.ecosDisponiveis} disponíveis (de{" "}
               {derivada.ecosMax} base)
             </span>

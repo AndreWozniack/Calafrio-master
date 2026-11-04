@@ -104,11 +104,11 @@ export function SecaoHabilidadesBiblioteca({
                   <span className="capitalize">{hab.tipoAcao}</span>
                   {hab.tempoPreparacao && <span>({hab.tempoPreparacao})</span>}
                   <span>·</span>
-                  <span className="font-bold text-amber-400">
+                  <span className="font-bold text-accent-ink">
                     {hab.custoPA === 0 ? "Passiva" : `${hab.custoPA} PA`}
                   </span>
                   {hab.requerFoco !== "nao" && (
-                    <span className="text-amber-300">· 🔒 Foco</span>
+                    <span className="text-accent-ink">· 🔒 Foco</span>
                   )}
                 </div>
 

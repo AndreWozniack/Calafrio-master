@@ -57,7 +57,7 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
       </div>
 
       {itemSorteado && (
-        <div className="p-3 bg-amber-500/15 border border-amber-500/50 rounded font-black text-sm text-amber-300 animate-in fade-in">
+        <div className="p-3 bg-amber-500/15 border border-amber-500/50 rounded font-black text-sm text-accent-ink animate-in fade-in">
           {itemSorteado}
         </div>
       )}
@@ -72,7 +72,7 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
                 key={item.numero}
                 className="flex gap-2 py-1 border-b border-border/40"
               >
-                <span className="w-7 font-black text-amber-400 shrink-0">
+                <span className="w-7 font-black text-accent-ink shrink-0">
                   {item.numero}.
                 </span>
                 <span>{item.nome}</span>
@@ -90,7 +90,7 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
                 key={item.numero}
                 className="flex gap-2 py-1 border-b border-border/40"
               >
-                <span className="w-7 font-black text-amber-400 shrink-0">
+                <span className="w-7 font-black text-accent-ink shrink-0">
                   {item.numero}.
                 </span>
                 <span>{item.nome}</span>
@@ -108,7 +108,7 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
                 key={item.numero}
                 className="flex gap-2 py-1 border-b border-border/40"
               >
-                <span className="w-7 font-black text-amber-400 shrink-0">
+                <span className="w-7 font-black text-accent-ink shrink-0">
                   {item.numero}.
                 </span>
                 <span>{item.nome}</span>

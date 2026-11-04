@@ -1,74 +1,154 @@
 "use client";
 
-import { RotateCw, Timer } from "lucide-react";
-import { useState } from "react";
+import {
+  type CriaturaCalafrio,
+  carregarCatalogoCalafrio,
+  type FichaCalafrio,
+  montarFichaCalafrio,
+} from "@calafrio/core";
+import { lerCriaturasSalvas, lerPersonagensSalvos } from "@calafrio/ficha-app";
+import { Plus, RotateCw, Timer, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import {
   CardCombatenteMesa,
   type CombatenteMesa,
 } from "./card-combatente-mesa";
 import { PainelDanoELogMesa } from "./painel-dano-e-log-mesa";
 
+const CHAVE_MESA = "calafrio:mesa:v1";
+
+function combatenteDePersonagem(
+  ficha: FichaCalafrio,
+  catalogo: ReturnType<typeof carregarCatalogoCalafrio>,
+): CombatenteMesa {
+  const d = montarFichaCalafrio(ficha, catalogo);
+  return {
+    id: `pj-${ficha.id}`,
+    nome: ficha.nome || "Sem nome",
+    tipo: "jogador",
+    apt: d.apt,
+    pd: d.pd,
+    pvMax: d.pvMax,
+    pvAtual: d.pvMax,
+    paMax: d.paMax,
+    paAtual: d.paMax,
+    velocidade: d.velocidade,
+    acoesPadrao: 2,
+    acaoLivre: 1,
+    reflexo: 1,
+    quedas: 0,
+  };
+}
+
+function combatenteDeCriatura(
+  c: CriaturaCalafrio,
+  existentes: CombatenteMesa[],
+): CombatenteMesa {
+  const copias = existentes.filter((e) => e.id.startsWith(`cr-${c.id}-`));
+  return {
+    id: `cr-${c.id}-${Date.now()}-${copias.length}`,
+    nome: copias.length ? `${c.nome} #${copias.length + 1}` : c.nome,
+    tipo:
+      c.categoria === "lacaio" || c.categoria === "familiar"
+        ? "lacaio"
+        : "ameaca",
+    apt: c.apt,
+    pd: c.pd,
+    pvMax: c.pvMax,
+    pvAtual: c.pvAtual ?? c.pvMax,
+    paMax: c.paMax,
+    paAtual: c.paAtual ?? c.paMax,
+    velocidade: c.velocidade,
+    acoesPadrao: 2,
+    acaoLivre: 1,
+    reflexo: 1,
+    quedas: 0,
+  };
+}
+
 export function VisaoMesaCombate() {
+  const catalogo = useMemo(() => carregarCatalogoCalafrio(), []);
   const [rodada, setRodada] = useState(1);
   const [segundosCombate, setSegundosCombate] = useState(6);
   const [turnoIndice, setTurnoIndice] = useState(0);
+  const [combatentes, setCombatentes] = useState<CombatenteMesa[]>([]);
+  const [logCombate, setLogCombate] = useState<string[]>([]);
+  const [personagens, setPersonagens] = useState<FichaCalafrio[]>([]);
+  const [criaturas, setCriaturas] = useState<CriaturaCalafrio[]>([]);
+  const [carregado, setCarregado] = useState(false);
 
-  const [combatentes, setCombatentes] = useState<CombatenteMesa[]>([
-    {
-      id: "p1",
-      nome: "Brendo (Investigador)",
-      tipo: "jogador",
-      apt: 2,
-      pd: 6,
-      pvMax: 9,
-      pvAtual: 9,
-      paMax: 9,
-      paAtual: 9,
-      velocidade: 6,
-      acoesPadrao: 2,
-      acaoLivre: 1,
-      reflexo: 1,
-      quedas: 0,
-    },
-    {
-      id: "p2",
-      nome: "Iara (Neural)",
-      tipo: "jogador",
-      apt: 1,
-      pd: 3,
-      pvMax: 6,
-      pvAtual: 6,
-      paMax: 6,
-      paAtual: 6,
-      velocidade: 6,
-      acoesPadrao: 2,
-      acaoLivre: 1,
-      reflexo: 1,
-      quedas: 0,
-    },
-    {
-      id: "a1",
-      nome: "Criatura da Madrugada (Ameaça)",
-      tipo: "ameaca",
-      apt: 3,
-      pd: 9,
-      pvMax: 15,
-      pvAtual: 15,
-      paMax: 12,
-      paAtual: 12,
-      velocidade: 9,
-      acoesPadrao: 2,
-      acaoLivre: 1,
-      reflexo: 1,
-      quedas: 0,
-    },
+  useEffect(() => {
+    setPersonagens(lerPersonagensSalvos());
+    setCriaturas(lerCriaturasSalvas());
+    try {
+      const bruto = localStorage.getItem(CHAVE_MESA);
+      if (bruto) {
+        const m = JSON.parse(bruto);
+        setRodada(m.rodada ?? 1);
+        setSegundosCombate(m.segundosCombate ?? 6);
+        setTurnoIndice(m.turnoIndice ?? 0);
+        setCombatentes(m.combatentes ?? []);
+        setLogCombate(m.logCombate ?? []);
+      }
+    } catch {}
+    setCarregado(true);
+  }, []);
+
+  useEffect(() => {
+    if (!carregado) return;
+    try {
+      localStorage.setItem(
+        CHAVE_MESA,
+        JSON.stringify({
+          rodada,
+          segundosCombate,
+          turnoIndice,
+          combatentes,
+          logCombate,
+        }),
+      );
+    } catch {}
+  }, [
+    carregado,
+    rodada,
+    segundosCombate,
+    turnoIndice,
+    combatentes,
+    logCombate,
   ]);
 
-  const [logCombate, setLogCombate] = useState<string[]>([
-    "Combate iniciado nas esquinas nebulosas de Curitiba. Ordem em roda (sentido horário).",
-  ]);
+  const adicionarPersonagem = (ficha: FichaCalafrio) => {
+    if (combatentes.some((c) => c.id === `pj-${ficha.id}`)) return;
+    const novo = combatenteDePersonagem(ficha, catalogo);
+    setCombatentes((prev) => [...prev, novo]);
+    setLogCombate((l) => [`➕ ${novo.nome} entrou na mesa.`, ...l]);
+  };
 
-  const combatenteDoTurno = combatentes[turnoIndice % combatentes.length];
+  const adicionarCriatura = (c: CriaturaCalafrio) => {
+    const novo = combatenteDeCriatura(c, combatentes);
+    setCombatentes((prev) => [...prev, novo]);
+    setLogCombate((l) => [`➕ ${novo.nome} entrou na mesa.`, ...l]);
+  };
+
+  const removerCombatente = (id: string) => {
+    const idx = combatentes.findIndex((c) => c.id === id);
+    if (idx < 0) return;
+    setCombatentes((prev) => prev.filter((c) => c.id !== id));
+    if (idx < turnoIndice) setTurnoIndice((t) => t - 1);
+  };
+
+  const reiniciarCombate = () => {
+    setRodada(1);
+    setSegundosCombate(6);
+    setTurnoIndice(0);
+    setCombatentes([]);
+    setLogCombate([]);
+  };
+
+  const combatenteDoTurno =
+    combatentes.length > 0
+      ? combatentes[turnoIndice % combatentes.length]
+      : undefined;
 
   const avancarTurno = () => {
     if (combatentes.length === 0) return;
@@ -164,7 +244,7 @@ export function VisaoMesaCombate() {
         <div>
           <div className="flex items-center gap-2">
             <span className="calafrio-tag">MESA DE COMBATE EM TEMPO REAL</span>
-            <span className="text-xs text-amber-400 font-bold flex items-center gap-1">
+            <span className="text-xs text-accent-ink font-bold flex items-center gap-1">
               <Timer className="size-3.5" /> Rodada {rodada} ({segundosCombate}
               s)
             </span>
@@ -178,10 +258,93 @@ export function VisaoMesaCombate() {
         <button
           type="button"
           onClick={avancarTurno}
-          className="flex items-center gap-2 px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-black font-black text-sm rounded cursor-pointer shadow-md transition-all"
+          disabled={combatentes.length === 0}
+          className="flex items-center gap-2 px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-black font-black text-sm rounded cursor-pointer shadow-md transition-all disabled:opacity-40"
         >
           <RotateCw className="size-4" /> Próximo Turno (Sentido Horário)
         </button>
+      </div>
+
+      <div className="calafrio-card p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="calafrio-tag-sm">PARTICIPANTES</span>
+          {combatentes.length > 0 && (
+            <button
+              type="button"
+              onClick={reiniciarCombate}
+              className="text-[11px] font-bold text-muted-foreground hover:text-foreground cursor-pointer"
+            >
+              Encerrar combate
+            </button>
+          )}
+        </div>
+        <div className="grid md:grid-cols-2 gap-4 text-xs">
+          <div className="space-y-1.5">
+            <div className="font-bold uppercase text-[10px] text-muted-foreground">
+              Investigadores ({personagens.length})
+            </div>
+            {personagens.length === 0 && (
+              <p className="text-muted-foreground">
+                Nenhum investigador criado. Crie em “Investigadores”.
+              </p>
+            )}
+            <div className="flex flex-wrap gap-1.5">
+              {personagens.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  disabled={combatentes.some((c) => c.id === `pj-${p.id}`)}
+                  onClick={() => adicionarPersonagem(p)}
+                  className="flex items-center gap-1 px-2 py-1 border border-border rounded font-bold hover:bg-muted disabled:opacity-40 cursor-pointer"
+                >
+                  <Plus className="size-3" /> {p.nome || "Sem nome"}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <div className="font-bold uppercase text-[10px] text-muted-foreground">
+              Bestiário ({criaturas.length})
+            </div>
+            {criaturas.length === 0 && (
+              <p className="text-muted-foreground">
+                Nenhuma criatura. Crie em “Bestiário”.
+              </p>
+            )}
+            <div className="flex flex-wrap gap-1.5">
+              {criaturas.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => adicionarCriatura(c)}
+                  className="flex items-center gap-1 px-2 py-1 border border-border rounded font-bold hover:bg-muted cursor-pointer"
+                >
+                  <Plus className="size-3" /> {c.nome}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        {combatentes.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border/40">
+            {combatentes.map((c) => (
+              <span
+                key={c.id}
+                className="inline-flex items-center gap-1 px-2 py-0.5 bg-muted rounded text-[11px] font-bold"
+              >
+                {c.nome}
+                <button
+                  type="button"
+                  aria-label={`Remover ${c.nome}`}
+                  onClick={() => removerCombatente(c.id)}
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                >
+                  <X className="size-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

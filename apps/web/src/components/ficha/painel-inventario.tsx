@@ -50,7 +50,7 @@ export function PainelInventario({
         <span className="calafrio-tag">CARTEIRA</span>
         <div className="flex items-center gap-4 text-xs font-bold">
           <label className="flex items-center gap-1.5">
-            <span className="text-amber-400">F$ (Fundos):</span>
+            <span className="text-accent-ink">F$ (Fundos):</span>
             <input
               type="number"
               min={0}
@@ -65,7 +65,7 @@ export function PainelInventario({
             />
           </label>
           <label className="flex items-center gap-1.5">
-            <span className="text-cyan-400">E$P (Espírions):</span>
+            <span className="text-info">E$P (Espírions):</span>
             <input
               type="number"
               min={0}
@@ -96,7 +96,7 @@ export function PainelInventario({
             key={item.id}
             className={`flex items-center justify-between p-2.5 rounded border text-xs ${
               item.paranormal
-                ? "border-amber-500/50 bg-amber-950/20"
+                ? "border-amber-500/50 bg-accent/20"
                 : "border-border bg-card"
             }`}
           >
@@ -125,11 +125,11 @@ export function PainelInventario({
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5 font-bold text-foreground">
                   {item.paranormal && (
-                    <Sparkles className="size-3.5 text-amber-400 shrink-0" />
+                    <Sparkles className="size-3.5 text-accent-ink shrink-0" />
                   )}
                   <span className="truncate">{item.nome}</span>
                   {item.dano && (
-                    <span className="text-[10px] text-amber-400 font-semibold shrink-0">
+                    <span className="text-[10px] text-accent-ink font-semibold shrink-0">
                       [{item.dano} dano {item.espectroDano}]
                     </span>
                   )}

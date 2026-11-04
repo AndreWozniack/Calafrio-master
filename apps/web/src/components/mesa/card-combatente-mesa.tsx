@@ -38,7 +38,7 @@ export function CardCombatenteMesa({
     <div
       className={`p-4 rounded-md border-2 flex flex-col justify-between space-y-3 transition-all ${
         ehVezDeste
-          ? "border-amber-400 bg-amber-950/20 shadow-lg scale-[1.01]"
+          ? "border-amber-400 bg-accent/20 shadow-lg scale-[1.01]"
           : "border-border bg-card"
       }`}
     >
@@ -75,11 +75,11 @@ export function CardCombatenteMesa({
               {c.pvAtual} / {c.pvMax}
             </span>
           </div>
-          <div className="p-2 rounded bg-cyan-950/30 border border-cyan-800/40">
-            <span className="text-cyan-300 block text-[10px] uppercase">
+          <div className="p-2 rounded bg-info/10 border border-info/40">
+            <span className="text-info block text-[10px] uppercase">
               ÂNIMUM (PA)
             </span>
-            <span className="text-lg font-black text-cyan-400">
+            <span className="text-lg font-black text-info">
               {c.paAtual} / {c.paMax}
             </span>
           </div>

@@ -60,7 +60,7 @@ export function PainelPalavrasChave({
             key={pc.id}
             className={`flex items-center justify-between p-2 rounded border text-xs sm:text-sm ${
               pc.semConsumirLimite
-                ? "border-amber-500/40 bg-amber-500/10 text-amber-200"
+                ? "border-amber-500/40 bg-amber-500/10 text-accent-ink"
                 : "border-border bg-card/60"
             }`}
           >
@@ -72,7 +72,7 @@ export function PainelPalavrasChave({
                 {pc.nome}
               </span>
               {pc.concedidaPor && (
-                <span className="text-[10px] text-amber-400 font-semibold truncate">
+                <span className="text-[10px] text-accent-ink font-semibold truncate">
                   (concedida por {pc.concedidaPor})
                 </span>
               )}

@@ -94,7 +94,7 @@ export function VisaoBiblioteca() {
                 key={g.termo}
                 className="p-3 rounded bg-muted/30 border border-border"
               >
-                <div className="font-black text-sm text-amber-400 mb-1">
+                <div className="font-black text-sm text-accent-ink mb-1">
                   {g.termo}
                 </div>
                 <p className="text-xs text-foreground/80 leading-relaxed">

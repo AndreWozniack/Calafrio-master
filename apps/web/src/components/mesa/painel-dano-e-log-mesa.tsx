@@ -70,7 +70,7 @@ export function PainelDanoELogMesa({
                 min={0}
                 value={paMitigar}
                 onChange={(e) => setPaMitigar(Number(e.target.value))}
-                className="w-full bg-muted p-2 rounded border border-border font-bold text-center text-cyan-400"
+                className="w-full bg-muted p-2 rounded border border-border font-bold text-center text-info"
               />
             </div>
           </div>

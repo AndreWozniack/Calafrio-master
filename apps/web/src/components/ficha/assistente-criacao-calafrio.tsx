@@ -161,7 +161,7 @@ export function AssistenteCriacaoCalafrio({
               </div>
 
               <div className="p-3 bg-muted/30 rounded border border-border space-y-1">
-                <span className="font-bold text-amber-300">
+                <span className="font-bold text-accent-ink">
                   Valores derivados para APT {ficha.aptBase}:
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-center font-bold">
@@ -198,15 +198,15 @@ export function AssistenteCriacaoCalafrio({
                   onClick={sortearOcupacao}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border rounded font-bold cursor-pointer"
                 >
-                  <Dices className="size-3.5 text-amber-400" /> Sortear Ocupação
-                  (d100)
+                  <Dices className="size-3.5 text-accent-ink" /> Sortear
+                  Ocupação (d100)
                 </button>
                 <button
                   type="button"
                   onClick={() => sortearPalavra("talento")}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border rounded font-bold cursor-pointer"
                 >
-                  <Dices className="size-3.5 text-amber-400" /> Sortear Talento
+                  <Dices className="size-3.5 text-accent-ink" /> Sortear Talento
                   (d100)
                 </button>
                 <button
@@ -214,7 +214,7 @@ export function AssistenteCriacaoCalafrio({
                   onClick={() => sortearPalavra("falha")}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border rounded font-bold cursor-pointer"
                 >
-                  <Dices className="size-3.5 text-amber-400" /> Sortear Falha
+                  <Dices className="size-3.5 text-accent-ink" /> Sortear Falha
                   (d100)
                 </button>
               </div>
@@ -257,7 +257,7 @@ export function AssistenteCriacaoCalafrio({
                 APT).
               </p>
               <div className="p-3 bg-muted/40 rounded border border-border space-y-2">
-                <span className="font-bold text-amber-300">
+                <span className="font-bold text-accent-ink">
                   Regra de Domínio:
                 </span>
                 <p className="text-[11px] text-muted-foreground">

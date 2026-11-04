@@ -14,8 +14,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className="antialiased min-h-screen flex flex-col bg-[#0E0E11] text-[#F4F4F2]">
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: script estático anti-flash do tema
+          dangerouslySetInnerHTML={{
+            __html:
+              'try{if(localStorage.getItem("calafrio:tema:v1")==="escuro")document.documentElement.classList.add("dark")}catch(e){}',
+          }}
+        />
+      </head>
+      <body className="antialiased min-h-screen flex flex-col bg-background text-foreground">
         <BarraTopo />
         <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6">
           {children}

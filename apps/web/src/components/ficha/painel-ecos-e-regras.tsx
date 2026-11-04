@@ -89,7 +89,7 @@ export function PainelEcosERegras({
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-amber-300 text-sm">
+                  <span className="font-bold text-accent-ink text-sm">
                     {u.nome}
                   </span>
                   <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
@@ -128,7 +128,7 @@ export function PainelEcosERegras({
         onSubmit={lidarCriarUnica}
         className="p-3 bg-muted/30 rounded border border-border space-y-3"
       >
-        <div className="flex items-center gap-1.5 font-bold text-xs text-amber-400">
+        <div className="flex items-center gap-1.5 font-bold text-xs text-accent-ink">
           <Sparkles className="size-3.5" />
           <span>Criar Nova Habilidade Única (1 Eco)</span>
         </div>

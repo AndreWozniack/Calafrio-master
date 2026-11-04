@@ -54,7 +54,7 @@ export function FichaCriaturaAtiva({
           />
           <div className="text-xs text-muted-foreground mt-0.5">
             Categoria:{" "}
-            <span className="uppercase font-bold text-amber-400">
+            <span className="uppercase font-bold text-accent-ink">
               {criatura.categoria}
             </span>
           </div>
@@ -87,15 +87,15 @@ export function FichaCriaturaAtiva({
             className="w-full text-center text-xl font-black text-red-400 bg-transparent mt-1"
           />
         </div>
-        <div className="p-3 bg-muted/40 rounded border border-cyan-900/40 text-center">
-          <span className="calafrio-tag-sm mb-1 bg-cyan-950 text-cyan-200">
+        <div className="p-3 bg-muted/40 rounded border border-info/40 text-center">
+          <span className="calafrio-tag-sm mb-1 bg-info/10 text-info">
             ÂNIMUM (PA)
           </span>
           <input
             type="number"
             value={criatura.paMax}
             onChange={(e) => onAtualizar({ paMax: Number(e.target.value) })}
-            className="w-full text-center text-xl font-black text-cyan-400 bg-transparent mt-1"
+            className="w-full text-center text-xl font-black text-info bg-transparent mt-1"
           />
         </div>
         <div className="p-3 bg-muted/40 rounded border border-border text-center">
@@ -137,7 +137,7 @@ export function FichaCriaturaAtiva({
                       : estado === "vulneravel"
                         ? "bg-red-950/60 border-red-500 text-red-200"
                         : estado === "imune"
-                          ? "bg-amber-950/60 border-amber-400 text-amber-200"
+                          ? "bg-accent/20 border-amber-400 text-accent-ink"
                           : "bg-card border-border text-muted-foreground"
                   }`}
                 >
@@ -183,7 +183,7 @@ export function FichaCriaturaAtiva({
               <option value="alvo">Alvo</option>
             </select>
           </label>
-          <span className="font-black text-amber-300">
+          <span className="font-black text-accent-ink">
             ➔ Dano Efetivo na Criatura: {danoFinalCalculado} PV
           </span>
         </div>

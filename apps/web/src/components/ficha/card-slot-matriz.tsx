@@ -40,7 +40,7 @@ export function CardSlotMatriz({
       >
         <div className="flex items-center justify-between">
           <span className="calafrio-tag-sm">{rotuloSlot}</span>
-          <span className="text-[11px] text-muted-foreground group-hover:text-amber-400 flex items-center gap-1 font-medium">
+          <span className="text-[11px] text-muted-foreground group-hover:text-accent-ink flex items-center gap-1 font-medium">
             <Plus className="size-3.5" /> Alocar
           </span>
         </div>
@@ -85,13 +85,13 @@ export function CardSlotMatriz({
         </div>
 
         <div>
-          <div className="font-black text-sm text-amber-300 leading-tight">
+          <div className="font-black text-sm text-accent-ink leading-tight">
             {unica?.nome ?? "Habilidade Única"}
           </div>
           <div className="text-[10px] text-muted-foreground flex items-center gap-2 mt-0.5">
             <span className="capitalize">{unica?.tipoAcao ?? "Padrão"}</span>
             <span>·</span>
-            <span className="font-bold text-amber-400">
+            <span className="font-bold text-accent-ink">
               {unica?.custo ?? 3} {unica?.recurso?.toUpperCase() ?? "PA"}
             </span>
           </div>
@@ -101,7 +101,7 @@ export function CardSlotMatriz({
         </div>
 
         <div className="flex items-center justify-between mt-2 pt-1 border-t border-border/50 text-[10px] text-muted-foreground">
-          <span className="text-amber-400 font-semibold">★ Eco Único</span>
+          <span className="text-accent-ink font-semibold">★ Eco Único</span>
         </div>
       </div>
     );
@@ -149,7 +149,7 @@ export function CardSlotMatriz({
         <div className="text-[10px] text-muted-foreground flex items-center gap-2 mt-0.5">
           <span className="capitalize">{hab?.tipoAcao}</span>
           <span>·</span>
-          <span className="font-bold text-amber-400">
+          <span className="font-bold text-accent-ink">
             {hab?.custoPA === 0 ? "Passiva (0 PA)" : `${hab?.custoPA} PA`}
           </span>
           {hab?.permiteCustoEmPV && (
