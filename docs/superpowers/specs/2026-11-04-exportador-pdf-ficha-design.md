@@ -90,32 +90,36 @@ O PDF oficial possui dimensões A4 exatas:
 
 #### Página 1 (Frente da Ficha)
 1. **Identidade:**
-   - `nome`: Nome do Investigador (texto)
-   - `ocupacao`: Ocupação / Conceito (texto)
-   - `apt`: Aptidão (número formatado)
+   - `nome`: Nome do Investigador (campo de texto sobre a linha de nome)
+   - `apt`: Aptidão (campo numérico centralizado)
+   - Retrato do Investigador: Se `ficha.retratoUrl` estiver preenchido (data URL ou URL acessível), é desenhado na caixa de ilustração; caso contrário, a caixa permanece livre para desenho/foto física.
 2. **Vitais:**
    - `pv_atual`: PV Atual
    - `pv_max`: PV Máximo
    - `pa_atual`: PA Atual
    - `pa_max`: PA Máximo
    - `pd`: Pontos de Defesa
-3. **Palavras-chave:**
-   - Linhas de 1 a 6 com nome, tipo e bônus da palavra-chave.
+   - `ecos`: Quantidade de Ecos (igual a APT)
+3. **Palavras-chave (9 linhas):**
+   - Seguindo rigorosamente a distribuição oficial (`distribuirLinhas`):
+     - Linha 1: Ocupação do personagem
+     - Linha 2: Talento
+     - Linha 3: Falha
+     - Linhas 4 a 9: Demais palavras-chave livres
+   - Cada linha possui campo de texto editável com o nome da palavra-chave.
 4. **Inventário & Equipamento:**
-   - Slots de armas e equipamentos (nome, atributos, dano, slots ocupados).
-   - Bugigangas e itens gerais.
-5. **Carteira & Recursos:**
-   - Fundos e Espírions.
-6. **Anotações da Frente:** Bloco livre para notas do investigador.
+   - Caixa oficial de Inventário mapeada com campo de texto multilinhas formatado, listando armas e itens com indicador de status (`[E]` para equipado), dano, espectro e descrição. Permite que o jogador digite, adicione ou apague itens livremente no leitor de PDF.
+5. **Carteira:**
+   - `fundos`: Valor de Fundos
+   - `espirions`: Valor de Espírions
 
 #### Página 2 (Verso da Ficha - Matriz de Habilidades)
-1. **Slots da Matriz de Alinhamento (1 a 12):**
-   - Nome da habilidade alocada.
-   - Domínio / Personalidade (Ex: Sangue / Negativo / Positivo).
-   - Tipo de Ação (Ação, Reação, Suporte, Passiva) e Custo de PA.
-   - Resumo do efeito ou texto da habilidade.
-2. **Ecos & Cicatrizes:**
-   - Lista de Ecos ativos, modificadores e anotações paranormais.
+1. **Slots da Matriz de Alinhamento (9 slots no grid 3x3):**
+   - Cada um dos 9 slots oficiais possui:
+     - Campo de Título: Nome da Habilidade Paranormal alocada (ou Habilidade Única)
+     - Campo de Descrição (multilinhas sobre as linhas pautadas): Custo de PA, Tipo de Ação, Personalidade/Domínio e resumo do efeito.
+2. **Anotações:**
+   - Campo de texto multilinhas cobrindo a caixa oficial de "Anotações" no rodapé da página 2, pré-preenchido com `ficha.anotacoes` e resumo de Ecos ativos/cicatrizes (se houver), 100% editável pelo jogador.
 
 ### 4.4 Experiência do Usuário (UI)
 - No cabeçalho de [ficha-live-client.tsx](file:///Users/andrewozniack/Documents/Calafrio-master/apps/web/src/app/mesa/[mesaId]/players/[playerId]/ficha/ficha-live-client.tsx):
