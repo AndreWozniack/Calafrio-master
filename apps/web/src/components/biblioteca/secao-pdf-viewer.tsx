@@ -9,10 +9,12 @@ export function SecaoPdfViewer() {
   );
 
   return (
-    <div className="calafrio-card p-4 space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
-        <span className="calafrio-tag">DOCUMENTOS OFICIAIS (PDF)</span>
-        <div className="flex flex-wrap gap-2 text-xs font-bold">
+    <div className="calafrio-card p-5 space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-border pb-4">
+        <span className="calafrio-tag text-xs sm:text-sm">
+          DOCUMENTOS OFICIAIS (PDF)
+        </span>
+        <div className="flex flex-wrap items-center gap-2 text-sm sm:text-base font-black">
           <button
             type="button"
             onClick={() =>
@@ -20,10 +22,10 @@ export function SecaoPdfViewer() {
                 "/assets/calafrio/2e-V1HabilidadesParanormais_Calafrio.pdf",
               )
             }
-            className={`px-3 py-1.5 rounded cursor-pointer ${
+            className={`px-4 py-2 rounded-md cursor-pointer transition-all ${
               pdfAtivo.includes("Habilidades")
-                ? "bg-amber-400 text-black"
-                : "bg-muted text-muted-foreground"
+                ? "bg-amber-400 text-black shadow-xs"
+                : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
             Habilidades Paranormais
@@ -33,10 +35,10 @@ export function SecaoPdfViewer() {
             onClick={() =>
               setPdfAtivo("/assets/calafrio/2e-V1FichaConsulta_Calafrio.pdf")
             }
-            className={`px-3 py-1.5 rounded cursor-pointer ${
+            className={`px-4 py-2 rounded-md cursor-pointer transition-all ${
               pdfAtivo.includes("Consulta")
-                ? "bg-amber-400 text-black"
-                : "bg-muted text-muted-foreground"
+                ? "bg-amber-400 text-black shadow-xs"
+                : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
             Ficha de Consulta Rápida
@@ -46,10 +48,10 @@ export function SecaoPdfViewer() {
             onClick={() =>
               setPdfAtivo("/assets/calafrio/2e-V1_FichaPersonagem_Calafrio.pdf")
             }
-            className={`px-3 py-1.5 rounded cursor-pointer ${
+            className={`px-4 py-2 rounded-md cursor-pointer transition-all ${
               pdfAtivo.includes("FichaPersonagem")
-                ? "bg-amber-400 text-black"
-                : "bg-muted text-muted-foreground"
+                ? "bg-amber-400 text-black shadow-xs"
+                : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
             Ficha de Personagem
@@ -58,9 +60,9 @@ export function SecaoPdfViewer() {
             href={pdfAtivo}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-1 px-3 py-1.5 bg-muted hover:bg-border rounded text-muted-foreground hover:text-foreground cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 bg-muted hover:bg-border rounded-md text-sm sm:text-base font-bold text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
           >
-            <ExternalLink className="size-3.5" /> Abrir em Nova Aba
+            <ExternalLink className="size-4" /> Abrir em Nova Aba
           </a>
         </div>
       </div>

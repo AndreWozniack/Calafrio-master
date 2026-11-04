@@ -79,3 +79,40 @@ export function AbasFicharioDossie({
     </div>
   );
 }
+
+export function BotoesPaginacaoRodape({
+  pagina,
+  onVirar,
+  className = "",
+}: {
+  pagina: PaginaFicha;
+  onVirar: (alvo: PaginaFicha) => void;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`mt-4 flex items-center justify-center gap-2.5 text-xs font-bold ${className}`}
+    >
+      {(
+        [
+          ["frente", "1 · Identidade"],
+          ["verso", "2 · Matriz"],
+          ["ecos", "3 · Ecos & Aprimoramentos"],
+        ] as const
+      ).map(([alvo, rotulo]) => (
+        <button
+          key={alvo}
+          type="button"
+          onClick={() => onVirar(alvo)}
+          className={`cursor-pointer rounded-full px-4 py-1.5 border border-black transition-all ${
+            pagina === alvo
+              ? "bg-black text-white shadow-[1px_1px_0px_#000]"
+              : "bg-white text-black hover:bg-black/10"
+          }`}
+        >
+          {rotulo}
+        </button>
+      ))}
+    </div>
+  );
+}

@@ -30,49 +30,49 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2 calafrio-card p-4">
-        <span className="calafrio-tag">SORTEADOR D100:</span>
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center gap-3 calafrio-card p-5">
+        <span className="calafrio-tag text-xs sm:text-sm">SORTEADOR D100:</span>
         <button
           type="button"
           onClick={() => sortearTabela("ocupacoes")}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-400 text-black font-bold text-xs rounded cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2 bg-amber-400 text-black font-black text-sm sm:text-base rounded-md cursor-pointer hover:bg-amber-300 transition-all shadow-xs"
         >
-          <Dices className="size-3.5" /> Sortear Ocupação
+          <Dices className="size-4" /> Sortear Ocupação
         </button>
         <button
           type="button"
           onClick={() => sortearTabela("palavras")}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-400 text-black font-bold text-xs rounded cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2 bg-amber-400 text-black font-black text-sm sm:text-base rounded-md cursor-pointer hover:bg-amber-300 transition-all shadow-xs"
         >
-          <Dices className="size-3.5" /> Sortear Palavra-chave
+          <Dices className="size-4" /> Sortear Palavra-chave
         </button>
         <button
           type="button"
           onClick={() => sortearTabela("bugigangas")}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-400 text-black font-bold text-xs rounded cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2 bg-amber-400 text-black font-black text-sm sm:text-base rounded-md cursor-pointer hover:bg-amber-300 transition-all shadow-xs"
         >
-          <Dices className="size-3.5" /> Sortear Bugiganga
+          <Dices className="size-4" /> Sortear Bugiganga
         </button>
       </div>
 
       {itemSorteado && (
-        <div className="p-3 bg-amber-500/15 border border-amber-500/50 rounded font-black text-sm text-accent-ink animate-in fade-in">
+        <div className="p-4 bg-amber-500/15 border-2 border-amber-500/50 rounded-md font-black text-base sm:text-lg text-accent-ink animate-in fade-in shadow-xs">
           {itemSorteado}
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Ocupações */}
-        <div className="calafrio-card p-4 space-y-2">
-          <span className="calafrio-tag-sm">100 OCUPAÇÕES</span>
-          <div className="max-h-96 overflow-y-auto space-y-1 text-xs pr-1">
+        <div className="calafrio-card p-5 space-y-3">
+          <span className="calafrio-tag text-xs sm:text-sm">100 OCUPAÇÕES</span>
+          <div className="max-h-96 overflow-y-auto space-y-1.5 text-sm sm:text-base pr-2">
             {catalogo.ocupacoes.map((item) => (
               <div
                 key={item.numero}
-                className="flex gap-2 py-1 border-b border-border/40"
+                className="flex items-baseline gap-2.5 py-1.5 border-b border-border/40 font-medium text-foreground"
               >
-                <span className="w-7 font-black text-accent-ink shrink-0">
+                <span className="w-9 font-black text-accent-ink shrink-0 text-sm sm:text-base">
                   {item.numero}.
                 </span>
                 <span>{item.nome}</span>
@@ -82,15 +82,15 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
         </div>
 
         {/* Palavras-chave Genéricas */}
-        <div className="calafrio-card p-4 space-y-2">
-          <span className="calafrio-tag-sm">100 PALAVRAS-CHAVE</span>
-          <div className="max-h-96 overflow-y-auto space-y-1 text-xs pr-1">
+        <div className="calafrio-card p-5 space-y-3">
+          <span className="calafrio-tag text-xs sm:text-sm">100 PALAVRAS-CHAVE</span>
+          <div className="max-h-96 overflow-y-auto space-y-1.5 text-sm sm:text-base pr-2">
             {catalogo.palavrasChaveGenericas.map((item) => (
               <div
                 key={item.numero}
-                className="flex gap-2 py-1 border-b border-border/40"
+                className="flex items-baseline gap-2.5 py-1.5 border-b border-border/40 font-medium text-foreground"
               >
-                <span className="w-7 font-black text-accent-ink shrink-0">
+                <span className="w-9 font-black text-accent-ink shrink-0 text-sm sm:text-base">
                   {item.numero}.
                 </span>
                 <span>{item.nome}</span>
@@ -100,15 +100,15 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
         </div>
 
         {/* Bugigangas */}
-        <div className="calafrio-card p-4 space-y-2">
-          <span className="calafrio-tag-sm">100 BUGIGANGAS</span>
-          <div className="max-h-96 overflow-y-auto space-y-1 text-xs pr-1">
+        <div className="calafrio-card p-5 space-y-3">
+          <span className="calafrio-tag text-xs sm:text-sm">100 BUGIGANGAS</span>
+          <div className="max-h-96 overflow-y-auto space-y-1.5 text-sm sm:text-base pr-2">
             {catalogo.bugigangas.map((item) => (
               <div
                 key={item.numero}
-                className="flex gap-2 py-1 border-b border-border/40"
+                className="flex items-baseline gap-2.5 py-1.5 border-b border-border/40 font-medium text-foreground"
               >
-                <span className="w-7 font-black text-accent-ink shrink-0">
+                <span className="w-9 font-black text-accent-ink shrink-0 text-sm sm:text-base">
                   {item.numero}.
                 </span>
                 <span>{item.nome}</span>

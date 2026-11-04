@@ -13,6 +13,7 @@ import { PaginaFrenteFicha } from "./pagina-frente-ficha";
 import { PaginaVersoMatriz } from "./pagina-verso-matriz";
 import {
   AbasFicharioDossie,
+  BotoesPaginacaoRodape,
   SetaVirar,
 } from "./papel/controles-navegacao-papel";
 
@@ -373,30 +374,11 @@ export function VisualizadorPapel({
       )}
 
       {/* Controles de Paginação Rodapé */}
-      <div
-        className={`mt-4 flex items-center justify-center gap-2.5 text-xs font-bold ${controlesVisiveis}`}
-      >
-        {(
-          [
-            ["frente", "1 · Identidade"],
-            ["verso", "2 · Matriz"],
-            ["ecos", "3 · Ecos & Aprimoramentos"],
-          ] as const
-        ).map(([alvo, rotulo]) => (
-          <button
-            key={alvo}
-            type="button"
-            onClick={() => virar(alvo)}
-            className={`cursor-pointer rounded-full px-4 py-1.5 border border-black transition-all ${
-              pagina === alvo
-                ? "bg-black text-white shadow-[1px_1px_0px_#000]"
-                : "bg-white text-black hover:bg-black/10"
-            }`}
-          >
-            {rotulo}
-          </button>
-        ))}
-      </div>
+      <BotoesPaginacaoRodape
+        pagina={pagina}
+        onVirar={virar}
+        className={controlesVisiveis}
+      />
     </div>
   );
 }

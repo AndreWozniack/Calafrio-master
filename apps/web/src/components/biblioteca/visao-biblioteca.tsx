@@ -17,15 +17,15 @@ export function VisaoBiblioteca() {
   return (
     <div className="space-y-6">
       {/* Navegação de Abas da Biblioteca */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-card border border-border rounded-md shadow-sm">
-        <div className="flex flex-wrap items-center gap-1.5 text-xs font-bold">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-card border-2 border-border rounded-md shadow-sm">
+        <div className="flex flex-wrap items-center gap-2 text-sm sm:text-base font-black">
           <button
             type="button"
             onClick={() => setAbaAtiva("habilidades")}
-            className={`px-3 py-1.5 rounded cursor-pointer transition-colors ${
+            className={`px-4 py-2 rounded-md cursor-pointer transition-all ${
               abaAtiva === "habilidades"
-                ? "bg-amber-400 text-black"
-                : "bg-muted text-muted-foreground hover:text-foreground"
+                ? "bg-amber-400 text-black shadow-sm"
+                : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
             }`}
           >
             ✨ 60 Habilidades
@@ -33,10 +33,10 @@ export function VisaoBiblioteca() {
           <button
             type="button"
             onClick={() => setAbaAtiva("tabelas")}
-            className={`px-3 py-1.5 rounded cursor-pointer transition-colors ${
+            className={`px-4 py-2 rounded-md cursor-pointer transition-all ${
               abaAtiva === "tabelas"
-                ? "bg-amber-400 text-black"
-                : "bg-muted text-muted-foreground hover:text-foreground"
+                ? "bg-amber-400 text-black shadow-sm"
+                : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
             }`}
           >
             🎲 Tabelas d100
@@ -44,10 +44,10 @@ export function VisaoBiblioteca() {
           <button
             type="button"
             onClick={() => setAbaAtiva("arsenal")}
-            className={`px-3 py-1.5 rounded cursor-pointer transition-colors ${
+            className={`px-4 py-2 rounded-md cursor-pointer transition-all ${
               abaAtiva === "arsenal"
-                ? "bg-amber-400 text-black"
-                : "bg-muted text-muted-foreground hover:text-foreground"
+                ? "bg-amber-400 text-black shadow-sm"
+                : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
             }`}
           >
             ⚔️ Arsenal & Suporte
@@ -55,10 +55,10 @@ export function VisaoBiblioteca() {
           <button
             type="button"
             onClick={() => setAbaAtiva("glossario")}
-            className={`px-3 py-1.5 rounded cursor-pointer transition-colors ${
+            className={`px-4 py-2 rounded-md cursor-pointer transition-all ${
               abaAtiva === "glossario"
-                ? "bg-amber-400 text-black"
-                : "bg-muted text-muted-foreground hover:text-foreground"
+                ? "bg-amber-400 text-black shadow-sm"
+                : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
             }`}
           >
             📖 Glossário
@@ -66,10 +66,10 @@ export function VisaoBiblioteca() {
           <button
             type="button"
             onClick={() => setAbaAtiva("pdfs")}
-            className={`px-3 py-1.5 rounded cursor-pointer transition-colors ${
+            className={`px-4 py-2 rounded-md cursor-pointer transition-all ${
               abaAtiva === "pdfs"
-                ? "bg-amber-400 text-black"
-                : "bg-muted text-muted-foreground hover:text-foreground"
+                ? "bg-amber-400 text-black shadow-sm"
+                : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
             }`}
           >
             📑 PDFs Oficiais
@@ -86,18 +86,20 @@ export function VisaoBiblioteca() {
       {abaAtiva === "arsenal" && <SecaoArsenalESuporte catalogo={catalogo} />}
 
       {abaAtiva === "glossario" && (
-        <div className="calafrio-card p-4 space-y-3">
-          <span className="calafrio-tag">GLOSSÁRIO OFICIAL — CALAFRIO 2E</span>
-          <div className="entrada-lista grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+        <div className="calafrio-card p-5 space-y-4">
+          <span className="calafrio-tag text-xs sm:text-sm">
+            GLOSSÁRIO OFICIAL — CALAFRIO 2E
+          </span>
+          <div className="entrada-lista grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
             {catalogo.glossario.map((g) => (
               <div
                 key={g.termo}
-                className="p-3 rounded bg-muted/30 border border-border"
+                className="p-4 rounded-md bg-muted/40 border border-border shadow-xs"
               >
-                <div className="font-black text-sm text-accent-ink mb-1">
+                <div className="font-black text-base sm:text-lg text-accent-ink mb-1.5">
                   {g.termo}
                 </div>
-                <p className="text-xs text-foreground/80 leading-relaxed">
+                <p className="text-sm sm:text-base text-foreground/90 leading-relaxed font-medium">
                   {g.definicao}
                 </p>
               </div>

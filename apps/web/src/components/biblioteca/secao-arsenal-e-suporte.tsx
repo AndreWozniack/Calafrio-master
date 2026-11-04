@@ -9,37 +9,39 @@ interface SecaoArsenalESuporteProps {
 export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
   return (
     <div className="space-y-6">
-      <div className="calafrio-card p-4 space-y-3">
-        <span className="calafrio-tag">TABELA DE ARMAS MUNDANAS (ARSENAL)</span>
+      <div className="calafrio-card p-5 space-y-4">
+        <span className="calafrio-tag text-xs sm:text-sm">
+          TABELA DE ARMAS MUNDANAS (ARSENAL)
+        </span>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full text-left text-sm sm:text-base border-collapse">
             <thead>
-              <tr className="border-b border-border text-muted-foreground uppercase">
-                <th className="py-2 pr-3">Categoria</th>
-                <th className="py-2 pr-3">Tipo</th>
-                <th className="py-2 pr-3">Preço</th>
-                <th className="py-2 pr-3">Dano</th>
-                <th className="py-2 pr-3">Exemplos</th>
-                <th className="py-2">Propriedades</th>
+              <tr className="border-b-2 border-border text-foreground/80 uppercase text-xs sm:text-sm font-black">
+                <th className="py-2.5 pr-4">Categoria</th>
+                <th className="py-2.5 pr-4">Tipo</th>
+                <th className="py-2.5 pr-4">Preço</th>
+                <th className="py-2.5 pr-4">Dano</th>
+                <th className="py-2.5 pr-4">Exemplos</th>
+                <th className="py-2.5">Propriedades</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border/50">
+            <tbody className="divide-y divide-border/60">
               {catalogo.armasMundanas.map((arma) => (
-                <tr key={arma.id} className="hover:bg-muted/30">
-                  <td className="py-2 font-bold text-foreground">
+                <tr key={arma.id} className="hover:bg-muted/40 transition-colors">
+                  <td className="py-3 font-black text-foreground">
                     {arma.categoria}
                   </td>
-                  <td className="py-2 text-muted-foreground">
+                  <td className="py-3 text-foreground/80 font-medium">
                     {arma.tipoAlcance}
                   </td>
-                  <td className="py-2 font-bold text-accent-ink">
+                  <td className="py-3 font-black text-amber-600 dark:text-amber-400">
                     {arma.precoFundos} F$
                   </td>
-                  <td className="py-2 font-black">{arma.dano}</td>
-                  <td className="py-2 text-muted-foreground">
+                  <td className="py-3 font-black text-foreground">{arma.dano}</td>
+                  <td className="py-3 text-muted-foreground font-medium">
                     {arma.exemplos}
                   </td>
-                  <td className="py-2 text-[11px] text-foreground/80">
+                  <td className="py-3 text-xs sm:text-sm text-foreground/90 font-medium leading-snug">
                     {arma.propriedades.join(" ")}
                   </td>
                 </tr>
@@ -49,19 +51,19 @@ export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="calafrio-card p-4 space-y-2">
-          <span className="calafrio-tag-sm">FAMILIARES (1d6)</span>
-          <div className="space-y-2 text-xs">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="calafrio-card p-5 space-y-3">
+          <span className="calafrio-tag text-xs sm:text-sm">FAMILIARES (1d6)</span>
+          <div className="space-y-2.5 text-sm">
             {catalogo.familiares.map((f) => (
               <div
                 key={f.dado}
-                className="p-2 rounded bg-muted/40 border border-border"
+                className="p-3 rounded-md bg-muted/40 border border-border shadow-xs"
               >
-                <div className="font-bold text-accent-ink">
+                <div className="font-black text-base text-accent-ink">
                   {f.dado}. {f.nome}
                 </div>
-                <p className="text-[11px] text-foreground/80 mt-1">
+                <p className="text-xs sm:text-sm text-foreground/90 mt-1.5 leading-relaxed font-medium">
                   {f.propriedades}
                 </p>
               </div>
@@ -69,22 +71,21 @@ export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
           </div>
         </div>
 
-        <div className="calafrio-card p-4 space-y-2">
-          <span className="calafrio-tag-sm">LACAIOS (1d6)</span>
-          <div className="space-y-2 text-xs">
+        <div className="calafrio-card p-5 space-y-3">
+          <span className="calafrio-tag text-xs sm:text-sm">LACAIOS (1d6)</span>
+          <div className="space-y-2.5 text-sm">
             {catalogo.lacaios.map((l) => (
               <div
                 key={l.dado}
-                className="p-2 rounded bg-muted/40 border border-border"
+                className="p-3 rounded-md bg-muted/40 border border-border shadow-xs"
               >
-                <div className="font-bold text-accent-ink">
+                <div className="font-black text-base text-accent-ink">
                   {l.dado}. {l.nome}
                 </div>
-                <div className="text-[10px] text-muted-foreground font-bold">
-                  {l.pv} PV · {l.pd} PD · +{l.aptBonus} APT · {l.velocidade}m
-                  VEL
+                <div className="text-xs sm:text-sm text-muted-foreground font-bold mt-0.5">
+                  {l.pv} PV · {l.pd} PD · +{l.aptBonus} APT · {l.velocidade}m VEL
                 </div>
-                <p className="text-[11px] text-foreground/80 mt-1">
+                <p className="text-xs sm:text-sm text-foreground/90 mt-1.5 leading-relaxed font-medium">
                   {l.propriedades}
                 </p>
               </div>
@@ -92,18 +93,18 @@ export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
           </div>
         </div>
 
-        <div className="calafrio-card p-4 space-y-2">
-          <span className="calafrio-tag-sm">DJANHOS (1d6)</span>
-          <div className="space-y-2 text-xs">
+        <div className="calafrio-card p-5 space-y-3">
+          <span className="calafrio-tag text-xs sm:text-sm">DJANHOS (1d6)</span>
+          <div className="space-y-2.5 text-sm">
             {catalogo.djanhos.map((d) => (
               <div
                 key={d.dado}
-                className="p-2 rounded bg-muted/40 border border-border"
+                className="p-3 rounded-md bg-muted/40 border border-border shadow-xs"
               >
-                <div className="font-bold text-accent-ink">
+                <div className="font-black text-base text-accent-ink">
                   {d.dado}. {d.nome}
                 </div>
-                <p className="text-[11px] text-foreground/80 mt-1">
+                <p className="text-xs sm:text-sm text-foreground/90 mt-1.5 leading-relaxed font-medium">
                   {d.propriedades}
                 </p>
               </div>
