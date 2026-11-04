@@ -48,7 +48,7 @@ export function FichaLiveClient({
   });
 
   const [pagina, setPagina] = useState<PaginaFicha>("frente");
-  const [modo, setModo] = useState<ModoVisualizacao>("duas");
+  const [modo, setModo] = useState<ModoVisualizacao>("uma");
   const [mostrarRolagem, setMostrarRolagem] = useState(false);
   const [mostrarDanoCura, setMostrarDanoCura] = useState(false);
   const [palavraChaveRolagem, setPalavraChaveRolagem] = useState<string>();
@@ -60,7 +60,13 @@ export function FichaLiveClient({
 
   return (
     <div className="space-y-5">
-      <div className="hidden sm:block lg:relative lg:left-1/2 lg:w-[min(96vw,1700px)] lg:-translate-x-1/2">
+      <div
+        className={`hidden sm:block ${
+          modo === "duas"
+            ? "lg:relative lg:left-1/2 lg:w-[min(96vw,1700px)] lg:-translate-x-1/2"
+            : "mx-auto max-w-[920px]"
+        }`}
+      >
         <div className="mb-5 flex w-full flex-wrap items-center justify-between gap-2 rounded-sm border-2 border-black bg-[#f7f7f5] p-2.5 shadow-[2px_2px_0px_#000]">
           <div className="flex items-center gap-2">
             <Link href={`/mesa/${mesaId}/players`} className={botaoClaro}>
@@ -69,8 +75,8 @@ export function FichaLiveClient({
             <div className="hidden rounded-sm border border-black bg-white p-0.5 lg:inline-flex">
               {(
                 [
-                  ["duas", "Duas páginas", Columns2],
                   ["uma", "Uma página", BookOpen],
+                  ["duas", "Duas páginas", Columns2],
                 ] as const
               ).map(([id, rotulo, Icone]) => (
                 <button
@@ -135,6 +141,7 @@ export function FichaLiveClient({
       <div className="sm:hidden">
         <FichaCelular
           f={f}
+          voltarHref={`/mesa/${mesaId}/players`}
           onAbrirRolagem={abrirRolagem}
           onAbrirDanoCura={() => setMostrarDanoCura(true)}
         />

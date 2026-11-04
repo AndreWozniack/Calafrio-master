@@ -16,7 +16,7 @@ function CartaoVital({
   return (
     <CartaoPapel className="space-y-1.5">
       <EtiquetaCelular>{rotulo}</EtiquetaCelular>
-      <div className="flex min-h-11 items-center justify-between gap-1">
+      <div className="flex min-h-10 items-center justify-between gap-1">
         {children}
       </div>
       <div className="text-right text-[9px] font-bold uppercase italic text-black/60">
@@ -28,7 +28,7 @@ function CartaoVital({
 
 function ValorGrande({ children }: { children: React.ReactNode }) {
   return (
-    <span className="flex-1 text-center text-3xl font-extrabold leading-none">
+    <span className="min-w-0 flex-1 text-center text-2xl font-extrabold leading-none">
       {children}
     </span>
   );
@@ -70,7 +70,7 @@ export function VitaisCelular({
   derivada: FichaDerivadaCalafrio;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-3 [&>*]:min-w-0">
       <CartaoVital rotulo="Vida (PV)" legenda="= 3 + 3*APT">
         <Ajustavel
           valor={derivada.pvAtual}

@@ -2,6 +2,7 @@
 
 import {
   Backpack,
+  ArrowLeft,
   Dices,
   Grid3x3,
   ImagePlus,
@@ -10,6 +11,7 @@ import {
   Sun,
   User,
 } from "lucide-react";
+import Link from "next/link";
 import { useRef, useState } from "react";
 import type { FichaViva } from "../fichas-tipos";
 import { lerImagemRedimensionada } from "../papel/retrato-papel";
@@ -125,10 +127,12 @@ function AcoesRapidas({
 
 export function FichaCelular({
   f,
+  voltarHref,
   onAbrirRolagem,
   onAbrirDanoCura,
 }: {
   f: FichaViva;
+  voltarHref: string;
   onAbrirRolagem: (nome?: string) => void;
   onAbrirDanoCura: () => void;
 }) {
@@ -136,7 +140,7 @@ export function FichaCelular({
 
   return (
     <div
-      className="-mx-3 -mt-3 min-h-screen space-y-5 px-3 pb-28 pt-4 text-black"
+      className="-mx-3 -mt-3 min-h-screen space-y-5 overflow-x-clip px-3 pb-28 pt-4 text-black"
       style={{
         fontFamily: "var(--font-alegreya), Georgia, serif",
         fontWeight: 600,
@@ -146,6 +150,20 @@ export function FichaCelular({
     >
       {aba === "ficha" && (
         <>
+          <div className="flex items-center justify-between gap-3">
+            <Link
+              href={voltarHref}
+              className="flex min-h-11 items-center gap-1.5 text-sm font-extrabold"
+            >
+              <ArrowLeft className="size-4" strokeWidth={3} /> Players
+            </Link>
+            {/* biome-ignore lint/performance/noImgElement: logo estático */}
+            <img
+              src="/assets/Calafrio.svg"
+              alt="Calafrio TTRPG"
+              className="h-7 w-auto"
+            />
+          </div>
           <Cabecalho f={f} />
           <AcoesRapidas
             f={f}

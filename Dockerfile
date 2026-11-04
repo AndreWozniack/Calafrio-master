@@ -17,4 +17,5 @@ ENV PORT=3001
 EXPOSE 3001
 
 WORKDIR /app/apps/web
-CMD ["pnpm", "start"]
+RUN chmod +x /app/docker/entrypoint.sh /app/docker/migrate.sh
+ENTRYPOINT ["/app/docker/entrypoint.sh"]

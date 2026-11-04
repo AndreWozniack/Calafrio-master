@@ -18,7 +18,7 @@ export function DashboardHeader({
       <div className="space-y-1">
         <Link
           href="/mesa"
-          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-amber-400 font-bold mb-1 transition-colors"
+          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground font-bold mb-1 transition-colors"
         >
           <ArrowLeft className="size-3.5" /> Voltar às Mesas
         </Link>
@@ -26,7 +26,7 @@ export function DashboardHeader({
           <h1 className="text-2xl font-black font-heading text-foreground uppercase tracking-wide">
             {nome}
           </h1>
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold uppercase bg-amber-400/15 text-amber-300 border border-amber-400/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold uppercase bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30">
             <Shield className="size-3" /> Mestre
           </span>
         </div>
@@ -35,7 +35,7 @@ export function DashboardHeader({
           <span className="font-mono font-bold text-foreground">
             {codigoConvite}
           </span>{" "}
-          · {totalPlayers} Player(s) na equipe
+          · {totalPlayers} Investigador(es) na equipe
         </p>
       </div>
     </div>

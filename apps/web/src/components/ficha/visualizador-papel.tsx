@@ -1,7 +1,8 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { flushSync } from "react-dom";
 import type { FichaViva, ModoVisualizacao, PaginaFicha } from "./fichas-tipos";
 import { PaginaFrenteFicha } from "./pagina-frente-ficha";
 import { PaginaVersoMatriz } from "./pagina-verso-matriz";
@@ -15,6 +16,67 @@ interface VisualizadorPapelProps {
 }
 
 const LIMITE_SWIPE_PX = 60;
+const PERSPECTIVA = "perspective(2000px)";
+const ANGULO_BORDA = 84;
+const DURACAO_SAIDA_MS = 230;
+const DURACAO_ENTRADA_MS = 360;
+
+const girar = (graus: number, opacidade: number) => ({
+  transform: `${PERSPECTIVA} rotateY(${graus}deg)`,
+  opacity: opacidade,
+});
+
+const ehTelaDuasPaginas = () => window.matchMedia("(min-width: 1024px)").matches;
+const prefereMovimentoReduzido = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/**
+ * Virada em duas fases, só com transform/opacity (compositor):
+ * a folha atual gira até ficar de borda, a troca acontece no instante invisível
+ * e a nova folha desdobra do outro lado. A folha sempre pivota na lombada.
+ */
+async function animarVirada(
+  saindo: HTMLElement,
+  entrando: HTMLElement,
+  sentido: 1 | -1,
+  trocar: () => void,
+) {
+  const origem = sentido === 1 ? "left center" : "right center";
+  for (const el of [saindo, entrando]) {
+    el.style.transformOrigin = origem;
+    el.style.willChange = "transform, opacity";
+  }
+
+  const saida = saindo.animate(
+    [girar(0, 1), girar(-ANGULO_BORDA * sentido, 0.5)],
+    {
+      duration: DURACAO_SAIDA_MS,
+      easing: "cubic-bezier(0.55, 0, 0.9, 0.6)",
+      fill: "forwards",
+    },
+  );
+  await saida.finished;
+
+  Object.assign(entrando.style, girar(ANGULO_BORDA * sentido, 0.5));
+  flushSync(trocar);
+
+  const entrada = entrando.animate(
+    [girar(ANGULO_BORDA * sentido, 0.5), girar(0, 1)],
+    { duration: DURACAO_ENTRADA_MS, easing: "cubic-bezier(0.1, 0.8, 0.2, 1)" },
+  );
+  entrada.finished
+    .catch(() => undefined)
+    .finally(() => {
+      saida.cancel();
+      for (const el of [saindo, entrando]) {
+        el.style.transform = "";
+        el.style.opacity = "";
+        el.style.transformOrigin = "";
+        el.style.willChange = "";
+      }
+    });
+  await entrada.finished.catch(() => undefined);
+}
 
 function digitando(alvo: EventTarget | null) {
   return (
@@ -41,11 +103,20 @@ function SetaVirar({
       onClick={onClick}
       aria-label={rotulo}
       title={rotulo}
-      className={`absolute top-[38%] z-20 flex-col items-center gap-1 rounded-full border-2 border-black bg-white/95 p-2 text-black shadow-lg transition-transform hover:scale-110 active:scale-95 ${visibilidade} ${
-        sentido === "direita" ? "right-1 sm:-right-5" : "left-1 sm:-left-5"
+      className={`group absolute top-1/2 -translate-y-1/2 z-30 flex size-12 sm:size-14 cursor-pointer items-center justify-center rounded-full border-2 border-black bg-[#fbfbf9]/95 text-black shadow-[2px_3px_0px_#000] backdrop-blur transition-all duration-300 ease-out hover:scale-110 hover:shadow-[3px_5px_0px_#000] active:scale-95 active:shadow-[1px_1px_0px_#000] ${visibilidade} ${
+        sentido === "direita"
+          ? "right-2 sm:-right-6 md:-right-7 lg:-right-8"
+          : "left-2 sm:-left-6 md:-left-7 lg:-left-8"
       }`}
     >
-      <Icone className="size-6" strokeWidth={3} />
+      <Icone
+        className={`size-7 sm:size-8 transition-transform duration-300 ease-out ${
+          sentido === "direita"
+            ? "group-hover:translate-x-1"
+            : "group-hover:-translate-x-1"
+        }`}
+        strokeWidth={2.5}
+      />
     </button>
   );
 }
@@ -57,13 +128,30 @@ export function VisualizadorPapel({
   onMudarPagina,
   onAbrirRolagem,
 }: VisualizadorPapelProps) {
-  const [direcao, setDirecao] = useState<"avancar" | "voltar" | null>(null);
   const inicioToque = useRef<number | null>(null);
+  const virando = useRef(false);
+  const refFrente = useRef<HTMLDivElement>(null);
+  const refVerso = useRef<HTMLDivElement>(null);
 
   const virar = (destino: PaginaFicha) => {
-    if (destino === pagina) return;
-    setDirecao(destino === "verso" ? "avancar" : "voltar");
-    onMudarPagina(destino);
+    if (destino === pagina || virando.current) return;
+    const saindo = (pagina === "frente" ? refFrente : refVerso).current;
+    const entrando = (destino === "frente" ? refFrente : refVerso).current;
+    const semAnimacao =
+      !saindo ||
+      !entrando ||
+      prefereMovimentoReduzido() ||
+      (modo === "duas" && ehTelaDuasPaginas());
+    if (semAnimacao) {
+      onMudarPagina(destino);
+      return;
+    }
+    virando.current = true;
+    void animarVirada(saindo, entrando, destino === "verso" ? 1 : -1, () =>
+      onMudarPagina(destino),
+    ).finally(() => {
+      virando.current = false;
+    });
   };
 
   useEffect(() => {
@@ -78,15 +166,12 @@ export function VisualizadorPapel({
 
   const duas = modo === "duas";
   const controlesVisiveis = duas ? "lg:hidden" : "";
-  const animacao =
-    direcao === null ? "" : direcao === "avancar" ? "virar-avancar" : "virar-voltar";
   const mostrar = (alvo: PaginaFicha) =>
     pagina === alvo ? "block" : duas ? "hidden lg:block" : "hidden";
 
   return (
     <div
-      className="relative"
-      data-modo={modo}
+      className={`relative ${duas ? "w-full" : "mx-auto max-w-[880px]"}`}
       onTouchStart={(e) => {
         inicioToque.current = e.touches[0].clientX;
       }}
@@ -115,7 +200,7 @@ export function VisualizadorPapel({
       )}
 
       <div className={`grid items-start gap-6 ${duas ? "lg:grid-cols-2" : ""}`}>
-        <div key={`frente-${pagina}`} className={`${mostrar("frente")} ${animacao}`}>
+        <div ref={refFrente} className={mostrar("frente")}>
           <PaginaFrenteFicha
             ficha={f.ficha}
             derivada={f.derivada}
@@ -137,7 +222,7 @@ export function VisualizadorPapel({
             onAbrirRolagem={onAbrirRolagem}
           />
         </div>
-        <div key={`verso-${pagina}`} className={`${mostrar("verso")} ${animacao}`}>
+        <div ref={refVerso} className={mostrar("verso")}>
           <PaginaVersoMatriz
             ficha={f.ficha}
             derivada={f.derivada}
@@ -169,20 +254,20 @@ export function VisualizadorPapel({
       </div>
 
       <div
-        className={`mt-4 flex items-center justify-center gap-3 text-xs font-bold ${controlesVisiveis}`}
+        className={`mt-4 flex items-center justify-center gap-2.5 text-xs font-bold ${controlesVisiveis}`}
       >
         {(["frente", "verso"] as const).map((alvo) => (
           <button
             key={alvo}
             type="button"
             onClick={() => virar(alvo)}
-            className={`cursor-pointer rounded-full px-4 py-1.5 ${
+            className={`cursor-pointer rounded-full px-4 py-1.5 border border-black transition-all ${
               pagina === alvo
-                ? "bg-black text-white"
-                : "bg-muted text-muted-foreground hover:text-foreground"
+                ? "bg-black text-white shadow-[1px_1px_0px_#000]"
+                : "bg-white text-black hover:bg-black/10"
             }`}
           >
-            {alvo === "frente" ? "1 · Frente" : "2 · Verso"}
+            {alvo === "frente" ? "1 · Frente (Identidade)" : "2 · Verso (Matriz)"}
           </button>
         ))}
       </div>

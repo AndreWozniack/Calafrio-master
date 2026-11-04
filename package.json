@@ -9,7 +9,10 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write",
     "type-check": "pnpm -r --no-bail type-check",
-    "test": "pnpm -r --no-bail test"
+    "test": "pnpm -r --no-bail test",
+    "db:migrate": "pnpm --filter @calafrio/web db:migrate",
+    "db:generate": "pnpm --filter @calafrio/web db:generate",
+    "db:push": "pnpm --filter @calafrio/web db:push"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.5",

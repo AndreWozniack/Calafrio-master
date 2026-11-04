@@ -1,11 +1,12 @@
 "use client";
 
-import { ImagePlus } from "lucide-react";
-import { useRef } from "react";
+import { ImagePlus, Loader2 } from "lucide-react";
+import { useRef, useState } from "react";
+import { uploadRetratoAction } from "@/app/actions/upload";
 import { Losango, Posicionado } from "./primitivos-papel";
 import { u } from "./unidades";
 
-const LADO_MAXIMO = 480;
+const LADO_MAXIMO = 640;
 
 export function lerImagemRedimensionada(arquivo: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -25,7 +26,7 @@ export function lerImagemRedimensionada(arquivo: File): Promise<string> {
         canvas
           .getContext("2d")
           ?.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL("image/jpeg", 0.85));
+        resolve(canvas.toDataURL("image/jpeg", 0.88));
       };
       img.src = String(leitor.result);
     };
@@ -41,6 +42,32 @@ export function RetratoPapel({
   onDefinir: (url: string) => void;
 }) {
   const entrada = useRef<HTMLInputElement>(null);
+  const [enviando, setEnviando] = useState(false);
+
+  const lidarArquivo = async (arquivo: File) => {
+    // 1. Otimização imediata local (feedback instantâneo)
+    try {
+      const dataUrlLocal = await lerImagemRedimensionada(arquivo);
+      onDefinir(dataUrlLocal);
+    } catch (e) {
+      console.warn("Erro ao ler imagem localmente:", e);
+    }
+
+    // 2. Upload para o Cloudflare R2 via Server Action
+    setEnviando(true);
+    try {
+      const formData = new FormData();
+      formData.append("arquivo", arquivo);
+      const res = await uploadRetratoAction(formData);
+      if (res.url) {
+        onDefinir(res.url);
+      }
+    } catch (err) {
+      console.warn("Upload para R2 falhou, mantendo versão local:", err);
+    } finally {
+      setEnviando(false);
+    }
+  };
 
   return (
     <>
@@ -48,15 +75,16 @@ export function RetratoPapel({
         <button
           type="button"
           onClick={() => entrada.current?.click()}
-          title="Trocar retrato"
+          title="Trocar retrato do investigador"
+          disabled={enviando}
           className="group relative block size-full cursor-pointer overflow-hidden bg-white"
           style={{ border: `${u(2.4)} solid black` }}
         >
           {retratoUrl ? (
-            // biome-ignore lint/performance/noImgElement: data URL local
+            // biome-ignore lint/performance/noImgElement: imagem de retrato
             <img
               src={retratoUrl}
-              alt="Retrato"
+              alt="Retrato do investigador"
               className="size-full object-cover"
             />
           ) : (
@@ -64,15 +92,22 @@ export function RetratoPapel({
               <ImagePlus style={{ width: u(26), height: u(26) }} />
             </span>
           )}
+
+          {enviando && (
+            <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white text-[10px] gap-1">
+              <Loader2 className="size-4 animate-spin" />
+              <span>R2 Upload...</span>
+            </div>
+          )}
         </button>
         <input
           ref={entrada}
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={async (e) => {
+          onChange={(e) => {
             const arquivo = e.target.files?.[0];
-            if (arquivo) onDefinir(await lerImagemRedimensionada(arquivo));
+            if (arquivo) void lidarArquivo(arquivo);
             e.target.value = "";
           }}
         />

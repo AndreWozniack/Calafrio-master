@@ -7,10 +7,15 @@ import type {
   TipoAcaoCalafrio,
 } from "@calafrio/core";
 import { TOKENS_PERSONALIDADE } from "@calafrio/tema";
-import { X } from "lucide-react";
-import type React from "react";
+import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import { EditorEfeitos } from "./editor-efeitos";
+import { Campo, classeCampo } from "./modais/campos-modal";
+import {
+  BotaoPrincipal,
+  BotaoSecundario,
+  CascaModal,
+} from "./modais/casca-modal";
 
 interface Props {
   aberto: boolean;
@@ -19,12 +24,27 @@ interface Props {
   onFechar: () => void;
 }
 
+const TIPOS_ACAO: { id: TipoAcaoCalafrio; rotulo: string }[] = [
+  { id: "padrao", rotulo: "Padrão" },
+  { id: "livre", rotulo: "Livre" },
+  { id: "reflexo", rotulo: "Reflexo" },
+  { id: "preparada", rotulo: "Preparada" },
+  { id: "passiva", rotulo: "Passiva" },
+];
+
 export function ModalHabilidadeUnica({
   aberto,
   inicial,
   onSalvar,
   onFechar,
 }: Props) {
+  if (!aberto) return null;
+  return (
+    <ConteudoModal inicial={inicial} onSalvar={onSalvar} onFechar={onFechar} />
+  );
+}
+
+function ConteudoModal({ inicial, onSalvar, onFechar }: Omit<Props, "aberto">) {
   const [nome, setNome] = useState(inicial?.nome ?? "");
   const [custo, setCusto] = useState(inicial?.custo ?? 3);
   const [recurso, setRecurso] = useState<HabilidadeUnicaCalafrio["recurso"]>(
@@ -44,16 +64,10 @@ export function ModalHabilidadeUnica({
     inicial?.efeitos ?? [],
   );
 
-  if (!aberto) return null;
+  const valido = nome.trim() !== "" && descricao.trim() !== "";
 
-  const fechar = () => {
-    onFechar();
-  };
-
-  const salvar = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!nome.trim() || !descricao.trim()) return;
-
+  const salvar = () => {
+    if (!valido) return;
     onSalvar({
       id:
         inicial?.id ??
@@ -68,96 +82,83 @@ export function ModalHabilidadeUnica({
       ecosInvestidos: Math.max(1, ecosInvestidos),
       efeitos,
     });
-    fechar();
+    onFechar();
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
-      <form
-        onSubmit={salvar}
-        className="calafrio-card p-5 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-4 shadow-2xl"
-      >
-        <div className="flex items-center justify-between border-b border-border pb-2">
-          <span className="calafrio-tag">
-            {inicial ? "EDITAR HABILIDADE ÚNICA" : "NOVA HABILIDADE ÚNICA"}
-          </span>
-          <button type="button" onClick={fechar} aria-label="Fechar">
-            <X className="size-4 cursor-pointer" />
-          </button>
-        </div>
+    <CascaModal
+      titulo={inicial ? "Editar habilidade única" : "Nova habilidade única"}
+      onFechar={onFechar}
+      rodape={
+        <>
+          <BotaoSecundario onClick={onFechar}>Cancelar</BotaoSecundario>
+          <BotaoPrincipal disabled={!valido} onClick={salvar}>
+            <Sparkles className="size-5" />
+            {inicial ? "Salvar" : "Forjar habilidade"}
+          </BotaoPrincipal>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        <Campo rotulo="Nome da habilidade">
+          <input
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            placeholder="Ex.: Guarda-Chuva Eletrocutante"
+            className={classeCampo}
+          />
+        </Campo>
 
-        <div className="space-y-1">
-          <label className="block text-[10px] font-black uppercase text-muted-foreground">
-            Nome da Habilidade
-            <input
-              type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              placeholder="Ex: Guarda-Chuva Eletrocutante, Sexto Sentido..."
-              className="mt-1 w-full bg-muted/60 text-sm px-2.5 py-1.5 rounded border border-border normal-case font-normal"
-              required
-            />
-          </label>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-          <label className="block text-[10px] font-black uppercase text-muted-foreground">
-            Ação
+        <div className="grid grid-cols-2 gap-3">
+          <Campo rotulo="Ação">
             <select
               value={tipoAcao}
               onChange={(e) => setTipoAcao(e.target.value as TipoAcaoCalafrio)}
-              className="mt-1 w-full bg-muted/60 text-xs p-1.5 rounded border border-border normal-case font-normal"
+              className={classeCampo}
             >
-              <option value="padrao">Padrão</option>
-              <option value="livre">Livre</option>
-              <option value="reflexo">Reflexo</option>
-              <option value="preparada">Preparada</option>
-              <option value="passiva">Passiva</option>
+              {TIPOS_ACAO.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.rotulo}
+                </option>
+              ))}
             </select>
-          </label>
-
-          <label className="block text-[10px] font-black uppercase text-muted-foreground">
-            Custo
-            <input
-              type="number"
-              min={0}
-              value={custo}
-              onChange={(e) => setCusto(Number(e.target.value))}
-              className="mt-1 w-full bg-muted/60 text-xs p-1.5 rounded border border-border text-center normal-case font-normal"
-            />
-          </label>
-
-          <label className="block text-[10px] font-black uppercase text-muted-foreground">
-            Recurso
+          </Campo>
+          <Campo rotulo="Recurso">
             <select
               value={recurso}
               onChange={(e) =>
                 setRecurso(e.target.value as HabilidadeUnicaCalafrio["recurso"])
               }
-              className="mt-1 w-full bg-muted/60 text-xs p-1.5 rounded border border-border normal-case font-normal"
+              className={classeCampo}
             >
               <option value="pa">PA</option>
               <option value="pv">PV</option>
               <option value="nenhum">Nenhum</option>
             </select>
-          </label>
-
-          <label className="block text-[10px] font-black uppercase text-muted-foreground">
-            Ecos Gastos
+          </Campo>
+          <Campo rotulo="Custo">
             <input
               type="number"
+              inputMode="numeric"
+              min={0}
+              value={custo}
+              onChange={(e) => setCusto(Number(e.target.value))}
+              className={classeCampo}
+            />
+          </Campo>
+          <Campo rotulo="Ecos gastos">
+            <input
+              type="number"
+              inputMode="numeric"
               min={1}
               value={ecosInvestidos}
               onChange={(e) => setEcosInvestidos(Number(e.target.value))}
-              className="mt-1 w-full bg-muted/60 text-xs p-1.5 rounded border border-border text-center normal-case font-normal"
-              title="Quantidade de Ecos investidos nesta habilidade"
+              className={classeCampo}
             />
-          </label>
+          </Campo>
         </div>
 
-        <label className="block text-[10px] font-black uppercase text-muted-foreground">
-          Personalidade de Alinhamento (se o Mestre permitir contar na Matriz
-          3x3)
+        <Campo rotulo="Personalidade de alinhamento (se o Mestre permitir)">
           <select
             value={personalidade}
             onChange={(e) =>
@@ -165,49 +166,36 @@ export function ModalHabilidadeUnica({
                 e.target.value as PersonalidadeCalafrio | "nenhum",
               )
             }
-            className="mt-1 w-full bg-muted/60 text-xs p-2 rounded border border-border normal-case font-normal"
+            className={classeCampo}
           >
-            <option value="nenhum">
-              Nenhuma (Neutra - não pontua alinhamento)
-            </option>
+            <option value="nenhum">Nenhuma (neutra, não pontua)</option>
             {Object.entries(TOKENS_PERSONALIDADE).map(([key, token]) => (
               <option key={key} value={key}>
-                {token.emoji} {token.nome} (Árvore {token.nome})
+                {token.emoji} {token.nome}
               </option>
             ))}
           </select>
-        </label>
+        </Campo>
 
-        <label className="block text-[10px] font-black uppercase text-muted-foreground">
-          Descrição Detalhada do Efeito
+        <Campo rotulo="Descrição do efeito">
           <textarea
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
-            rows={3}
-            placeholder="Descreva exatamente o funcionamento acordado com o MdJ..."
-            className="mt-1 w-full bg-muted/60 text-xs p-2 rounded border border-border normal-case font-normal"
-            required
+            rows={4}
+            placeholder="Descreva o funcionamento acordado com o MdJ..."
+            className={classeCampo}
           />
-        </label>
+        </Campo>
 
-        <EditorEfeitos efeitos={efeitos} onChange={setEfeitos} />
-
-        <div className="flex justify-end gap-2 pt-2 border-t border-border">
-          <button
-            type="button"
-            onClick={fechar}
-            className="px-4 py-2 text-xs font-bold rounded border border-border hover:bg-muted cursor-pointer"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 text-xs font-black rounded bg-amber-400 text-black hover:bg-amber-300 cursor-pointer"
-          >
-            {inicial ? "Salvar Alterações" : "Forjar Habilidade Única"}
-          </button>
-        </div>
-      </form>
-    </div>
+        <details className="border-2 border-black/30">
+          <summary className="min-h-12 cursor-pointer px-3 py-3 text-base font-extrabold">
+            Efeitos / modificadores ({efeitos.length})
+          </summary>
+          <div className="border-t-2 border-black/20 p-3">
+            <EditorEfeitos efeitos={efeitos} onChange={setEfeitos} />
+          </div>
+        </details>
+      </div>
+    </CascaModal>
   );
 }

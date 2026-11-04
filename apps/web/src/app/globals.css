@@ -108,51 +108,159 @@ body {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
-/* Virar página da ficha (ver visualizador-ficha.tsx) */
-@keyframes virar-avancar {
+/* ===== Movimento =====
+ * Só `transform` e `opacity` são animados (compositor, sem layout/paint).
+ * Tudo some com prefers-reduced-motion. */
+:root {
+  --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-suave: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes entrar {
   from {
-    transform: perspective(1800px) rotateY(-60deg);
-    transform-origin: left center;
-    opacity: 0.25;
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
   }
   to {
-    transform: perspective(1800px) rotateY(0);
-    transform-origin: left center;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes entrar-escala {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fundo-modal {
+  from {
+    opacity: 0;
+  }
+  to {
     opacity: 1;
   }
 }
 
-@keyframes virar-voltar {
+@keyframes folha-subir {
   from {
-    transform: perspective(1800px) rotateY(60deg);
-    transform-origin: right center;
-    opacity: 0.25;
+    transform: translate3d(0, 100%, 0);
   }
   to {
-    transform: perspective(1800px) rotateY(0);
-    transform-origin: right center;
-    opacity: 1;
+    transform: none;
   }
 }
 
-.virar-avancar {
-  animation: virar-avancar 0.45s ease-out;
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
-.virar-voltar {
-  animation: virar-voltar 0.45s ease-out;
+@keyframes pulso-valor {
+  0% {
+    transform: scale(1.22);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pagina-entrada {
+  animation: entrar 0.45s var(--ease-saida) backwards;
+}
+
+.entrada {
+  animation: entrar 0.45s var(--ease-saida) backwards;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+.entrada-lista > * {
+  animation: entrar 0.45s var(--ease-saida) backwards;
+  animation-delay: 550ms;
+}
+
+.entrada-lista > *:nth-child(1) { animation-delay: 0ms; }
+.entrada-lista > *:nth-child(2) { animation-delay: 55ms; }
+.entrada-lista > *:nth-child(3) { animation-delay: 110ms; }
+.entrada-lista > *:nth-child(4) { animation-delay: 165ms; }
+.entrada-lista > *:nth-child(5) { animation-delay: 220ms; }
+.entrada-lista > *:nth-child(6) { animation-delay: 275ms; }
+.entrada-lista > *:nth-child(7) { animation-delay: 330ms; }
+.entrada-lista > *:nth-child(8) { animation-delay: 385ms; }
+.entrada-lista > *:nth-child(9) { animation-delay: 440ms; }
+.entrada-lista > *:nth-child(10) { animation-delay: 495ms; }
+
+.modal-fundo {
+  animation: fundo-modal 0.2s ease-out backwards;
+}
+
+.modal-caixa {
+  animation: folha-subir 0.34s var(--ease-saida) backwards;
+}
+
+@media (min-width: 640px) {
+  .modal-caixa {
+    animation: entrar-escala 0.26s var(--ease-saida) backwards;
+  }
+}
+
+.resultado-pop {
+  animation: pop 0.42s var(--ease-saida) backwards;
+}
+
+.valor-pulso {
+  display: inline-block;
+  animation: pulso-valor 0.26s var(--ease-saida);
+}
+
+.pressionavel {
+  transition: transform 0.12s var(--ease-suave);
+}
+
+.pressionavel:active {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) {
+  .elevar {
+    transition:
+      transform 0.2s var(--ease-saida),
+      box-shadow 0.2s var(--ease-suave);
+  }
+
+  .elevar:hover {
+    transform: translate3d(0, -2px, 0);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .virar-avancar,
-  .virar-voltar {
-    animation: none;
+  .pagina-entrada,
+  .entrada,
+  .entrada-lista > *,
+  .modal-fundo,
+  .modal-caixa,
+  .resultado-pop,
+  .valor-pulso {
+    animation: none !important;
   }
-}
 
-@media (min-width: 1024px) {
-  [data-modo="duas"] .virar-avancar,
-  [data-modo="duas"] .virar-voltar {
-    animation: none;
+  .pressionavel,
+  .elevar {
+    transition: none !important;
   }
 }

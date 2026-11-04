@@ -41,22 +41,22 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <div className="font-black text-base text-foreground group-hover:text-amber-300 transition-colors">
+                  <div className="font-black text-base text-foreground group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
                     {p.nome}
                   </div>
                   <div className="text-xs text-muted-foreground mt-0.5">
                     {ocupacao} · APT {p.aptBase}
                   </div>
                 </div>
-                <ArrowRight className="size-4 text-muted-foreground group-hover:text-amber-400 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="size-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-transform" />
               </div>
 
-              {/* Badges de recursos (Estilo T20 Master) */}
+              {/* Badges de recursos */}
               <div className="flex items-center gap-2 pt-1 border-t border-border/40">
-                <span className="h-6 px-2.5 rounded text-xs font-black bg-red-950/40 text-red-400 border border-red-800/40">
+                <span className="h-6 px-2.5 rounded text-xs font-black bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800/40">
                   PV {p.pvMax}
                 </span>
-                <span className="h-6 px-2.5 rounded text-xs font-black bg-cyan-950/40 text-cyan-400 border border-cyan-800/40">
+                <span className="h-6 px-2.5 rounded text-xs font-black bg-cyan-50 text-cyan-800 border border-cyan-200 dark:bg-cyan-950/40 dark:text-cyan-400 dark:border-cyan-800/40">
                   PA {p.paMax}
                 </span>
                 <span className="h-6 px-2.5 rounded text-xs font-black bg-muted text-muted-foreground border border-border">

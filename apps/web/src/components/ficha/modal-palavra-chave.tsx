@@ -6,9 +6,22 @@ import {
   type EfeitoCalafrio,
   type PalavraChaveNaFicha,
 } from "@calafrio/core";
-import { Dices, X } from "lucide-react";
+import { Dices, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { EditorEfeitos } from "./editor-efeitos";
+import { type AbaModal, AbasModal } from "./modais/abas-modal";
+import { Alternancia, Campo, classeCampo } from "./modais/campos-modal";
+import {
+  BotaoPrincipal,
+  BotaoSecundario,
+  CascaModal,
+} from "./modais/casca-modal";
+import {
+  BuscaBiblioteca,
+  CardResultado,
+  FiltrosBiblioteca,
+  ListaVazia,
+} from "./modais/lista-biblioteca";
 
 interface Props {
   aberto: boolean;
@@ -30,7 +43,15 @@ export function ModalPalavraChave({
   onSalvar,
   onFechar,
 }: Props) {
+  if (!aberto) return null;
+  return (
+    <ConteudoModal inicial={inicial} onSalvar={onSalvar} onFechar={onFechar} />
+  );
+}
+
+function ConteudoModal({ inicial, onSalvar, onFechar }: Omit<Props, "aberto">) {
   const catalogo = useMemo(() => carregarCatalogoCalafrio(), []);
+  const [aba, setAba] = useState<AbaModal>(inicial ? "manual" : "biblioteca");
   const [categoria, setCategoria] = useState<CategoriaPalavraChave>(
     inicial?.categoria ?? "ocupacao",
   );
@@ -44,32 +65,25 @@ export function ModalPalavraChave({
   );
   const [busca, setBusca] = useState("");
 
-  if (!aberto) return null;
-
   const tabela =
     categoria === "ocupacao"
       ? catalogo.ocupacoes
       : catalogo.palavrasChaveGenericas;
-  const sugestoes = tabela
-    .filter((e) => e.nome.toLowerCase().includes(busca.toLowerCase()))
-    .slice(0, 8);
+  const visiveis = tabela.filter((e) =>
+    e.nome.toLowerCase().includes(busca.toLowerCase()),
+  );
+
+  const escolher = (escolhido: string) => {
+    setNome(escolhido);
+    setAba("manual");
+  };
 
   const sortear = () => {
     const e = tabela[Math.floor(Math.random() * tabela.length)];
-    if (e) setNome(e.nome);
+    if (e) escolher(e.nome);
   };
 
-  const fechar = () => {
-    setNome("");
-    setNotas("");
-    setBusca("");
-    setEfeitos([]);
-    setSemConsumirLimite(false);
-    onFechar();
-  };
-
-  const salvar = (e: React.FormEvent) => {
-    e.preventDefault();
+  const salvar = () => {
     if (!nome.trim()) return;
     onSalvar({
       id:
@@ -81,121 +95,97 @@ export function ModalPalavraChave({
       notas: notas.trim() || undefined,
       efeitos,
     });
-    fechar();
+    onFechar();
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-      <form
-        onSubmit={salvar}
-        className="calafrio-card p-5 max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4 shadow-2xl"
-      >
-        <div className="flex items-center justify-between border-b border-border pb-2">
-          <span className="calafrio-tag">
-            {inicial ? "EDITAR PALAVRA-CHAVE" : "NOVA PALAVRA-CHAVE"}
-          </span>
-          <button type="button" onClick={fechar} aria-label="Fechar">
-            <X className="size-4 cursor-pointer" />
-          </button>
-        </div>
+    <CascaModal
+      titulo={inicial ? "Editar palavra-chave" : "Nova palavra-chave"}
+      onFechar={onFechar}
+      rodape={
+        <>
+          <BotaoSecundario onClick={onFechar}>Cancelar</BotaoSecundario>
+          <BotaoPrincipal disabled={!nome.trim()} onClick={salvar}>
+            <Plus className="size-5" strokeWidth={3} />
+            {inicial ? "Salvar" : "Adicionar"}
+          </BotaoPrincipal>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        <FiltrosBiblioteca
+          opcoes={CATEGORIAS}
+          ativo={categoria}
+          onMudar={setCategoria}
+        />
+        <AbasModal aba={aba} onMudar={setAba} />
 
-        <div className="flex flex-wrap gap-1.5">
-          {CATEGORIAS.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              onClick={() => setCategoria(c.id)}
-              className={`px-3 py-1 text-xs font-bold rounded border cursor-pointer ${
-                categoria === c.id
-                  ? "bg-amber-400 text-black border-amber-400"
-                  : "border-border hover:bg-muted"
-              }`}
-            >
-              {c.rotulo}
-            </button>
-          ))}
-        </div>
-
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-black uppercase text-muted-foreground">
-            Nome
-            <input
-              type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              placeholder="Escreva livremente ou escolha abaixo"
-              className="mt-1 w-full bg-muted/60 text-sm px-2.5 py-2 rounded border border-border normal-case font-normal"
+        {aba === "biblioteca" ? (
+          <div className="space-y-3">
+            <BuscaBiblioteca
+              valor={busca}
+              onChange={setBusca}
+              placeholder={`Buscar entre ${tabela.length} opções...`}
+              acao={
+                <button
+                  type="button"
+                  onClick={sortear}
+                  aria-label="Sortear no d100"
+                  className="flex min-h-12 shrink-0 cursor-pointer items-center gap-1.5 border-2 border-black bg-white px-3 text-sm font-extrabold active:bg-black/10"
+                >
+                  <Dices className="size-5" /> d100
+                </button>
+              }
             />
-          </label>
-          <div className="flex gap-1.5">
-            <input
-              type="text"
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              placeholder={`Buscar no catálogo (${tabela.length} opções)...`}
-              className="flex-1 bg-muted/60 text-xs px-2.5 py-1.5 rounded border border-border"
+            <div className="space-y-2">
+              {visiveis.map((e) => (
+                <CardResultado
+                  key={e.numero}
+                  titulo={e.nome}
+                  meta={`d100 · ${e.numero}`}
+                  selecionado={e.nome === nome}
+                  onSelecionar={() => escolher(e.nome)}
+                />
+              ))}
+              {visiveis.length === 0 && (
+                <ListaVazia texto="Nada encontrado. Use a aba Manual para escrever livremente." />
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <Campo rotulo="Nome">
+              <input
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                placeholder="Escreva livremente ou escolha na Biblioteca"
+                className={classeCampo}
+              />
+            </Campo>
+            <Campo rotulo="Notas">
+              <textarea
+                value={notas}
+                onChange={(e) => setNotas(e.target.value)}
+                rows={3}
+                className={classeCampo}
+              />
+            </Campo>
+            <Alternancia
+              rotulo="Concedida (não consome o limite de 2 + APT)"
+              marcado={semConsumirLimite}
+              onChange={setSemConsumirLimite}
             />
-            <button
-              type="button"
-              onClick={sortear}
-              className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded border border-border hover:bg-muted cursor-pointer"
-              title="Sortear no d100"
-            >
-              <Dices className="size-3.5" /> d100
-            </button>
+            <details className="border-2 border-black/30">
+              <summary className="min-h-12 cursor-pointer px-3 py-3 text-base font-extrabold">
+                Efeitos / modificadores ({efeitos.length})
+              </summary>
+              <div className="border-t-2 border-black/20 p-3">
+                <EditorEfeitos efeitos={efeitos} onChange={setEfeitos} />
+              </div>
+            </details>
           </div>
-          <div className="flex flex-wrap gap-1">
-            {sugestoes.map((s) => (
-              <button
-                key={s.numero}
-                type="button"
-                onClick={() => setNome(s.nome)}
-                className="px-2 py-0.5 text-[11px] rounded border border-border hover:bg-muted cursor-pointer"
-              >
-                {s.nome}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <label className="block text-[10px] font-black uppercase text-muted-foreground">
-          Notas
-          <textarea
-            value={notas}
-            onChange={(e) => setNotas(e.target.value)}
-            rows={2}
-            className="mt-1 w-full bg-muted/60 text-xs px-2.5 py-2 rounded border border-border normal-case font-normal"
-          />
-        </label>
-
-        <label className="flex items-center gap-2 text-xs cursor-pointer">
-          <input
-            type="checkbox"
-            checked={semConsumirLimite}
-            onChange={(e) => setSemConsumirLimite(e.target.checked)}
-          />
-          Concedida (não consome o limite de 2 + APT)
-        </label>
-
-        <EditorEfeitos efeitos={efeitos} onChange={setEfeitos} />
-
-        <div className="flex justify-end gap-2 pt-2 border-t border-border">
-          <button
-            type="button"
-            onClick={fechar}
-            className="px-4 py-2 text-xs font-bold rounded border border-border hover:bg-muted cursor-pointer"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            disabled={!nome.trim()}
-            className="px-4 py-2 text-xs font-black rounded bg-amber-400 text-black hover:bg-amber-300 disabled:opacity-40 cursor-pointer"
-          >
-            {inicial ? "Salvar alterações" : "Adicionar palavra-chave"}
-          </button>
-        </div>
-      </form>
-    </div>
+        )}
+      </div>
+    </CascaModal>
   );
 }

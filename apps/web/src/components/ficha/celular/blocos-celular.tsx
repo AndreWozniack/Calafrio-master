@@ -35,7 +35,7 @@ export function PassoCelular({
       aria-label={titulo}
       title={titulo}
       onClick={onClick}
-      className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-black text-white active:scale-90"
+      className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-black text-white active:scale-90"
     >
       <Icone className="size-5" strokeWidth={3} />
     </button>
@@ -51,7 +51,7 @@ export function CartaoPapel({
 }) {
   return (
     <div
-      className={`bg-white p-3 shadow-[0_0_3px_rgba(0,0,0,0.4)] ${className}`}
+      className={`min-w-0 bg-white p-3 shadow-[0_0_3px_rgba(0,0,0,0.4)] ${className}`}
     >
       {children}
     </div>

@@ -3,11 +3,14 @@
 import { BookOpen, Skull, Swords } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { estaNaFicha } from "@/lib/rota-ficha";
 import { CalafrioLogo } from "../svg/calafrio-ornamentos";
 import { AlternarTema } from "./alternar-tema";
 
 export function BarraTopo() {
   const pathname = usePathname();
+
+  if (estaNaFicha(pathname)) return null;
 
   const links = [
     { href: "/mesa", label: "Suas Mesas", icon: Swords },

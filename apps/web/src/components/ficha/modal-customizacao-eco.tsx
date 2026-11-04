@@ -8,10 +8,15 @@ import type {
   RecursoDeAtivacao,
   TipoAcaoCalafrio,
 } from "@calafrio/core";
-import { X } from "lucide-react";
-import type React from "react";
+import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import { EditorEfeitos } from "./editor-efeitos";
+import { Campo, classeCampo, numeroOuIndefinido } from "./modais/campos-modal";
+import {
+  BotaoPrincipal,
+  BotaoSecundario,
+  CascaModal,
+} from "./modais/casca-modal";
 
 interface Props {
   aberto: boolean;
@@ -21,15 +26,21 @@ interface Props {
   onFechar: () => void;
 }
 
-export function ModalCustomizacaoEco({
-  aberto,
+export function ModalCustomizacaoEco({ aberto, ...resto }: Props) {
+  if (!aberto) return null;
+  return <ConteudoModal {...resto} />;
+}
+
+function ConteudoModal({
   ficha,
   catalogo,
   onSalvar,
   onFechar,
-}: Props) {
+}: Omit<Props, "aberto">) {
   const [habilidadeAlvoId, setHabilidadeAlvoId] = useState(
-    catalogo.habilidadesParanormais[0]?.id ?? "",
+    ficha.matrizHabilidades[0]?.id ??
+      catalogo.habilidadesParanormais[0]?.id ??
+      "",
   );
   const [titulo, setTitulo] = useState("");
   const [descricaoMudanca, setDescricaoMudanca] = useState("");
@@ -38,12 +49,10 @@ export function ModalCustomizacaoEco({
   const [novoTipoAcao, setNovoTipoAcao] = useState<TipoAcaoCalafrio | "">("");
   const [efeitosExtras, setEfeitosExtras] = useState<EfeitoCalafrio[]>([]);
 
-  if (!aberto) return null;
+  const valido = titulo.trim() !== "" && habilidadeAlvoId !== "";
 
-  const salvar = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!titulo.trim() || !habilidadeAlvoId) return;
-
+  const salvar = () => {
+    if (!valido) return;
     onSalvar({
       id: `eco-cust-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       habilidadeAlvoId,
@@ -58,28 +67,26 @@ export function ModalCustomizacaoEco({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
-      <form
-        onSubmit={salvar}
-        className="calafrio-card p-5 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-4 shadow-2xl"
-      >
-        <div className="flex items-center justify-between border-b border-border pb-2">
-          <span className="calafrio-tag">
-            APRIMORAR HABILIDADE COM ECO (1 ECO)
-          </span>
-          <button type="button" onClick={onFechar} aria-label="Fechar">
-            <X className="size-4 cursor-pointer" />
-          </button>
-        </div>
-
-        <label className="block text-[10px] font-black uppercase text-muted-foreground">
-          Habilidade Alvo
+    <CascaModal
+      titulo="Aprimorar com Eco (1 Eco)"
+      onFechar={onFechar}
+      rodape={
+        <>
+          <BotaoSecundario onClick={onFechar}>Cancelar</BotaoSecundario>
+          <BotaoPrincipal disabled={!valido} onClick={salvar}>
+            <Sparkles className="size-5" /> Gravar
+          </BotaoPrincipal>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        <Campo rotulo="Habilidade alvo">
           <select
             value={habilidadeAlvoId}
             onChange={(e) => setHabilidadeAlvoId(e.target.value)}
-            className="mt-1 w-full bg-muted/60 text-xs p-2 rounded border border-border normal-case font-normal"
+            className={classeCampo}
           >
-            <optgroup label="Suas Habilidades na Matriz">
+            <optgroup label="Suas habilidades na Matriz">
               {ficha.matrizHabilidades.map((m) => {
                 const hab = catalogo.habilidadesParanormais.find(
                   (h) => h.id === m.id,
@@ -91,108 +98,87 @@ export function ModalCustomizacaoEco({
                 );
               })}
             </optgroup>
-            <optgroup label="Todas as Habilidades do Catálogo Oficial">
+            <optgroup label="Catálogo oficial">
               {catalogo.habilidadesParanormais.map((h) => (
                 <option key={h.id} value={h.id}>
-                  {h.nome} ({h.personalidade} - {h.dominio})
+                  {h.nome} ({h.personalidade})
                 </option>
               ))}
             </optgroup>
           </select>
-        </label>
+        </Campo>
 
-        <label className="block text-[10px] font-black uppercase text-muted-foreground">
-          Nome do Aprimoramento / Versão
+        <Campo rotulo="Nome do aprimoramento">
           <input
-            type="text"
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
-            placeholder="Ex: Telepatia de Longo Alcance, Pirocinese Concentrada..."
-            className="mt-1 w-full bg-muted/60 text-xs p-2 rounded border border-border normal-case font-normal"
-            required
+            placeholder="Ex.: Telepatia de longo alcance"
+            className={classeCampo}
           />
-        </label>
+        </Campo>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <label className="block text-[10px] font-black uppercase text-muted-foreground">
-            Novo Custo (opcional)
+        <div className="grid grid-cols-2 gap-3">
+          <Campo rotulo="Novo custo">
             <input
               type="number"
+              inputMode="numeric"
               min={0}
               value={novoCusto ?? ""}
-              onChange={(e) =>
-                setNovoCusto(
-                  e.target.value === "" ? undefined : Number(e.target.value),
-                )
-              }
-              placeholder="Mantém original"
-              className="mt-1 w-full bg-muted/60 text-xs p-2 rounded border border-border normal-case font-normal"
+              onChange={(e) => setNovoCusto(numeroOuIndefinido(e.target.value))}
+              placeholder="Original"
+              className={classeCampo}
             />
-          </label>
-
-          <label className="block text-[10px] font-black uppercase text-muted-foreground">
-            Novo Recurso
+          </Campo>
+          <Campo rotulo="Novo recurso">
             <select
               value={novoRecurso}
               onChange={(e) =>
                 setNovoRecurso(e.target.value as RecursoDeAtivacao | "")
               }
-              className="mt-1 w-full bg-muted/60 text-xs p-2 rounded border border-border normal-case font-normal"
+              className={classeCampo}
             >
-              <option value="">Mantém original</option>
+              <option value="">Original</option>
               <option value="pa">PA</option>
               <option value="pv">PV</option>
-              <option value="nenhum">Nenhum (0)</option>
+              <option value="nenhum">Nenhum</option>
             </select>
-          </label>
-
-          <label className="block text-[10px] font-black uppercase text-muted-foreground">
-            Nova Ação
+          </Campo>
+          <Campo rotulo="Nova ação" className="col-span-2">
             <select
               value={novoTipoAcao}
               onChange={(e) =>
                 setNovoTipoAcao(e.target.value as TipoAcaoCalafrio | "")
               }
-              className="mt-1 w-full bg-muted/60 text-xs p-2 rounded border border-border normal-case font-normal"
+              className={classeCampo}
             >
-              <option value="">Mantém original</option>
+              <option value="">Original</option>
               <option value="padrao">Padrão</option>
               <option value="livre">Livre</option>
               <option value="reflexo">Reflexo</option>
               <option value="passiva">Passiva</option>
             </select>
-          </label>
+          </Campo>
         </div>
 
-        <label className="block text-[10px] font-black uppercase text-muted-foreground">
-          Descrição da Melhoria / Efeito
+        <Campo rotulo="Descrição da melhoria">
           <textarea
             value={descricaoMudanca}
             onChange={(e) => setDescricaoMudanca(e.target.value)}
-            rows={3}
+            rows={4}
             placeholder="Descreva a melhoria acordada com o MdJ..."
-            className="mt-1 w-full bg-muted/60 text-xs p-2 rounded border border-border normal-case font-normal"
+            className={classeCampo}
           />
-        </label>
+        </Campo>
 
-        <EditorEfeitos efeitos={efeitosExtras} onChange={setEfeitosExtras} />
-
-        <div className="flex justify-end gap-2 pt-2 border-t border-border">
-          <button
-            type="button"
-            onClick={onFechar}
-            className="px-4 py-2 text-xs font-bold rounded border border-border hover:bg-muted cursor-pointer"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 text-xs font-black rounded bg-amber-400 text-black hover:bg-amber-300 cursor-pointer"
-          >
-            Gravar Aprimoramento
-          </button>
-        </div>
-      </form>
-    </div>
+        <details className="border-2 border-black/30">
+          <summary className="min-h-12 cursor-pointer px-3 py-3 text-base font-extrabold">
+            Efeitos extras ({efeitosExtras.length})
+          </summary>
+          <div className="border-t-2 border-black/20 p-3">
+            <EditorEfeitos efeitos={efeitosExtras} onChange={setEfeitosExtras} />
+          </div>
+        </details>
+      </div>
+    </CascaModal>
   );
 }

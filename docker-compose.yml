@@ -1,4 +1,21 @@
 services:
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: "no"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      NODE_ENV: production
+    entrypoint:
+      - /app/docker/migrate.sh
+    command: []
+    networks:
+      - default
+      - dokploy-network
+
   app:
     build:
       context: .
@@ -14,6 +31,9 @@ services:
       - "3001"
     ports:
       - "${HOST_PORT:-3001}:3001"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
     networks:
       - default
       - dokploy-network
@@ -30,7 +50,10 @@ services:
       - traefik.http.routers.calafrio-websecure.tls.certresolver=letsencrypt
       - traefik.http.routers.calafrio-websecure.service=calafrio-websecure
       - traefik.http.services.calafrio-websecure.loadbalancer.server.port=3001
+      - traefik.http.services.calafrio-web.loadbalancer.passhostheader=true
+      - traefik.http.services.calafrio-websecure.loadbalancer.passhostheader=true
 
 networks:
   dokploy-network:
     name: dokploy-network
+    external: true

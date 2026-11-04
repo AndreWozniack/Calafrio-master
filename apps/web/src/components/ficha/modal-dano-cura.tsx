@@ -3,6 +3,7 @@
 import { type EspectroDeDano, TOKENS_ESPECTRO_DANO } from "@calafrio/tema";
 import { Heart, Skull, Zap } from "lucide-react";
 import { useState } from "react";
+import { BotaoPrincipal, BotaoSecundario, CascaModal } from "./modais/casca-modal";
 
 type Modo = "dano" | "pv" | "pa";
 
@@ -45,25 +46,32 @@ export function ModalDanoCura({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 sm:items-center sm:p-4">
-      <div className="calafrio-card w-full max-w-md space-y-4 rounded-b-none border-2 border-amber-400 p-5 shadow-2xl sm:rounded-b">
-        <div className="flex items-center justify-between">
-          <span className="calafrio-tag">DANO E CURA</span>
-          <span className="text-xs font-bold text-muted-foreground">
-            PV {pvAtual} · PA {paAtual}
-          </span>
-        </div>
-
+    <CascaModal
+      titulo="Dano e cura"
+      onFechar={onFechar}
+      rodape={
+        <>
+          <BotaoSecundario onClick={onFechar}>Cancelar</BotaoSecundario>
+          <BotaoPrincipal disabled={valor <= 0} onClick={aplicar}>
+            Aplicar
+          </BotaoPrincipal>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        <p className="text-sm font-extrabold uppercase text-black/70">
+          PV {pvAtual} · PA {paAtual}
+        </p>
         <div className="grid grid-cols-3 gap-1.5">
           {MODOS.map(({ id, rotulo, Icone }) => (
             <button
               key={id}
               type="button"
               onClick={() => setModo(id)}
-              className={`flex cursor-pointer flex-col items-center gap-1 rounded px-1 py-2.5 text-xs font-bold ${
+              className={`flex cursor-pointer flex-col items-center gap-1 px-1 py-3 text-sm font-extrabold ${
                 modo === id
-                  ? "bg-amber-400 text-black"
-                  : "bg-muted text-muted-foreground"
+                  ? "bg-black text-white"
+                  : "border-2 border-black bg-white"
               }`}
             >
               <Icone className="size-4" />
@@ -73,14 +81,14 @@ export function ModalDanoCura({
         </div>
 
         <div className="space-y-2">
-          <label className="block text-[10px] font-black uppercase text-muted-foreground">
+          <label className="block text-sm font-extrabold uppercase text-black/70">
             Quantidade
             <input
               type="number"
               min={1}
               value={valor}
               onChange={(e) => setValor(Number(e.target.value))}
-              className="mt-1 w-full rounded border border-border bg-muted/60 px-3 py-3 text-center text-3xl font-black"
+              className="mt-1 w-full border-2 border-black bg-white px-3 py-3 text-center text-3xl font-black text-black outline-none"
             />
           </label>
           <div className="flex gap-1.5">
@@ -89,7 +97,7 @@ export function ModalDanoCura({
                 key={n}
                 type="button"
                 onClick={() => setValor(n)}
-                className="flex-1 cursor-pointer rounded bg-muted py-2 text-sm font-bold hover:bg-border"
+                className="min-h-11 flex-1 cursor-pointer border-2 border-black bg-white text-base font-extrabold active:bg-black active:text-white"
               >
                 {n}
               </button>
@@ -99,12 +107,12 @@ export function ModalDanoCura({
 
         {modo === "dano" && (
           <div className="grid grid-cols-2 gap-2">
-            <label className="block text-[10px] font-black uppercase text-muted-foreground">
+            <label className="block text-sm font-extrabold uppercase text-black/70">
               Espectro
               <select
                 value={espectro}
                 onChange={(e) => setEspectro(e.target.value as EspectroDeDano)}
-                className="mt-1 w-full rounded border border-border bg-muted/60 px-2 py-2 text-xs normal-case"
+                className="mt-1 w-full border-2 border-black bg-white px-2 py-2.5 text-base font-semibold normal-case"
               >
                 {Object.values(TOKENS_ESPECTRO_DANO).map((t) => (
                   <option key={t.id} value={t.id}>
@@ -113,7 +121,7 @@ export function ModalDanoCura({
                 ))}
               </select>
             </label>
-            <label className="block text-[10px] font-black uppercase text-muted-foreground">
+            <label className="block text-sm font-extrabold uppercase text-black/70">
               PA para mitigar
               <input
                 type="number"
@@ -121,29 +129,13 @@ export function ModalDanoCura({
                 max={paAtual}
                 value={paMitigar}
                 onChange={(e) => setPaMitigar(Number(e.target.value))}
-                className="mt-1 w-full rounded border border-border bg-muted/60 px-2 py-2 text-xs"
+                className="mt-1 w-full border-2 border-black bg-white px-2 py-2.5 text-base font-semibold"
               />
             </label>
           </div>
         )}
 
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={onFechar}
-            className="flex-1 cursor-pointer rounded bg-muted py-3 text-sm font-bold"
-          >
-            Cancelar
-          </button>
-          <button
-            type="button"
-            onClick={aplicar}
-            className="flex-[2] cursor-pointer rounded bg-amber-400 py-3 text-sm font-black text-black hover:bg-amber-300"
-          >
-            Aplicar
-          </button>
-        </div>
       </div>
-    </div>
+    </CascaModal>
   );
 }

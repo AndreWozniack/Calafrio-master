@@ -74,14 +74,14 @@ export function PalavrasChaveCelular({
 export function CarteiraCelular({ f }: { f: FichaViva }) {
   const { fundos, espirions } = f.ficha.carteira;
   const campo = (rotulo: string, valor: number, aoMudar: (n: number) => void) => (
-    <label className="flex flex-1 items-center gap-2 bg-white p-2 shadow-[0_0_3px_rgba(0,0,0,0.4)]">
+    <label className="flex min-w-0 flex-1 items-center gap-2 bg-white p-2 shadow-[0_0_3px_rgba(0,0,0,0.4)]">
       <span className="calafrio-tag text-sm">{rotulo}</span>
       <input
         type="number"
         min={0}
         value={valor}
         onChange={(e) => aoMudar(Number(e.target.value))}
-        className="min-w-0 flex-1 bg-transparent text-right text-xl font-extrabold outline-none"
+        className="w-0 min-w-0 flex-1 bg-transparent text-right text-xl font-extrabold outline-none"
       />
     </label>
   );

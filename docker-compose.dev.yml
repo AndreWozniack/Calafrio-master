@@ -1,5 +1,22 @@
-# Dev com hot reload: docker compose -f docker-compose.dev.yml up
+# Dev com hot reload e Postgres local: docker compose -f docker-compose.dev.yml up
 services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: calafrio
+      POSTGRES_PASSWORD: calafrio_secret
+      POSTGRES_DB: calafrio
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U calafrio -d calafrio"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   web:
     build:
       context: .
@@ -10,6 +27,10 @@ services:
       NODE_ENV: development
       WATCHPACK_POLLING: "true"
       CHOKIDAR_USEPOLLING: "true"
+      DATABASE_URL: "postgresql://calafrio:calafrio_secret@db:5432/calafrio"
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
       - .:/app
       # node_modules do container (não sobrescreve com o do macOS)
@@ -21,6 +42,7 @@ services:
       - next_cache:/app/apps/web/.next
 
 volumes:
+  postgres_data:
   node_modules_root:
   node_modules_web:
   node_modules_core:

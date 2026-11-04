@@ -1,6 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { FichaCalafrio } from "@calafrio/core";
+import { eq } from "drizzle-orm";
+import { db, schema } from "@/db";
 
 export interface MesaCalafrio {
   id: string;
@@ -80,7 +82,6 @@ export async function carregarStore(): Promise<DadosStore> {
     };
     return storeEmMemoria;
   } catch {
-    // Inicializar store padrão
     storeEmMemoria = {
       mesas: [
         {
@@ -110,36 +111,89 @@ export async function salvarStore(dados: DadosStore): Promise<void> {
       "utf-8",
     );
   } catch (err) {
-    console.error("Erro ao persistir store Calafrio:", err);
+    console.error("Erro ao persistir store local:", err);
   }
 }
 
 // === MESAS ===
 
 export async function listarMesas(): Promise<MesaCalafrio[]> {
+  if (db) {
+    try {
+      const res = await db.select().from(schema.mesas);
+      return res.map((m) => ({
+        id: m.id,
+        nome: m.nome,
+        codigoConvite: m.codigoConvite,
+        criadaEm: m.criadaEm.toISOString(),
+      }));
+    } catch (e) {
+      console.warn("Postgres falhou, usando store local:", e);
+    }
+  }
   const s = await carregarStore();
   return s.mesas;
 }
 
 export async function obterMesa(id: string): Promise<MesaCalafrio | null> {
+  if (db) {
+    try {
+      const res = await db.select().from(schema.mesas).where(eq(schema.mesas.id, id));
+      const m = res[0];
+      if (m) {
+        return {
+          id: m.id,
+          nome: m.nome,
+          codigoConvite: m.codigoConvite,
+          criadaEm: m.criadaEm.toISOString(),
+        };
+      }
+    } catch (e) {
+      console.warn("Postgres falhou, usando store local:", e);
+    }
+  }
   const s = await carregarStore();
   return s.mesas.find((m) => m.id === id) ?? null;
 }
 
 export async function criarMesa(nome: string): Promise<MesaCalafrio> {
-  const s = await carregarStore();
   const nova: MesaCalafrio = {
     id: `mesa-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     nome: nome.trim(),
     codigoConvite: gerarCodigoConvite(),
     criadaEm: new Date().toISOString(),
   };
+
+  if (db) {
+    try {
+      await db.insert(schema.mesas).values({
+        id: nova.id,
+        nome: nova.nome,
+        codigoConvite: nova.codigoConvite,
+        criadaEm: new Date(nova.criadaEm),
+        atualizadaEm: new Date(nova.criadaEm),
+      });
+      return nova;
+    } catch (e) {
+      console.warn("Postgres falhou ao criar mesa, usando store local:", e);
+    }
+  }
+
+  const s = await carregarStore();
   s.mesas.push(nova);
   await salvarStore(s);
   return nova;
 }
 
 export async function excluirMesa(id: string): Promise<void> {
+  if (db) {
+    try {
+      await db.delete(schema.mesas).where(eq(schema.mesas.id, id));
+      return;
+    } catch (e) {
+      console.warn("Postgres falhou ao excluir mesa, usando store local:", e);
+    }
+  }
   const s = await carregarStore();
   s.mesas = s.mesas.filter((m) => m.id !== id);
   s.players = s.players.filter((p) => p.mesaId !== id);
@@ -151,6 +205,32 @@ export async function excluirMesa(id: string): Promise<void> {
 // === PLAYERS / INVESTIGADORES ===
 
 export async function listarPlayers(mesaId: string): Promise<PlayerCalafrio[]> {
+  if (db) {
+    try {
+      const res = await db
+        .select()
+        .from(schema.players)
+        .where(eq(schema.players.mesaId, mesaId));
+
+      return res.map((p) => ({
+        id: p.id,
+        mesaId: p.mesaId,
+        nome: p.nome,
+        jogador: p.jogador ?? undefined,
+        aptBase: p.aptBase,
+        pvMax: p.pvMax,
+        paMax: p.paMax,
+        pd: p.pd,
+        velocidade: p.velocidade,
+        carteira: p.carteira as { fundos: number; espirions: number },
+        ficha: p.ficha,
+        criadaEm: p.criadaEm.toISOString(),
+      }));
+    } catch (e) {
+      console.warn("Postgres falhou ao listar players, usando store local:", e);
+    }
+  }
+
   const s = await carregarStore();
   return s.players.filter((p) => p.mesaId === mesaId);
 }
@@ -158,6 +238,34 @@ export async function listarPlayers(mesaId: string): Promise<PlayerCalafrio[]> {
 export async function obterPlayer(
   playerId: string,
 ): Promise<PlayerCalafrio | null> {
+  if (db) {
+    try {
+      const res = await db
+        .select()
+        .from(schema.players)
+        .where(eq(schema.players.id, playerId));
+      const p = res[0];
+      if (p) {
+        return {
+          id: p.id,
+          mesaId: p.mesaId,
+          nome: p.nome,
+          jogador: p.jogador ?? undefined,
+          aptBase: p.aptBase,
+          pvMax: p.pvMax,
+          paMax: p.paMax,
+          pd: p.pd,
+          velocidade: p.velocidade,
+          carteira: p.carteira as { fundos: number; espirions: number },
+          ficha: p.ficha,
+          criadaEm: p.criadaEm.toISOString(),
+        };
+      }
+    } catch (e) {
+      console.warn("Postgres falhou ao obter player, usando store local:", e);
+    }
+  }
+
   const s = await carregarStore();
   return s.players.find((p) => p.id === playerId) ?? null;
 }
@@ -166,24 +274,48 @@ export async function criarPlayer(
   mesaId: string,
   ficha: FichaCalafrio,
 ): Promise<PlayerCalafrio> {
-  const s = await carregarStore();
   const apt = ficha.aptBase || 1;
   const novo: PlayerCalafrio = {
     id:
       ficha.id ||
       `player-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     mesaId,
-    nome: ficha.nome,
+    nome: ficha.nome || "Novo Investigador",
     jogador: ficha.jogador,
     aptBase: apt,
     pvMax: 3 + 3 * apt,
     paMax: 3 + 3 * apt,
     pd: 3 * apt,
     velocidade: 6,
-    carteira: ficha.carteira,
+    carteira: ficha.carteira || { fundos: 6, espirions: 0 },
     ficha,
     criadaEm: new Date().toISOString(),
   };
+
+  if (db) {
+    try {
+      await db.insert(schema.players).values({
+        id: novo.id,
+        mesaId: novo.mesaId,
+        nome: novo.nome,
+        jogador: novo.jogador,
+        aptBase: novo.aptBase,
+        pvMax: novo.pvMax,
+        paMax: novo.paMax,
+        pd: novo.pd,
+        velocidade: novo.velocidade,
+        carteira: novo.carteira,
+        ficha: novo.ficha,
+        criadaEm: new Date(novo.criadaEm),
+        atualizadaEm: new Date(novo.criadaEm),
+      });
+      return novo;
+    } catch (e) {
+      console.warn("Postgres falhou ao criar player, usando store local:", e);
+    }
+  }
+
+  const s = await carregarStore();
   s.players.push(novo);
   await salvarStore(s);
   return novo;
@@ -193,11 +325,52 @@ export async function salvarFichaPlayer(
   playerId: string,
   ficha: FichaCalafrio,
 ): Promise<PlayerCalafrio | null> {
+  const apt = ficha.aptBase || 1;
+
+  if (db) {
+    try {
+      const atualizados = await db
+        .update(schema.players)
+        .set({
+          nome: ficha.nome,
+          jogador: ficha.jogador,
+          aptBase: apt,
+          pvMax: 3 + 3 * apt,
+          paMax: 3 + 3 * apt,
+          pd: 3 * apt,
+          carteira: ficha.carteira,
+          ficha,
+          atualizadaEm: new Date(),
+        })
+        .where(eq(schema.players.id, playerId))
+        .returning();
+
+      const p = atualizados[0];
+      if (p) {
+        return {
+          id: p.id,
+          mesaId: p.mesaId,
+          nome: p.nome,
+          jogador: p.jogador ?? undefined,
+          aptBase: p.aptBase,
+          pvMax: p.pvMax,
+          paMax: p.paMax,
+          pd: p.pd,
+          velocidade: p.velocidade,
+          carteira: p.carteira as { fundos: number; espirions: number },
+          ficha: p.ficha,
+          criadaEm: p.criadaEm.toISOString(),
+        };
+      }
+    } catch (e) {
+      console.warn("Postgres falhou ao salvar ficha, usando store local:", e);
+    }
+  }
+
   const s = await carregarStore();
   const idx = s.players.findIndex((p) => p.id === playerId);
   if (idx === -1) return null;
 
-  const apt = ficha.aptBase || 1;
   const atualizado: PlayerCalafrio = {
     ...s.players[idx],
     nome: ficha.nome,
@@ -218,6 +391,14 @@ export async function excluirPlayer(
   mesaId: string,
   playerId: string,
 ): Promise<void> {
+  if (db) {
+    try {
+      await db.delete(schema.players).where(eq(schema.players.id, playerId));
+      return;
+    } catch (e) {
+      console.warn("Postgres falhou ao excluir player, usando store local:", e);
+    }
+  }
   const s = await carregarStore();
   s.players = s.players.filter(
     (p) => !(p.mesaId === mesaId && p.id === playerId),

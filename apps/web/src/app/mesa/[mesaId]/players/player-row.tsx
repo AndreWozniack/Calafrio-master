@@ -22,7 +22,7 @@ export function PlayerRow({ player: p, mesaId, onExcluir }: PlayerRowProps) {
           <span className="font-black text-base text-foreground flex items-center gap-1.5">
             <User className="size-4 text-amber-400" /> {p.nome}
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30">
+          <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30">
             {ocupacao}
           </span>
           {p.jogador && (
@@ -35,15 +35,15 @@ export function PlayerRow({ player: p, mesaId, onExcluir }: PlayerRowProps) {
           )}
         </div>
 
-        {/* Vitais destacados em badges (Estilo T20 Master) */}
+        {/* Vitais destacados em badges */}
         <div className="flex items-center gap-2 pt-1">
           <span className="h-6 px-2 rounded-md flex items-center justify-center text-xs font-black bg-muted text-foreground border border-border">
             APT {p.aptBase}
           </span>
-          <span className="h-6 px-2.5 rounded-md flex items-center justify-center text-xs font-black bg-red-950/40 text-red-400 border border-red-800/50">
+          <span className="h-6 px-2.5 rounded-md flex items-center justify-center text-xs font-black bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800/50">
             PV {p.pvMax}
           </span>
-          <span className="h-6 px-2.5 rounded-md flex items-center justify-center text-xs font-black bg-cyan-950/40 text-cyan-400 border border-cyan-800/50">
+          <span className="h-6 px-2.5 rounded-md flex items-center justify-center text-xs font-black bg-cyan-50 text-cyan-800 border-cyan-200 dark:bg-cyan-950/40 dark:text-cyan-400 dark:border-cyan-800/50">
             PA {p.paMax}
           </span>
           <span className="h-6 px-2 rounded-md flex items-center justify-center text-xs font-black bg-muted/60 text-muted-foreground border border-border">
@@ -68,7 +68,7 @@ export function PlayerRow({ player: p, mesaId, onExcluir }: PlayerRowProps) {
         >
           <button
             type="submit"
-            className="p-2 rounded-lg border border-border hover:bg-red-950/40 text-muted-foreground hover:text-red-400 cursor-pointer transition-colors"
+            className="p-2 rounded-lg border border-border hover:bg-red-50 dark:hover:bg-red-950/40 text-muted-foreground hover:text-red-600 dark:hover:text-red-400 cursor-pointer transition-colors"
             title="Excluir Player"
           >
             <Trash2 className="size-4" />
