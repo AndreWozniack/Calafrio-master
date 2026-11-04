@@ -214,6 +214,31 @@ export function VisualizadorPapel({
     }
   };
 
+  const animacaoVerso =
+    transicao?.cima === "verso" && transicao.tipo === "avancar"
+      ? "folha-camada-cima-entrar"
+      : transicao?.cima === "verso" && transicao.tipo === "voltar"
+        ? "folha-camada-cima-sair"
+        : "";
+
+  const animacaoEcos =
+    transicao?.cima === "ecos" && transicao.tipo === "avancar"
+      ? "folha-camada-cima-entrar"
+      : transicao?.cima === "ecos" && transicao.tipo === "voltar"
+        ? "folha-camada-cima-sair"
+        : "";
+
+  const mostrarVerso =
+    pagina === "verso" ||
+    pagina === "ecos" ||
+    transicao?.cima === "verso" ||
+    transicao?.baixo === "verso";
+
+  const mostrarEcos =
+    pagina === "ecos" ||
+    transicao?.cima === "ecos" ||
+    transicao?.baixo === "ecos";
+
   return (
     <div
       className={`relative ${
@@ -309,50 +334,76 @@ export function VisualizadorPapel({
         />
       )}
 
-      {/* Visualização de Páginas: Perfeitamente Sobrepostas no Centro */}
+      {/* Visualização de Páginas: Pilha Real com Deslocamento Vertical Sutil (sem deslocamento horizontal) */}
       {!duas ? (
-        <div className="relative w-full">
-          <div className="relative w-full overflow-hidden rounded-sm shadow-xl">
-            {transicao ? (
-              transicao.tipo === "avancar" ? (
-                <>
-                  {/* Folha de baixo: parada exatamente no centro */}
-                  <div
-                    key={`baixo-${transicao.baixo}`}
-                    className="relative z-10 w-full pointer-events-none"
-                  >
-                    {renderPagina(transicao.baixo)}
-                  </div>
-                  {/* Folha de cima: entra deslizando por cima na MESMA POSIÇÃO EXATA */}
-                  <div
-                    key={`cima-${transicao.cima}`}
-                    className="absolute inset-0 z-20 w-full folha-camada-cima-entrar pointer-events-none"
-                  >
-                    {renderPagina(transicao.cima)}
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* Folha de baixo: na mesma posição central */}
-                  <div
-                    key={`baixo-${transicao.baixo}`}
-                    className="relative z-10 w-full pointer-events-none"
-                  >
-                    {renderPagina(transicao.baixo)}
-                  </div>
-                  {/* Folha de cima: desliza saindo para a direita */}
-                  <div
-                    key={`cima-${transicao.cima}`}
-                    className="absolute inset-0 z-20 w-full folha-camada-cima-sair pointer-events-none"
-                  >
-                    {renderPagina(transicao.cima)}
-                  </div>
-                </>
-              )
-            ) : (
-              /* Em repouso: folha ativa perfeitamente centralizada e interativa */
-              <div key={`atual-${pagina}`} className="relative z-10 w-full">
-                {renderPagina(pagina)}
+        <div className="relative w-full pb-3 sm:pb-4">
+          <div className="relative w-full overflow-hidden rounded-sm">
+            {/* Folha 1 (Frente / Identidade) — Base da pilha: y = 0 */}
+            <div
+              className={`relative w-full rounded-sm transition-all duration-300 ${
+                pagina === "frente"
+                  ? "z-30 pointer-events-auto shadow-xl"
+                  : "z-10 shadow-md"
+              } translate-x-0 translate-y-0`}
+            >
+              {renderPagina("frente")}
+
+              {/* Borda superior clicável da Folha 1 exposta quando estiver na Folha 2 ou 3 */}
+              {pagina !== "frente" && (
+                <button
+                  type="button"
+                  onClick={() => virar("frente")}
+                  title="Voltar para a Folha 1 (Identidade)"
+                  aria-label="Voltar para a Folha 1 (Identidade)"
+                  className="absolute top-0 left-0 w-full h-1.5 sm:h-2 z-40 cursor-pointer pointer-events-auto bg-transparent hover:bg-black/10 transition-colors"
+                />
+              )}
+            </div>
+
+            {/* Folha 2 (Verso / Matriz) — Sobreposta ligeiramente mais para baixo (y = 4px a 6px) */}
+            {mostrarVerso && (
+              <div
+                className={`absolute inset-0 translate-x-0 translate-y-1 sm:translate-y-1.5 transition-all duration-300 ${
+                  pagina === "verso" && !transicao
+                    ? "z-30 pointer-events-auto shadow-xl"
+                    : pagina === "frente"
+                      ? "z-10 pointer-events-none shadow-md"
+                      : "z-20 shadow-md"
+                }`}
+              >
+                <div
+                  className={`relative w-full rounded-sm ${animacaoVerso}`}
+                >
+                  {renderPagina("verso")}
+
+                  {/* Borda superior clicável da Folha 2 exposta quando estiver na Folha 3 */}
+                  {pagina === "ecos" && (
+                    <button
+                      type="button"
+                      onClick={() => virar("verso")}
+                      title="Voltar para a Folha 2 (Matriz)"
+                      aria-label="Voltar para a Folha 2 (Matriz)"
+                      className="absolute top-0 left-0 w-full h-1.5 sm:h-2 z-40 cursor-pointer pointer-events-auto bg-transparent hover:bg-black/10 transition-colors"
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Folha 3 (Ecos & Aprimoramentos) — Sobreposta ligeiramente mais para baixo (y = 8px a 12px) */}
+            {mostrarEcos && (
+              <div
+                className={`absolute inset-0 translate-x-0 translate-y-2 sm:translate-y-3 transition-all duration-300 ${
+                  pagina === "ecos" && !transicao
+                    ? "z-30 pointer-events-auto shadow-2xl"
+                    : "z-10 pointer-events-none shadow-md"
+                }`}
+              >
+                <div
+                  className={`relative w-full rounded-sm ${animacaoEcos}`}
+                >
+                  {renderPagina("ecos")}
+                </div>
               </div>
             )}
           </div>
