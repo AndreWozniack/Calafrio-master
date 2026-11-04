@@ -59,9 +59,9 @@ export function FichaLiveClient({
   };
 
   return (
-    <div className="space-y-5">
+    <div className="w-full">
       <div
-        className={`hidden sm:block ${
+        className={`hidden sm:block space-y-5 ${
           modo === "duas"
             ? "lg:relative lg:left-1/2 lg:w-[min(96vw,1700px)] lg:-translate-x-1/2"
             : "mx-auto max-w-[920px]"

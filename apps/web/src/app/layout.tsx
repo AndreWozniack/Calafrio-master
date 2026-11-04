@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Alegreya, Alegreya_Sans } from "next/font/google";
 import { auth } from "@/auth";
 import { BarraTopo } from "@/components/navegacao/barra-topo";
@@ -26,6 +26,13 @@ export const metadata: Metadata = {
     "Ficha Viva, Criação de Personagens e Mesa de Combate para Calafrio 2e",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#f4f4f2",
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -48,7 +55,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased min-h-screen flex flex-col bg-background text-foreground font-serif">
+      <body className="antialiased min-h-dvh flex flex-col bg-background text-foreground font-serif">
         <BarraTopo user={session?.user} />
         <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 flex flex-col">
           {children}

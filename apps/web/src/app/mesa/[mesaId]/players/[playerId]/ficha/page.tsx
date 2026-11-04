@@ -19,7 +19,7 @@ export default async function FichaPage({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full">
       <FichaLiveClient
         mesaId={mesaId}
         playerId={playerId}

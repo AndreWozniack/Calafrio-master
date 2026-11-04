@@ -2,14 +2,13 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { buscarUsuarioPorGoogleId } from "@/db/queries/usuarios";
+import { ehAmbienteDev } from "@/lib/auth/ambiente";
 import { provisionarConta } from "@/services/conta-service";
 
 /**
- * Login sem senha, só no ambiente de desenvolvimento.
+ * Login sem senha, estritamente no ambiente de desenvolvimento local.
  */
-const isDev =
-  process.env.NODE_ENV !== "production" ||
-  process.env.ALLOW_DEV_LOGIN === "true";
+const isDev = ehAmbienteDev();
 
 const googleClientId =
   process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID;
@@ -58,6 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               email: { label: "Email", type: "text" },
             },
             async authorize(credentials) {
+              if (!ehAmbienteDev()) return null;
               const email = String(credentials?.email ?? "")
                 .trim()
                 .toLowerCase();

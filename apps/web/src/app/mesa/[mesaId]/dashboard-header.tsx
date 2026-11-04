@@ -36,7 +36,7 @@ export function DashboardHeader({
           <span className="font-mono font-bold text-white">
             {codigoConvite}
           </span>{" "}
-          · {totalPlayers} Investigador(es) na equipe
+          · {totalPlayers} Player(s) na equipe
         </p>
       </div>
     </BannerEscudo>
