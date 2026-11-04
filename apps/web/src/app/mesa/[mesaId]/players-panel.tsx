@@ -12,9 +12,9 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
     <section className="space-y-4">
       <div className="flex items-center justify-between gap-3 border-b border-border pb-3">
         <div>
-          <span className="calafrio-tag-sm">EQUIPE DE INVESTIGADORES</span>
+          <span className="calafrio-tag-sm">PLAYERS DA MESA</span>
           <h2 className="text-lg font-black text-foreground flex items-center gap-2 mt-1">
-            <Users className="size-5 text-amber-400" /> Investigadores (
+            <Users className="size-5 text-amber-400" /> Players (
             {players.length})
           </h2>
         </div>
@@ -31,7 +31,7 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
         {players.map((p) => {
           const ocupacao =
             p.ficha.palavrasChave.find((pc) => pc.categoria === "ocupacao")
-              ?.nome ?? "Investigador(a)";
+              ?.nome ?? "Player";
 
           return (
             <Link
@@ -74,7 +74,7 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
           <div className="col-span-full py-10 px-4 text-center border-2 border-dashed border-border rounded-xl bg-card/20 space-y-2">
             <Users className="size-8 mx-auto text-muted-foreground/60" />
             <p className="text-sm font-bold text-foreground">
-              Nenhum investigador cadastrado nesta mesa.
+              Nenhum player cadastrado nesta mesa.
             </p>
             <p className="text-xs text-muted-foreground max-w-sm mx-auto">
               Clique no botão acima para abrir o Assistente e criar o primeiro

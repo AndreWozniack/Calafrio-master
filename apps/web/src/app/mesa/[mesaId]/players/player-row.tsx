@@ -13,7 +13,7 @@ interface PlayerRowProps {
 export function PlayerRow({ player: p, mesaId, onExcluir }: PlayerRowProps) {
   const ocupacao =
     p.ficha.palavrasChave.find((pc) => pc.categoria === "ocupacao")?.nome ??
-    "Investigador(a)";
+    "Player";
 
   return (
     <div className="calafrio-card p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -69,7 +69,7 @@ export function PlayerRow({ player: p, mesaId, onExcluir }: PlayerRowProps) {
           <button
             type="submit"
             className="p-2 rounded-lg border border-border hover:bg-red-950/40 text-muted-foreground hover:text-red-400 cursor-pointer transition-colors"
-            title="Excluir Investigador"
+            title="Excluir Player"
           >
             <Trash2 className="size-4" />
           </button>

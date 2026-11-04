@@ -5,11 +5,14 @@ import { ALTURA_FOLHA, LARGURA_FOLHA } from "./unidades";
 export function FolhaPapel({ children }: { children: ReactNode }) {
   return (
     <div
-      className="relative mx-auto w-full max-w-[880px] overflow-hidden bg-[#fbfbf9] text-black shadow-xl ring-1 ring-black/15"
+      className="relative mx-auto w-full max-w-[880px] overflow-hidden bg-[#fbfbf9] text-black shadow-xl ring-1 ring-black/15 [&_input]:font-bold [&_textarea]:font-semibold"
       style={{
         containerType: "inline-size",
         aspectRatio: `${LARGURA_FOLHA} / ${ALTURA_FOLHA}`,
         fontFamily: "var(--font-alegreya), Georgia, serif",
+        fontWeight: 600,
+        backgroundImage: "url(/assets/fundo-papel.svg)",
+        backgroundSize: "24cqw",
       }}
     >
       {children}

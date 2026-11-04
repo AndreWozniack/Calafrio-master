@@ -19,9 +19,9 @@ export function PreviewFichaCriacao({
   return (
     <div className="w-full lg:w-80 shrink-0 border-b lg:border-b-0 lg:border-r border-border bg-card/60 p-4 space-y-4 overflow-y-auto max-h-[30vh] lg:max-h-none">
       <div>
-        <span className="calafrio-tag-sm">PREVIEW DO INVESTIGADOR</span>
+        <span className="calafrio-tag-sm">PREVIEW DO PLAYER</span>
         <h3 className="text-base font-black text-foreground mt-1 truncate">
-          {ficha.nome.trim() ? ficha.nome : "Nome do Investigador"}
+          {ficha.nome.trim() ? ficha.nome : "Nome do Player"}
         </h3>
         <p className="text-xs text-muted-foreground truncate">
           {ocupacao} ·{" "}

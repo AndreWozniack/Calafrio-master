@@ -84,50 +84,62 @@ export function PalavrasChavePapel({
             style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.35)" }}
           >
             {p ? (
-              <button
-                type="button"
-                onClick={() => onRolar(p.nome)}
-                title={`Rolar d20 + APT com ${p.nome}`}
-                className="flex size-full cursor-pointer items-center truncate text-left"
-                style={{ paddingLeft: u(6), fontSize: u(11) }}
-              >
-                <span className="truncate font-semibold">{p.nome}</span>
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => onRolar(p.nome)}
+                  title={`Rolar d20 + APT com "${p.nome}"`}
+                  className="flex size-full cursor-pointer items-center truncate text-left font-bold hover:bg-black/5"
+                  style={{
+                    paddingLeft: u(8),
+                    paddingRight: u(40),
+                    fontSize: u(13),
+                  }}
+                >
+                  <span className="truncate">{p.nome}</span>
+                </button>
+                <span
+                  className="absolute top-0 flex h-full items-center"
+                  style={{ right: u(5), gap: u(4) }}
+                >
+                  <span
+                    className="pointer-events-none flex items-center justify-center rounded-full bg-black text-white"
+                    style={{ width: u(16), height: u(16) }}
+                    aria-hidden="true"
+                  >
+                    <Dices style={{ width: u(10), height: u(10) }} />
+                  </span>
+                  {!p.semConsumirLimite && (
+                    <button
+                      type="button"
+                      title="Remover palavra-chave"
+                      aria-label={`Remover ${p.nome}`}
+                      onClick={() => onRemover(p.id)}
+                      className="cursor-pointer text-black/35 hover:text-red-700"
+                    >
+                      <X style={{ width: u(11), height: u(11) }} strokeWidth={3} />
+                    </button>
+                  )}
+                </span>
+              </>
             ) : (
               <button
                 type="button"
                 onClick={() => setModalAberto(true)}
                 title="Adicionar palavra-chave"
-                className="flex size-full cursor-pointer items-center justify-start text-black/0 transition-colors hover:text-black/40"
-                style={{ paddingLeft: u(6) }}
+                className="flex size-full cursor-pointer items-center text-black/35 transition-colors hover:bg-black/5 hover:text-black"
+                style={{ paddingLeft: u(8), gap: u(4), fontSize: u(10.5) }}
               >
-                <Plus style={{ width: u(11), height: u(11) }} />
+                <Plus style={{ width: u(11), height: u(11) }} strokeWidth={3} />
+                Adicionar
               </button>
             )}
             {linha.rotulo && (
               <span
-                className="pointer-events-none absolute uppercase italic text-black/80"
-                style={{ right: u(14), bottom: u(2), fontSize: u(5.5) }}
+                className="pointer-events-none absolute font-bold uppercase italic text-black/70"
+                style={{ right: u(40), bottom: u(1.5), fontSize: u(5.8) }}
               >
                 {linha.rotulo}
-              </span>
-            )}
-            {p && (
-              <span
-                className="absolute top-0 flex h-full items-center gap-[0.4cqw] opacity-0 transition-opacity group-hover:opacity-100"
-                style={{ right: u(4) }}
-              >
-                <Dices style={{ width: u(10), height: u(10) }} />
-                {!p.semConsumirLimite && (
-                  <button
-                    type="button"
-                    title="Remover"
-                    onClick={() => onRemover(p.id)}
-                    className="cursor-pointer text-red-700"
-                  >
-                    <X style={{ width: u(10), height: u(10) }} />
-                  </button>
-                )}
               </span>
             )}
           </Posicionado>

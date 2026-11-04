@@ -30,7 +30,7 @@ export default async function PlayersPage({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-4">
         <div>
           <h1 className="text-2xl font-black font-heading tracking-wide text-foreground uppercase flex items-center gap-2">
-            <Users className="size-6 text-amber-400" /> Investigadores (
+            <Users className="size-6 text-amber-400" /> Players (
             {players.length})
           </h1>
           <p className="text-xs text-muted-foreground font-semibold mt-1">
@@ -63,7 +63,7 @@ export default async function PlayersPage({
           <div className="py-12 text-center border-2 border-dashed border-border rounded-xl bg-card/20 space-y-2">
             <Users className="size-8 mx-auto text-muted-foreground/60" />
             <p className="text-sm font-bold text-foreground">
-              Nenhum investigador cadastrado nesta mesa.
+              Nenhum player cadastrado nesta mesa.
             </p>
             <p className="text-xs text-muted-foreground">
               Clique em &ldquo;Criar Ficha Completa&rdquo; para forjar seu

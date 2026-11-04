@@ -6,7 +6,7 @@ import type {
   HabilidadeUnicaCalafrio,
 } from "@calafrio/core";
 import { TOKENS_PERSONALIDADE } from "@calafrio/tema";
-import { Lock, X } from "lucide-react";
+import { Lock, Plus, X } from "lucide-react";
 import { Posicionado } from "./primitivos-papel";
 import { u } from "./unidades";
 
@@ -116,13 +116,13 @@ export function SlotHabilidadePapel({
         />
         {dados && (
           <div
-            className="pointer-events-none absolute flex items-end gap-[0.6cqw] truncate font-bold leading-none"
+            className="pointer-events-none absolute flex items-end gap-[0.6cqw] truncate font-extrabold leading-none"
             style={{
               left: u(22),
               top: u(30),
               width: u(112),
               height: u(18),
-              fontSize: u(11.5),
+              fontSize: u(12.5),
             }}
           >
             {dados.cor && (
@@ -141,8 +141,8 @@ export function SlotHabilidadePapel({
         )}
         {dados && (
           <div
-            className="pointer-events-none absolute uppercase italic"
-            style={{ left: u(22), top: u(51), fontSize: u(6) }}
+            className="pointer-events-none absolute font-bold uppercase italic"
+            style={{ left: u(22), top: u(51), fontSize: u(6.6) }}
           >
             {dados.tipoAcao} · {dados.custo}
           </div>
@@ -157,12 +157,22 @@ export function SlotHabilidadePapel({
             width: u(160),
             height: u(PASSO_LINHA * 6),
             backgroundImage: `repeating-linear-gradient(to bottom, transparent 0, transparent calc(${u(PASSO_LINHA)} - 1px), rgba(0,0,0,0.28) calc(${u(PASSO_LINHA)} - 1px), rgba(0,0,0,0.28) ${u(PASSO_LINHA)})`,
-            fontSize: u(8.6),
+            fontSize: u(9.4),
             lineHeight: u(PASSO_LINHA),
+            fontWeight: 600,
           }}
         >
           {dados?.descricao}
         </div>
+        {!dados && (
+          <div
+            className="pointer-events-none absolute flex items-center font-bold text-black/40 transition-colors group-hover:text-black"
+            style={{ left: u(22), top: u(60), gap: u(4), fontSize: u(11) }}
+          >
+            <Plus style={{ width: u(12), height: u(12) }} strokeWidth={3} />
+            Escolher habilidade
+          </div>
+        )}
 
         {/* cadeado (Foco) */}
         <FocoCadeado
@@ -177,8 +187,8 @@ export function SlotHabilidadePapel({
             type="button"
             title="Limpar slot"
             onClick={() => onLimpar(numero)}
-            className="absolute cursor-pointer text-red-700 opacity-0 transition-opacity group-hover:opacity-100"
-            style={{ right: u(6), bottom: u(4) }}
+            className="absolute z-10 cursor-pointer text-black/40 hover:text-red-700"
+            style={{ right: u(8), bottom: u(6) }}
           >
             <X style={{ width: u(11), height: u(11) }} />
           </button>

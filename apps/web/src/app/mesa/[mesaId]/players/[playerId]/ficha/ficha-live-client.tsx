@@ -2,12 +2,25 @@
 
 import type { FichaCalafrio } from "@calafrio/core";
 import { useFichaCalafrio } from "@calafrio/ficha-app";
-import { ArrowLeft, Dices, Moon, Sun } from "lucide-react";
+import {
+  ArrowLeft,
+  BookOpen,
+  Columns2,
+  Dices,
+  Moon,
+  Skull,
+  Sun,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { FichaCelular } from "@/components/ficha/celular/ficha-celular";
+import type {
+  ModoVisualizacao,
+  PaginaFicha,
+} from "@/components/ficha/fichas-tipos";
+import { ModalDanoCura } from "@/components/ficha/modal-dano-cura";
 import { ModalRolagemCalafrio } from "@/components/ficha/modal-rolagem-calafrio";
-import { PaginaFrenteFicha } from "@/components/ficha/pagina-frente-ficha";
-import { PaginaVersoMatriz } from "@/components/ficha/pagina-verso-matriz";
+import { VisualizadorPapel } from "@/components/ficha/visualizador-papel";
 import {
   formatarContestacao,
   formatarTesteAcao,
@@ -21,6 +34,10 @@ interface FichaLiveClientProps {
   fichaInicial: FichaCalafrio;
 }
 
+const botaoBarra =
+  "flex cursor-pointer items-center gap-1.5 rounded-sm border border-black px-3 py-2 text-xs font-bold shadow-[1px_1px_0px_#000] transition-all";
+const botaoClaro = `${botaoBarra} bg-white text-black hover:bg-black hover:text-white`;
+
 export function FichaLiveClient({
   mesaId,
   playerId,
@@ -30,136 +47,99 @@ export function FichaLiveClient({
     salvarFichaPlayerAction(playerId, nova);
   });
 
-  const [paginaAtiva, setPaginaAtiva] = useState<"frente" | "verso">("frente");
+  const [pagina, setPagina] = useState<PaginaFicha>("frente");
+  const [modo, setModo] = useState<ModoVisualizacao>("duas");
   const [mostrarRolagem, setMostrarRolagem] = useState(false);
-  const [palavraChaveRolagem, setPalavraChaveRolagem] = useState<
-    string | undefined
-  >(undefined);
+  const [mostrarDanoCura, setMostrarDanoCura] = useState(false);
+  const [palavraChaveRolagem, setPalavraChaveRolagem] = useState<string>();
+
+  const abrirRolagem = (nome?: string) => {
+    setPalavraChaveRolagem(nome);
+    setMostrarRolagem(true);
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Barra Superior da Ficha */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-card border border-border rounded-md shadow-sm">
-        <div className="flex items-center gap-2 flex-wrap">
-          <Link
-            href={`/mesa/${mesaId}/players`}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-muted hover:bg-border text-foreground text-xs font-bold transition-colors cursor-pointer"
-          >
-            <ArrowLeft className="size-3.5 text-amber-400" /> Investigadores
-          </Link>
+    <div className="space-y-5">
+      <div className="hidden sm:block lg:relative lg:left-1/2 lg:w-[min(96vw,1700px)] lg:-translate-x-1/2">
+        <div className="mb-5 flex w-full flex-wrap items-center justify-between gap-2 rounded-sm border-2 border-black bg-[#f7f7f5] p-2.5 shadow-[2px_2px_0px_#000]">
+          <div className="flex items-center gap-2">
+            <Link href={`/mesa/${mesaId}/players`} className={botaoClaro}>
+              <ArrowLeft className="size-4" /> Players
+            </Link>
+            <div className="hidden rounded-sm border border-black bg-white p-0.5 lg:inline-flex">
+              {(
+                [
+                  ["duas", "Duas páginas", Columns2],
+                  ["uma", "Uma página", BookOpen],
+                ] as const
+              ).map(([id, rotulo, Icone]) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setModo(id)}
+                  className={`flex cursor-pointer items-center gap-1.5 rounded-xs px-3 py-1.5 text-xs transition-all ${
+                    modo === id
+                      ? "bg-black font-black text-white"
+                      : "font-semibold text-black/70 hover:text-black"
+                  }`}
+                >
+                  <Icone className="size-4" /> {rotulo}
+                </button>
+              ))}
+            </div>
+          </div>
 
-          <span className="text-xs text-muted-foreground font-semibold px-2">
-            Investigador:{" "}
-            <strong className="text-foreground">{f.ficha.nome}</strong> (APT{" "}
-            {f.ficha.aptBase})
-          </span>
-
-          {/* Alternador de Páginas */}
-          <div className="inline-flex p-0.5 bg-muted rounded border border-border text-xs font-bold">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={() => setPaginaAtiva("frente")}
-              className={`px-3 py-1 rounded-xs transition-colors cursor-pointer ${
-                paginaAtiva === "frente"
-                  ? "bg-amber-400 text-black shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              onClick={() => f.descansar("curto", 1, "fixo")}
+              title="Descanso curto (1h: +9 PA)"
+              className={botaoClaro}
             >
-              Página 1 (Frente)
+              <Sun className="size-4 text-amber-600" /> Descanso curto
             </button>
             <button
               type="button"
-              onClick={() => setPaginaAtiva("verso")}
-              className={`px-3 py-1 rounded-xs transition-colors cursor-pointer ${
-                paginaAtiva === "verso"
-                  ? "bg-amber-400 text-black shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              onClick={() => f.descansar("longo", 8, "fixo")}
+              title="Descanso longo (8h: +6 PV e todo o PA)"
+              className={botaoClaro}
             >
-              Página 2 (Matriz 3×3)
+              <Moon className="size-4 text-blue-600" /> Descanso longo
+            </button>
+            <button
+              type="button"
+              onClick={() => setMostrarDanoCura(true)}
+              className={botaoClaro}
+            >
+              <Skull className="size-4" /> Dano / Cura
+            </button>
+            <button
+              type="button"
+              onClick={() => abrirRolagem()}
+              className={`${botaoBarra} bg-black px-4 font-black text-white shadow-[2px_2px_0px_rgba(0,0,0,0.4)] hover:bg-black/85`}
+            >
+              <Dices className="size-4 text-amber-400" /> Rolar d20
             </button>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Descansos */}
-          <button
-            type="button"
-            onClick={() => f.descansar("curto", 1, "fixo")}
-            className="flex items-center gap-1 px-2.5 py-1.5 bg-muted hover:bg-border rounded text-xs font-bold cursor-pointer text-muted-foreground hover:text-foreground"
-            title="Descanso Curto (1h: +9 PA)"
-          >
-            <Sun className="size-3.5 text-amber-400" /> Curto (+9 PA)
-          </button>
-
-          <button
-            type="button"
-            onClick={() => f.descansar("longo", 8, "fixo")}
-            className="flex items-center gap-1 px-2.5 py-1.5 bg-muted hover:bg-border rounded text-xs font-bold cursor-pointer text-muted-foreground hover:text-foreground"
-            title="Descanso Longo (8h: +6 PV e todo o PA)"
-          >
-            <Moon className="size-3.5 text-cyan-400" /> Longo (+6 PV)
-          </button>
-
-          {/* Rolar d20 */}
-          <button
-            type="button"
-            onClick={() => {
-              setPalavraChaveRolagem(undefined);
-              setMostrarRolagem(true);
-            }}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-400 text-black hover:bg-amber-300 rounded text-xs font-black cursor-pointer shadow-sm"
-          >
-            <Dices className="size-3.5" /> Rolar Dados
-          </button>
-        </div>
+        <VisualizadorPapel
+          f={f}
+          modo={modo}
+          pagina={pagina}
+          onMudarPagina={setPagina}
+          onAbrirRolagem={abrirRolagem}
+        />
       </div>
 
-      {/* Exibição da Página Selecionada */}
-      {paginaAtiva === "frente" ? (
-        <PaginaFrenteFicha
-          ficha={f.ficha}
-          derivada={f.derivada}
-          onDefinirNome={f.definirNome}
-          onDefinirApt={f.definirApt}
-          onDefinirRetrato={(url) => f.dispatch({ tipo: "definirRetrato", url })}
-          onDefinirPvAtual={f.definirPvAtual}
-          onDefinirPaAtual={f.definirPaAtual}
-          onAdicionarPalavraChave={f.adicionarPalavraChave}
-          onRemoverPalavraChave={f.removerPalavraChave}
-          onAdicionarItem={f.adicionarItem}
-          onAlternarEquipado={(id) =>
-            f.dispatch({ tipo: "alternarEquipadoItem", id })
-          }
-          onRemoverItem={f.removerItem}
-          onAtualizarCarteira={f.definirCarteira}
-          onAbrirRolagem={(palavra) => {
-            setPalavraChaveRolagem(palavra);
-            setMostrarRolagem(true);
-          }}
+      <div className="sm:hidden">
+        <FichaCelular
+          f={f}
+          onAbrirRolagem={abrirRolagem}
+          onAbrirDanoCura={() => setMostrarDanoCura(true)}
         />
-      ) : (
-        <PaginaVersoMatriz
-          ficha={f.ficha}
-          derivada={f.derivada}
-          catalogo={f.catalogo}
-          onAlocarSlot={(slot, alocacao) =>
-            f.alocarSlotMatriz(slot, alocacao.tipo, alocacao.id)
-          }
-          onLimparSlot={f.limparSlotMatriz}
-          onAdicionarHabilidadeUnica={(unica) =>
-            f.dispatch({ tipo: "adicionarHabilidadeUnica", unica })
-          }
-          onRemoverHabilidadeUnica={(id) =>
-            f.dispatch({ tipo: "removerHabilidadeUnica", id })
-          }
-          focoAtivoId={f.estado.focoAtivoId}
-          onAlternarFoco={f.alternarFoco}
-          onDefinirAnotacoes={f.definirAnotacoes}
-        />
-      )}
+      </div>
 
-      {/* Modal de Rolagens */}
       {mostrarRolagem && (
         <ModalRolagemCalafrio
           aberto={mostrarRolagem}
@@ -167,13 +147,26 @@ export function FichaLiveClient({
           palavraChaveInicial={palavraChaveRolagem}
           onFechar={() => setMostrarRolagem(false)}
           onRolou={(resultado, acao) => {
-            const ctx = { mesaId, autor: f.ficha.nome || "Investigador", acao };
+            const ctx = { mesaId, autor: f.ficha.nome || "Player", acao };
             const rolagem =
               resultado.tipo === "acao"
                 ? formatarTesteAcao(resultado.dados, ctx)
                 : formatarContestacao(resultado.dados, ctx);
             void registrarRolagemAction(rolagem);
           }}
+        />
+      )}
+
+      {mostrarDanoCura && (
+        <ModalDanoCura
+          pvAtual={f.derivada.pvAtual}
+          paAtual={f.derivada.paAtual}
+          onDano={(valor, espectro, paMitigar) =>
+            f.sofrerDano(valor, espectro, paMitigar)
+          }
+          onCurarPv={f.curarPv}
+          onCurarPa={f.curarPa}
+          onFechar={() => setMostrarDanoCura(false)}
         />
       )}
     </div>

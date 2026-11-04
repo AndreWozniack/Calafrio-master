@@ -32,14 +32,14 @@ export function InventarioPapel({
       </EtiquetaPapel>
 
       <Posicionado
-        area={{ x: 24, y: 376, w: 614, h: 500 }}
+        area={{ x: 26, y: 384, w: 610, h: 494 }}
         className="overflow-y-auto"
-        style={{ columnCount: 2, columnGap: u(18), fontSize: u(10.5) }}
+        style={{ columnCount: 2, columnGap: u(22), fontSize: u(13) }}
       >
         {inventario.map((item) => (
           <div
             key={item.id}
-            className="group mb-[1.4cqw] flex break-inside-avoid items-start gap-[1cqw] border-b border-black/20 pb-[1cqw]"
+            className="group mb-[2cqw] flex break-inside-avoid items-start gap-[1.2cqw] border-b border-black/25 pb-[1.6cqw]"
           >
             <button
               type="button"
@@ -47,22 +47,22 @@ export function InventarioPapel({
               title={item.equipado ? "Equipado" : "Guardado"}
               className={`mt-[0.3cqw] shrink-0 cursor-pointer ${item.equipado ? "text-black" : "text-black/25"}`}
             >
-              <Shield style={{ width: u(11), height: u(11) }} />
+              <Shield style={{ width: u(13), height: u(13) }} />
             </button>
-            <div className="min-w-0 flex-1 leading-tight">
+            <div className="min-w-0 flex-1 font-bold leading-snug">
               <div className="flex items-center gap-[0.8cqw] font-bold">
                 {item.paranormal && (
                   <Sparkles style={{ width: u(9), height: u(9) }} />
                 )}
                 <span className="truncate">{item.nome}</span>
                 {item.dano && (
-                  <span className="italic" style={{ fontSize: u(8.5) }}>
+                  <span className="italic" style={{ fontSize: u(10) }}>
                     [{item.dano} {item.espectroDano}]
                   </span>
                 )}
               </div>
               {item.descricao && (
-                <p className="text-black/70" style={{ fontSize: u(8.5) }}>
+                <p className="font-medium text-black/70" style={{ fontSize: u(10.5) }}>
                   {item.descricao}
                 </p>
               )}
@@ -71,7 +71,7 @@ export function InventarioPapel({
               type="button"
               title="Remover"
               onClick={() => onRemover(item.id)}
-              className="cursor-pointer text-red-700 opacity-0 group-hover:opacity-100"
+              className="cursor-pointer text-black/35 hover:text-red-700"
             >
               <X style={{ width: u(10), height: u(10) }} />
             </button>
@@ -79,14 +79,14 @@ export function InventarioPapel({
         ))}
       </Posicionado>
 
-      <Posicionado area={{ x: 560, y: 364, w: 84, h: 16 }}>
+      <Posicionado area={{ x: 548, y: 366, w: 96, h: 18 }}>
         <button
           type="button"
           onClick={() => setModalAberto(true)}
           className="flex size-full cursor-pointer items-center justify-center gap-[0.5cqw] bg-black text-white transition-opacity hover:opacity-80"
-          style={{ fontSize: u(8.5) }}
+          style={{ fontSize: u(11) }}
         >
-          <Plus style={{ width: u(9), height: u(9) }} /> Novo item
+          <Plus style={{ width: u(10), height: u(10) }} strokeWidth={3} /> Novo item
         </button>
       </Posicionado>
 

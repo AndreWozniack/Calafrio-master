@@ -7,7 +7,7 @@ import { u } from "./unidades";
 
 const LADO_MAXIMO = 480;
 
-function lerImagemRedimensionada(arquivo: File): Promise<string> {
+export function lerImagemRedimensionada(arquivo: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const leitor = new FileReader();
     leitor.onerror = () => reject(leitor.error);

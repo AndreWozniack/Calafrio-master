@@ -1,6 +1,6 @@
 "use client";
 
-import { CampoPapel, EtiquetaPapel } from "./primitivos-papel";
+import { BotaoPassoPapel, CampoPapel, EtiquetaPapel } from "./primitivos-papel";
 import { u } from "./unidades";
 
 const X_ETIQUETA = 165;
@@ -12,7 +12,7 @@ export const Y_LINHA_INICIAL = 78;
 const PASSO = 43.4;
 
 const classeEntrada =
-  "w-full bg-transparent text-center font-semibold outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none";
+  "w-full bg-transparent text-center font-extrabold outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none";
 
 export function LinhaVital({
   indice,
@@ -62,7 +62,7 @@ export function NumeroEditavel({
       title={titulo}
       onChange={(e) => onChange(Number(e.target.value))}
       className={classeEntrada}
-      style={{ fontSize: u(17) }}
+      style={{ fontSize: u(20) }}
     />
   );
 }
@@ -70,8 +70,8 @@ export function NumeroEditavel({
 export function NumeroFixo({ children }: { children: React.ReactNode }) {
   return (
     <span
-      className="w-full text-center font-semibold"
-      style={{ fontSize: u(17) }}
+      className="w-full text-center font-extrabold"
+      style={{ fontSize: u(20) }}
     >
       {children}
     </span>
@@ -90,8 +90,16 @@ export function VitalAtualMaximo({
   titulo: string;
 }) {
   return (
-    <div className="flex size-full items-center" style={{ fontSize: u(17) }}>
-      <div style={{ width: u(66) }}>
+    <div
+      className="flex size-full items-center justify-between"
+      style={{ paddingLeft: u(8), paddingRight: u(22), fontSize: u(20) }}
+    >
+      <BotaoPassoPapel
+        sentido="menos"
+        titulo={`Diminuir ${titulo}`}
+        onClick={() => onAtual(atual - 1)}
+      />
+      <div className="flex items-center font-extrabold">
         <input
           type="number"
           value={atual}
@@ -99,15 +107,18 @@ export function VitalAtualMaximo({
           title={titulo}
           onChange={(e) => onAtual(Number(e.target.value))}
           className={`${classeEntrada} text-right`}
-          style={{ fontSize: u(17) }}
+          style={{ fontSize: u(20), width: u(36) }}
         />
+        <span className="px-[0.5cqw] font-light" style={{ fontSize: u(24) }}>
+          /
+        </span>
+        <span style={{ minWidth: u(30) }}>{maximo}</span>
       </div>
-      <span className="px-[0.6cqw] font-light" style={{ fontSize: u(22) }}>
-        /
-      </span>
-      <span className="font-semibold" style={{ minWidth: u(40) }}>
-        {maximo}
-      </span>
+      <BotaoPassoPapel
+        sentido="mais"
+        titulo={`Aumentar ${titulo}`}
+        onClick={() => onAtual(atual + 1)}
+      />
     </div>
   );
 }

@@ -24,7 +24,7 @@ export function CardInvestigadorRow({
 
   const ocupacao =
     p.palavrasChave.find((pc) => pc.categoria === "ocupacao")?.nome ??
-    "Investigador(a)";
+    "Player";
 
   return (
     <div className="p-4 rounded-xl border border-border/80 bg-card/70 hover:bg-card hover:border-amber-400/40 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
@@ -72,7 +72,7 @@ export function CardInvestigadorRow({
           type="button"
           onClick={() => onDuplicar(p.id)}
           className="p-2 rounded-lg border border-border hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
-          title="Duplicar Investigador"
+          title="Duplicar Player"
         >
           <Copy className="size-4" />
         </button>
@@ -89,7 +89,7 @@ export function CardInvestigadorRow({
             }
           }}
           className="p-2 rounded-lg border border-border hover:bg-red-950/40 text-muted-foreground hover:text-red-400 cursor-pointer transition-colors"
-          title="Excluir Investigador"
+          title="Excluir Player"
         >
           <Trash2 className="size-4" />
         </button>

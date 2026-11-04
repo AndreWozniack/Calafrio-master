@@ -71,7 +71,7 @@ export function AssistenteCriacaoCalafrio({
         {/* Cabeçalho Superior Fixo */}
         <div className="flex items-center justify-between px-6 py-3.5 border-b border-border bg-muted/40 shrink-0">
           <div className="flex items-center gap-3">
-            <span className="calafrio-tag">CRIAÇÃO DE INVESTIGADOR</span>
+            <span className="calafrio-tag">CRIAÇÃO DE PLAYER</span>
             <span className="text-xs text-muted-foreground font-semibold">
               Calafrio 2ª Edição
             </span>

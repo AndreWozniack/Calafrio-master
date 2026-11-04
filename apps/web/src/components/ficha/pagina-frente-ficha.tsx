@@ -6,7 +6,6 @@ import type {
   ItemNaFichaCalafrio,
   PalavraChaveNaFicha,
 } from "@calafrio/core";
-import { Minus, Plus } from "lucide-react";
 import {
   LinhaVital,
   NumeroEditavel,
@@ -17,6 +16,7 @@ import { FolhaPapel } from "./papel/folha-papel";
 import { InventarioPapel } from "./papel/inventario-papel";
 import { PalavrasChavePapel } from "./papel/palavras-chave-papel";
 import {
+  BotaoPassoPapel,
   CampoPapel,
   EtiquetaPapel,
   Losango,
@@ -43,9 +43,6 @@ interface PaginaFrenteFichaProps {
   onAtualizarCarteira: (fundos: number, espirions: number) => void;
   onAbrirRolagem: (nome?: string) => void;
 }
-
-const botaoApt =
-  "flex cursor-pointer items-center justify-center rounded-full bg-black text-white hover:opacity-70";
 
 function CampoCarteira({
   y,
@@ -126,7 +123,7 @@ export function PaginaFrenteFicha({
         <input
           value={ficha.nome}
           onChange={(e) => onDefinirNome(e.target.value)}
-          placeholder="Nome do investigador"
+          placeholder="Nome do player"
           className="size-full bg-transparent font-semibold outline-none placeholder:font-normal placeholder:text-black/20"
           style={{ fontSize: u(19), paddingLeft: u(10), paddingBottom: u(8) }}
         />
@@ -156,17 +153,16 @@ export function PaginaFrenteFicha({
         }
         legenda="= Concedido pelo MdJ"
       >
-        <div className="flex size-full items-center">
-          <button
-            type="button"
-            className={botaoApt}
-            style={{ width: u(16), height: u(16), marginLeft: u(10) }}
-            title="Diminuir APT"
+        <div
+          className="flex size-full items-center justify-between"
+          style={{ paddingLeft: u(8), paddingRight: u(22) }}
+        >
+          <BotaoPassoPapel
+            sentido="menos"
+            titulo="Diminuir APT"
             onClick={() => onDefinirApt(ficha.aptBase - 1)}
-          >
-            <Minus style={{ width: u(10), height: u(10) }} />
-          </button>
-          <div className="flex-1">
+          />
+          <div style={{ width: u(60) }}>
             <NumeroEditavel
               valor={ficha.aptBase}
               min={1}
@@ -174,15 +170,11 @@ export function PaginaFrenteFicha({
               titulo="Aptidão"
             />
           </div>
-          <button
-            type="button"
-            className={botaoApt}
-            style={{ width: u(16), height: u(16), marginRight: u(34) }}
-            title="Aumentar APT"
+          <BotaoPassoPapel
+            sentido="mais"
+            titulo="Aumentar APT"
             onClick={() => onDefinirApt(ficha.aptBase + 1)}
-          >
-            <Plus style={{ width: u(10), height: u(10) }} />
-          </button>
+          />
         </div>
       </LinhaVital>
       <LinhaVital

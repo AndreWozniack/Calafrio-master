@@ -281,11 +281,11 @@ export function VisaoMesaCombate() {
         <div className="grid md:grid-cols-2 gap-4 text-xs">
           <div className="space-y-1.5">
             <div className="font-bold uppercase text-[10px] text-muted-foreground">
-              Investigadores ({personagens.length})
+              Players ({personagens.length})
             </div>
             {personagens.length === 0 && (
               <p className="text-muted-foreground">
-                Nenhum investigador criado. Crie em “Investigadores”.
+                Nenhum player criado. Crie em “Players”.
               </p>
             )}
             <div className="flex flex-wrap gap-1.5">

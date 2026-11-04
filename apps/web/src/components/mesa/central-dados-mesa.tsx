@@ -148,7 +148,7 @@ export function CentralDadosMesa({
         </ul>
         {rolagens.length === 0 && (
           <p className="rounded-xl border-2 border-dashed border-border py-10 text-center text-xs text-muted-foreground">
-            Nenhuma rolagem ainda. As rolagens dos investigadores aparecem aqui.
+            Nenhuma rolagem ainda. As rolagens dos players aparecem aqui.
           </p>
         )}
       </section>

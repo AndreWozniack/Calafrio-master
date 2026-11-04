@@ -1,3 +1,4 @@
+import { Minus, Plus } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
 import { estiloRetangulo, type Retangulo, u } from "./unidades";
 
@@ -155,5 +156,30 @@ export function CaixaMoldura({ area }: { area: Retangulo }) {
       className="border-black bg-white"
       style={{ borderWidth: u(2.2), borderStyle: "solid" }}
     />
+  );
+}
+
+/** Botão redondo preto de "+" ou "−" para ajustar valores direto na folha. */
+export function BotaoPassoPapel({
+  sentido,
+  titulo,
+  onClick,
+}: {
+  sentido: "mais" | "menos";
+  titulo: string;
+  onClick: () => void;
+}) {
+  const Icone = sentido === "mais" ? Plus : Minus;
+  return (
+    <button
+      type="button"
+      title={titulo}
+      aria-label={titulo}
+      onClick={onClick}
+      className="flex shrink-0 cursor-pointer items-center justify-center rounded-full bg-black text-white transition-transform hover:scale-110 active:scale-95"
+      style={{ width: u(17), height: u(17) }}
+    >
+      <Icone style={{ width: u(11), height: u(11) }} strokeWidth={3} />
+    </button>
   );
 }

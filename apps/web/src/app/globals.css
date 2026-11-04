@@ -107,3 +107,52 @@ body {
   border: 2px solid #222226;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
+
+/* Virar página da ficha (ver visualizador-ficha.tsx) */
+@keyframes virar-avancar {
+  from {
+    transform: perspective(1800px) rotateY(-60deg);
+    transform-origin: left center;
+    opacity: 0.25;
+  }
+  to {
+    transform: perspective(1800px) rotateY(0);
+    transform-origin: left center;
+    opacity: 1;
+  }
+}
+
+@keyframes virar-voltar {
+  from {
+    transform: perspective(1800px) rotateY(60deg);
+    transform-origin: right center;
+    opacity: 0.25;
+  }
+  to {
+    transform: perspective(1800px) rotateY(0);
+    transform-origin: right center;
+    opacity: 1;
+  }
+}
+
+.virar-avancar {
+  animation: virar-avancar 0.45s ease-out;
+}
+
+.virar-voltar {
+  animation: virar-voltar 0.45s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .virar-avancar,
+  .virar-voltar {
+    animation: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  [data-modo="duas"] .virar-avancar,
+  [data-modo="duas"] .virar-voltar {
+    animation: none;
+  }
+}

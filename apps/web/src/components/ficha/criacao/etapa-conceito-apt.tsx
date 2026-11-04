@@ -24,7 +24,7 @@ export function EtapaConceitoApt({
           1. Identidade & Aptidão
         </h4>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Defina a identidade do seu investigador e o nível de Aptidão inicial.
+          Defina a identidade do seu player e o nível de Aptidão inicial.
         </p>
       </div>
 
@@ -37,7 +37,7 @@ export function EtapaConceitoApt({
             type="text"
             value={ficha.nome}
             onChange={(e) => onDefinirNome(e.target.value)}
-            placeholder="Nome do investigador"
+            placeholder="Nome do player"
             required
             className="w-full bg-muted/60 p-2.5 rounded-lg border border-border focus:border-amber-400 outline-none font-bold text-sm"
           />
