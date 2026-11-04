@@ -194,11 +194,11 @@ export function PaginaFrenteFicha({
       <LinhaVital
         indice={2}
         rotulo={
-          <>
+          <span title="Fórmula: 3 + 3 × APT">
             Vida <strong className="ml-[0.5cqw] font-extrabold">(PV)</strong>:
-          </>
+          </span>
         }
-        legenda="= 3 + 3*APT"
+        legenda=""
       >
         <VitalAtualMaximo
           atual={derivada.pvAtual}
@@ -210,11 +210,11 @@ export function PaginaFrenteFicha({
       <LinhaVital
         indice={3}
         rotulo={
-          <>
+          <span title="Fórmula: 3 + 3 × APT">
             Ânimum <strong className="ml-[0.5cqw] font-extrabold">(PA)</strong>:
-          </>
+          </span>
         }
-        legenda="= 3 + 3*APT"
+        legenda=""
       >
         <VitalAtualMaximo
           atual={derivada.paAtual}
