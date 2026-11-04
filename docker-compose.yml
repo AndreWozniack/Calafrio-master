@@ -30,6 +30,11 @@ services:
       ALLOW_DEV_LOGIN: "false"
       PORT: "3001"
       AUTH_TRUST_HOST: "true"
+      AUTH_URL: "${AUTH_URL:-https://calafrio.wozniack.com}"
+      NEXTAUTH_URL: "${AUTH_URL:-https://calafrio.wozniack.com}"
+      AUTH_SECRET: "${AUTH_SECRET}"
+      AUTH_GOOGLE_ID: "${AUTH_GOOGLE_ID}"
+      AUTH_GOOGLE_SECRET: "${AUTH_GOOGLE_SECRET}"
     expose:
       - "3001"
     ports:

@@ -32,6 +32,9 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       DATABASE_URL: "postgresql://calafrio:calafrio_secret@db:5432/calafrio"
       AUTH_SECRET: "${AUTH_SECRET:-calafrio-dev-secret-jwt-key-super-secure-token-2026}"
+      AUTH_URL: "${AUTH_URL:-http://localhost:3001}"
+      NEXTAUTH_URL: "${AUTH_URL:-http://localhost:3001}"
+      AUTH_TRUST_HOST: "true"
     depends_on:
       db:
         condition: service_healthy

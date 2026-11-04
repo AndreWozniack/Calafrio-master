@@ -30,6 +30,15 @@ if ((!googleClientId || !googleClientSecret) && !isDev) {
   );
 }
 
+// Garante que em produção o NextAuth nunca faça fallback para localhost:3001 caso AUTH_URL não tenha sido injetada
+if (!process.env.AUTH_URL && !process.env.NEXTAUTH_URL) {
+  if (process.env.DOMAIN && !process.env.DOMAIN.includes("localhost")) {
+    process.env.AUTH_URL = `https://${process.env.DOMAIN}`;
+  } else if (!isDev) {
+    process.env.AUTH_URL = "https://calafrio.wozniack.com";
+  }
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   secret: authSecret,

@@ -4,8 +4,6 @@ import type { FichaCalafrio } from "@calafrio/core";
 import { useFichaCalafrio } from "@calafrio/ficha-app";
 import {
   ArrowLeft,
-  BookOpen,
-  Columns2,
   Dices,
   Moon,
   Skull,
@@ -15,7 +13,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { FichaCelular } from "@/components/ficha/celular/ficha-celular";
 import type {
-  ModoVisualizacao,
   PaginaFicha,
 } from "@/components/ficha/fichas-tipos";
 import { ModalDanoCura } from "@/components/ficha/modal-dano-cura";
@@ -48,7 +45,6 @@ export function FichaLiveClient({
   });
 
   const [pagina, setPagina] = useState<PaginaFicha>("frente");
-  const [modo, setModo] = useState<ModoVisualizacao>("uma");
   const [mostrarRolagem, setMostrarRolagem] = useState(false);
   const [mostrarDanoCura, setMostrarDanoCura] = useState(false);
   const [palavraChaveRolagem, setPalavraChaveRolagem] = useState<string>();
@@ -60,39 +56,12 @@ export function FichaLiveClient({
 
   return (
     <div className="w-full">
-      <div
-        className={`hidden sm:block space-y-5 ${
-          modo === "duas"
-            ? "lg:relative lg:left-1/2 lg:w-[min(96vw,1700px)] lg:-translate-x-1/2"
-            : "mx-auto max-w-[920px]"
-        }`}
-      >
+      <div className="hidden sm:block space-y-5 mx-auto max-w-[920px]">
         <div className="mb-5 flex w-full flex-wrap items-center justify-between gap-2 rounded-sm border-2 border-black bg-[#f7f7f5] p-2.5 shadow-[2px_2px_0px_#000]">
           <div className="flex items-center gap-2">
             <Link href={`/mesa/${mesaId}/players`} className={botaoClaro}>
               <ArrowLeft className="size-4" /> Players
             </Link>
-            <div className="hidden rounded-sm border border-black bg-white p-0.5 lg:inline-flex">
-              {(
-                [
-                  ["uma", "Uma página", BookOpen],
-                  ["duas", "Duas páginas", Columns2],
-                ] as const
-              ).map(([id, rotulo, Icone]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setModo(id)}
-                  className={`flex cursor-pointer items-center gap-1.5 rounded-xs px-3 py-1.5 text-xs transition-all ${
-                    modo === id
-                      ? "bg-black font-black text-white"
-                      : "font-semibold text-black/70 hover:text-black"
-                  }`}
-                >
-                  <Icone className="size-4" /> {rotulo}
-                </button>
-              ))}
-            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -131,7 +100,6 @@ export function FichaLiveClient({
 
         <VisualizadorPapel
           f={f}
-          modo={modo}
           pagina={pagina}
           onMudarPagina={setPagina}
           onAbrirRolagem={abrirRolagem}
