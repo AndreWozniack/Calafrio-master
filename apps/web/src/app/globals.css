@@ -397,7 +397,7 @@ body:has([data-pagina-login])::after {
     color: #111113 !important;
   }
 
-  .dark body:has([data-papel])::before {
+  body:has([data-papel])::before {
     display: none !important;
   }
 
@@ -421,7 +421,8 @@ body:has([data-pagina-login])::after {
   }
 }
 
-.dark body::before {
+/* Fundo com ornamento temático em todo o sistema (claro e escuro) */
+body::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -432,6 +433,6 @@ body:has([data-pagina-login])::after {
 }
 
 .dark body::before {
-  background: url(/assets/ornamento-escuro.svg) center / cover no-repeat;
+  background-image: url(/assets/ornamento-escuro.svg);
   opacity: 0.45;
 }
