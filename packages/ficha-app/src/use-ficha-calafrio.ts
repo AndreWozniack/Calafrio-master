@@ -88,13 +88,23 @@ export function useFichaCalafrio(
     if (fichaParam && fichaParam.id !== ficha.id) {
       dispatch({ tipo: "carregarFicha", ficha: fichaParam });
       setEfemero(criarEstadoDeJogoInicial());
+      ultimaFichaSalvaRef.current = fichaParam;
     }
   }, [fichaParam, ficha.id]);
 
-  // Propaga edições para o gerenciador (que persiste a coleção inteira).
+  // Propaga edições para o gerenciador sem disparar no mount inicial ou em loops
+  const onSalvarRef = useRef(onSalvar);
   useEffect(() => {
-    if (onSalvar && fichaParam && fichaParam.id === ficha.id) onSalvar(ficha);
-  }, [ficha, onSalvar, fichaParam]);
+    onSalvarRef.current = onSalvar;
+  }, [onSalvar]);
+
+  const ultimaFichaSalvaRef = useRef<FichaCalafrio>(ficha);
+  useEffect(() => {
+    if (ultimaFichaSalvaRef.current !== ficha) {
+      ultimaFichaSalvaRef.current = ficha;
+      onSalvarRef.current?.(ficha);
+    }
+  }, [ficha]);
 
   // Recalcular a FichaDerivada de forma determinística
   const derivada: FichaDerivadaCalafrio = useMemo(

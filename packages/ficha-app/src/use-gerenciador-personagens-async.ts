@@ -74,8 +74,9 @@ export function useGerenciadorPersonagensAsync(adapter: StorageAdapterAsync) {
 
   const salvarPersonagem = useCallback((atualizado: FichaCalafrio) => {
     setPersonagens((atuais) => {
-      const existente = atuais.find((p) => p.id === atualizado.id);
-      if (existente === atualizado) return atuais;
+      const index = atuais.findIndex((p) => p.id === atualizado.id);
+      if (index === -1) return atuais;
+      if (atuais[index] === atualizado) return atuais;
       return atualizarPersonagemNaLista(atuais, atualizado);
     });
   }, []);
