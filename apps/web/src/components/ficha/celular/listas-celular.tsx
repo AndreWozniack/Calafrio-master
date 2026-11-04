@@ -99,7 +99,7 @@ export function CarteiraCelular({ f }: { f: FichaViva }) {
 export function InventarioCelular({ f }: { f: FichaViva }) {
   const [modal, setModal] = useState(false);
   return (
-    <section className="space-y-2">
+    <section className="entrada-lista space-y-2">
       <TituloSecaoCelular detalhe={`${f.ficha.inventario.length} itens`}>
         Inventário
       </TituloSecaoCelular>

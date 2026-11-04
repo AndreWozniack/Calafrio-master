@@ -63,7 +63,7 @@ export function PainelAnotacoesMesa({
         </button>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2">
+      <div className="entrada-lista grid gap-3 md:grid-cols-2">
         {notas.map((nota) => (
           <article key={nota.id} className="calafrio-card space-y-2 p-3">
             <div className="flex items-center gap-2">

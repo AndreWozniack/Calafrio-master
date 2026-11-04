@@ -8,3 +8,5 @@ dist/
 *.tsbuildinfo
 next-env.d.ts
 apps/web/data/*.json
+.idea/
+client_secret_215617915913-m3v1qvnveqh41j9oaavado3r78jvc09r.apps.googleusercontent.com.json

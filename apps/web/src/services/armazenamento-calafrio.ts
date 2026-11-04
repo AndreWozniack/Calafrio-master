@@ -1,11 +1,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { FichaCalafrio } from "@calafrio/core";
-import { eq } from "drizzle-orm";
+import { eq, isNull, or } from "drizzle-orm";
 import { db, schema } from "@/db";
 
 export interface MesaCalafrio {
   id: string;
+  userId?: string | null;
   nome: string;
   codigoConvite: string;
   criadaEm: string;
@@ -14,6 +15,7 @@ export interface MesaCalafrio {
 export interface PlayerCalafrio {
   id: string;
   mesaId: string;
+  userId?: string | null;
   nome: string;
   jogador?: string;
   aptBase: number;
@@ -117,12 +119,50 @@ export async function salvarStore(dados: DadosStore): Promise<void> {
 
 // === MESAS ===
 
-export async function listarMesas(): Promise<MesaCalafrio[]> {
+export async function listarMesas(userId?: string): Promise<MesaCalafrio[]> {
   if (db) {
     try {
+      if (userId) {
+        const mesasMestre = await db
+          .select()
+          .from(schema.mesas)
+          .where(or(eq(schema.mesas.userId, userId), isNull(schema.mesas.userId)));
+
+        const mesasJogador = await db
+          .select({
+            id: schema.mesas.id,
+            userId: schema.mesas.userId,
+            nome: schema.mesas.nome,
+            codigoConvite: schema.mesas.codigoConvite,
+            criadaEm: schema.mesas.criadaEm,
+            atualizadaEm: schema.mesas.atualizadaEm,
+          })
+          .from(schema.mesas)
+          .innerJoin(schema.players, eq(schema.players.mesaId, schema.mesas.id))
+          .where(eq(schema.players.userId, userId));
+
+        const todas = [...mesasMestre, ...mesasJogador];
+        const vistas = new Set<string>();
+        const res: typeof todas = [];
+        for (const m of todas) {
+          if (!vistas.has(m.id)) {
+            vistas.add(m.id);
+            res.push(m);
+          }
+        }
+        return res.map((m) => ({
+          id: m.id,
+          userId: m.userId,
+          nome: m.nome,
+          codigoConvite: m.codigoConvite,
+          criadaEm: m.criadaEm.toISOString(),
+        }));
+      }
+
       const res = await db.select().from(schema.mesas);
       return res.map((m) => ({
         id: m.id,
+        userId: m.userId,
         nome: m.nome,
         codigoConvite: m.codigoConvite,
         criadaEm: m.criadaEm.toISOString(),
@@ -143,6 +183,7 @@ export async function obterMesa(id: string): Promise<MesaCalafrio | null> {
       if (m) {
         return {
           id: m.id,
+          userId: m.userId,
           nome: m.nome,
           codigoConvite: m.codigoConvite,
           criadaEm: m.criadaEm.toISOString(),
@@ -156,9 +197,10 @@ export async function obterMesa(id: string): Promise<MesaCalafrio | null> {
   return s.mesas.find((m) => m.id === id) ?? null;
 }
 
-export async function criarMesa(nome: string): Promise<MesaCalafrio> {
+export async function criarMesa(nome: string, userId?: string): Promise<MesaCalafrio> {
   const nova: MesaCalafrio = {
     id: `mesa-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+    userId: userId ?? null,
     nome: nome.trim(),
     codigoConvite: gerarCodigoConvite(),
     criadaEm: new Date().toISOString(),
@@ -168,6 +210,7 @@ export async function criarMesa(nome: string): Promise<MesaCalafrio> {
     try {
       await db.insert(schema.mesas).values({
         id: nova.id,
+        userId: nova.userId ?? null,
         nome: nova.nome,
         codigoConvite: nova.codigoConvite,
         criadaEm: new Date(nova.criadaEm),
@@ -275,12 +318,15 @@ export async function criarPlayer(
   ficha: FichaCalafrio,
 ): Promise<PlayerCalafrio> {
   const apt = ficha.aptBase || 1;
+  const novoId =
+    ficha.id && ficha.id !== "sem-ficha"
+      ? ficha.id
+      : `player-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+  const fichaFinal: FichaCalafrio = { ...ficha, id: novoId };
   const novo: PlayerCalafrio = {
-    id:
-      ficha.id ||
-      `player-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+    id: novoId,
     mesaId,
-    nome: ficha.nome || "Novo Investigador",
+    nome: ficha.nome?.trim() || "Novo Investigador",
     jogador: ficha.jogador,
     aptBase: apt,
     pvMax: 3 + 3 * apt,
@@ -288,7 +334,7 @@ export async function criarPlayer(
     pd: 3 * apt,
     velocidade: 6,
     carteira: ficha.carteira || { fundos: 6, espirions: 0 },
-    ficha,
+    ficha: fichaFinal,
     criadaEm: new Date().toISOString(),
   };
 

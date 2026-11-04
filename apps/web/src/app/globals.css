@@ -27,9 +27,9 @@
 }
 
 @theme inline {
-  --font-serif: var(--font-merriweather), Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-sans: var(--font-merriweather-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-heading: var(--font-merriweather), Georgia, serif;
+  --font-serif: var(--font-alegreya), Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: var(--font-alegreya-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: var(--font-alegreya), Georgia, serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -44,12 +44,20 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-merriweather), Georgia, Cambria, "Times New Roman", Times, serif;
+  font-family: var(--font-alegreya), Georgia, Cambria, "Times New Roman", Times, serif;
   min-height: 100vh;
 }
 
 .font-heading {
-  font-family: var(--font-merriweather), Georgia, serif;
+  font-family: var(--font-alegreya), Georgia, serif;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
 }
 
 /* Chanfro geométrico estilo Calafrio 2e (etiqueta preta, igual ao PDF) */
@@ -57,6 +65,7 @@ body {
   background-color: #000000;
   color: #ffffff;
   padding: 0.25rem 0.75rem;
+  font-family: var(--font-alegreya), Georgia, serif;
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -79,6 +88,7 @@ body {
   background-color: #000000;
   color: #ffffff;
   padding: 0.15rem 0.5rem;
+  font-family: var(--font-alegreya), Georgia, serif;
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -106,6 +116,62 @@ body {
   color: #111113;
   border: 2px solid #222226;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== Folheada da folha (sutil, contínua e sem esmagar o texto) ===== */
+@keyframes folheada-avancar {
+  0% {
+    transform: perspective(2400px) rotateY(-18deg) translate3d(14px, 0, 0) scale(0.985);
+    transform-origin: left center;
+    opacity: 0.4;
+    box-shadow: -12px 8px 24px rgba(0, 0, 0, 0.18);
+  }
+  60% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: perspective(2400px) rotateY(0deg) translate3d(0, 0, 0) scale(1);
+    transform-origin: left center;
+    opacity: 1;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  }
+}
+
+@keyframes folheada-voltar {
+  0% {
+    transform: perspective(2400px) rotateY(18deg) translate3d(-14px, 0, 0) scale(0.985);
+    transform-origin: right center;
+    opacity: 0.4;
+    box-shadow: 12px 8px 24px rgba(0, 0, 0, 0.18);
+  }
+  60% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: perspective(2400px) rotateY(0deg) translate3d(0, 0, 0) scale(1);
+    transform-origin: right center;
+    opacity: 1;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.folheada-avancar {
+  animation: folheada-avancar 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.folheada-voltar {
+  animation: folheada-voltar 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folheada-avancar,
+  .folheada-voltar {
+    animation: none !important;
+  }
 }
 
 /* ===== Movimento =====
@@ -263,4 +329,36 @@ body {
   .elevar {
     transition: none !important;
   }
+}
+
+/* ===== Ornamentos de página ===== */
+body::after {
+  content: "";
+  flex: none;
+  height: clamp(18px, 2.4vw, 28px);
+  margin-top: 2rem;
+  background: url(/assets/pattern.svg) repeat-x center / auto 100%;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.dark body::after {
+  filter: invert(1);
+  opacity: 0.35;
+}
+
+/* a ficha já traz o próprio rodapé estampado, e a tela de login não precisa do ornamento */
+body:has([data-papel])::after,
+body:has([data-pagina-login])::after {
+  display: none;
+}
+
+.dark body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url(/assets/ornamento-escuro.svg) center / cover no-repeat;
+  opacity: 0.4;
 }

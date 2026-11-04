@@ -22,6 +22,16 @@ export async function buscarUsuarioPorGoogleId(
   return usuario ?? null;
 }
 
+export async function buscarUsuarioPorEmail(
+  email: string,
+): Promise<UsuarioRow | null> {
+  if (!db) return null;
+  const usuario = await db.query.users.findFirst({
+    where: eq(users.email, email.toLowerCase().trim()),
+  });
+  return usuario ?? null;
+}
+
 export async function inserirUsuario(
   dados: typeof users.$inferInsert,
 ): Promise<UsuarioRow | null> {

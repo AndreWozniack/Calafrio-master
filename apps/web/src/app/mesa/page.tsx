@@ -1,6 +1,9 @@
 import { ArrowRight, Plus, Shield, Swords, Trash2 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
+import { BannerEscudo } from "@/components/navegacao/banner-escudo";
 import { listarMesas } from "@/services/armazenamento-calafrio";
 import { criarMesaAction, excluirMesaAction } from "./actions";
 
@@ -11,21 +14,27 @@ export const metadata: Metadata = {
 };
 
 export default async function MesaPage() {
-  const mesas = await listarMesas();
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  const userId = (session.user as { id?: string }).id;
+  const mesas = await listarMesas(userId);
 
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-8 md:py-12 space-y-6">
       {/* Header do Hub de Mesas (Estilo T20 Master) */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-4">
+      <BannerEscudo>
         <div>
-          <h1 className="text-2xl font-black font-heading uppercase tracking-wide text-foreground flex items-center gap-2">
+          <h1 className="text-2xl font-black font-heading uppercase tracking-wide text-white flex items-center gap-2">
             <Swords className="size-6 text-amber-400" /> Suas Mesas
           </h1>
-          <p className="text-xs text-muted-foreground font-semibold mt-1">
+          <p className="text-xs text-white/70 font-semibold mt-1">
             Campanhas e mesas ativas no submundo paranormal de Curitiba.
           </p>
         </div>
-      </div>
+      </BannerEscudo>
 
       {/* Formulário de Criação de Nova Mesa */}
       <form
@@ -48,7 +57,7 @@ export default async function MesaPage() {
       </form>
 
       {/* Lista de Mesas (Cards estilo T20 Master) */}
-      <div className="space-y-3">
+      <div className="entrada-lista space-y-3">
         {mesas.map((mesa) => (
           <div
             key={mesa.id}

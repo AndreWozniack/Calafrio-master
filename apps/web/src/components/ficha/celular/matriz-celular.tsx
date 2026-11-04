@@ -28,14 +28,14 @@ export function MatrizCelular({ f }: { f: FichaViva }) {
   const detalhe = aberto !== null ? resumoSlot(f, alocacaoDe(aberto)) : null;
 
   return (
-    <div className="space-y-5">
+    <div className="entrada-lista space-y-5">
       <section className="space-y-2">
         <TituloSecaoCelular
           detalhe={`${f.derivada.habilidadesMemorizadasCount}/${f.derivada.limiteHabilidadesMemorizadas} = APT`}
         >
           Habilidades
         </TituloSecaoCelular>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="entrada-lista grid grid-cols-3 gap-2">
           {Array.from({ length: 9 }, (_, slot) => {
             const r = resumoSlot(f, alocacaoDe(slot));
             return (
@@ -43,7 +43,7 @@ export function MatrizCelular({ f }: { f: FichaViva }) {
                 key={slot}
                 type="button"
                 onClick={() => (r ? setAberto(slot) : setSeletor(slot))}
-                className={`flex min-h-24 cursor-pointer flex-col items-start gap-1 bg-white p-2 text-left ${
+                className={`pressionavel flex min-h-24 cursor-pointer flex-col items-start gap-1 bg-white p-2 text-left ${
                   emAlinhamento.has(slot)
                     ? "shadow-[0_0_0_2px_black]"
                     : "shadow-[0_0_3px_rgba(0,0,0,0.4)]"

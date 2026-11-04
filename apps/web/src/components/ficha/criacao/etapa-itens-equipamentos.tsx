@@ -8,14 +8,17 @@ import type {
 } from "@calafrio/core";
 import type { EspectroDeDano } from "@calafrio/tema";
 import {
+  ChevronLeft,
+  ChevronRight,
   Coins,
   Dices,
   PackagePlus,
   Plus,
+  Search,
   Sparkles,
   Trash2,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 interface EtapaItensEquipamentosProps {
   ficha: FichaCalafrio;
@@ -35,6 +38,44 @@ const CATEGORIAS_ITEM: { valor: CategoriaItemCalafrio; rotulo: string }[] = [
   { valor: "bugiganga", rotulo: "Bugiganga" },
 ];
 
+type FiltroCatalogo =
+  | "todos"
+  | "curto"
+  | "longo"
+  | "misto"
+  | "consumivel"
+  | "bugiganga";
+
+const FILTROS_CATALOGO: { id: FiltroCatalogo; rotulo: string }[] = [
+  { id: "todos", rotulo: "Tudo" },
+  { id: "curto", rotulo: "Corpo a corpo" },
+  { id: "longo", rotulo: "Longo alcance" },
+  { id: "misto", rotulo: "Misto" },
+  { id: "consumivel", rotulo: "Consumíveis" },
+  { id: "bugiganga", rotulo: "Bugigangas (d100)" },
+];
+
+interface ItemCatalogoView {
+  id: string;
+  tipo: "arma" | "bugiganga";
+  nome: string;
+  filtro: Exclude<FiltroCatalogo, "todos">;
+  tag: string;
+  precoFundos?: number;
+  dano?: number;
+  espectroDano?: EspectroDeDano;
+  descricao?: string;
+  propriedades?: string[];
+  dadosArma?: (typeof ARMAS_MUNDANAS_EXEMPLO)[number];
+  dadosBugiganga?: { numero: number; nome: string };
+}
+
+// Tipo auxiliar para inferência de arma
+type TipoArmaCatalogo = CatalogoCalafrio["armasMundanas"][number];
+const ARMAS_MUNDANAS_EXEMPLO: TipoArmaCatalogo[] = [];
+
+const ITENS_POR_PAGINA = 8;
+
 export function EtapaItensEquipamentos({
   ficha,
   catalogo,
@@ -53,7 +94,89 @@ export function EtapaItensEquipamentos({
   const [precoFundosLivre, setPrecoFundosLivre] = useState<number>(0);
 
   // Tab entre criar livre ou catálogo
-  const [modoAba, setModoAba] = useState<"livre" | "catalogo">("livre");
+  const [modoAba, setModoAba] = useState<"livre" | "catalogo">("catalogo");
+
+  // Filtro, busca e paginação do catálogo
+  const [busca, setBusca] = useState("");
+  const [filtro, setFiltro] = useState<FiltroCatalogo>("todos");
+  const [pagina, setPagina] = useState(1);
+
+  // Mapeia todas as entradas da biblioteca (armas mundanas + bugigangas da d100)
+  const itensCatalogo = useMemo<ItemCatalogoView[]>(() => {
+    const armas: ItemCatalogoView[] = catalogo.armasMundanas.map((arma) => {
+      let filtroArma: Exclude<FiltroCatalogo, "todos">;
+      if (arma.tipoAlcance === "Consumível") {
+        filtroArma = "consumivel";
+      } else if (arma.tipoAlcance.includes("Longo")) {
+        filtroArma = "longo";
+      } else if (arma.tipoAlcance.includes("misto")) {
+        filtroArma = "misto";
+      } else {
+        filtroArma = "curto";
+      }
+
+      return {
+        id: arma.id,
+        tipo: "arma",
+        nome: arma.categoria,
+        filtro: filtroArma,
+        tag: arma.tipoAlcance,
+        precoFundos: arma.precoFundos,
+        dano: arma.dano,
+        espectroDano: arma.espectroDano,
+        descricao: arma.exemplos ? `Exemplos: ${arma.exemplos}` : undefined,
+        propriedades: [...arma.propriedades],
+        dadosArma: arma,
+      };
+    });
+
+    const bugigangas: ItemCatalogoView[] = catalogo.bugigangas.map((bg) => ({
+      id: `bug-${bg.numero}`,
+      tipo: "bugiganga",
+      nome: bg.nome,
+      filtro: "bugiganga",
+      tag: `d100 · #${bg.numero}`,
+      precoFundos: 0,
+      descricao: `Bugiganga da tabela d100 (#${bg.numero})`,
+      dadosBugiganga: bg,
+    }));
+
+    return [...armas, ...bugigangas];
+  }, [catalogo.armasMundanas, catalogo.bugigangas]);
+
+  const itensFiltrados = useMemo(() => {
+    return itensCatalogo.filter((item) => {
+      if (filtro !== "todos" && item.filtro !== filtro) return false;
+      if (busca.trim()) {
+        const termo = busca.toLowerCase();
+        const textoCompleto = `${item.nome} ${item.tag} ${item.descricao ?? ""} ${item.propriedades?.join(" ") ?? ""}`.toLowerCase();
+        return textoCompleto.includes(termo);
+      }
+      return true;
+    });
+  }, [itensCatalogo, filtro, busca]);
+
+  const totalPaginas = Math.max(
+    1,
+    Math.ceil(itensFiltrados.length / ITENS_POR_PAGINA),
+  );
+  const paginaValida = Math.min(pagina, totalPaginas);
+  const inicio = (paginaValida - 1) * ITENS_POR_PAGINA;
+  const itensExibidos = itensFiltrados.slice(inicio, inicio + ITENS_POR_PAGINA);
+
+  const gerarBotoesPagina = () => {
+    const botoes: number[] = [];
+    const maxBotoes = 5;
+    let inicioBtn = Math.max(1, paginaValida - 2);
+    let fimBtn = Math.min(totalPaginas, inicioBtn + maxBotoes - 1);
+    if (fimBtn - inicioBtn + 1 < maxBotoes) {
+      inicioBtn = Math.max(1, fimBtn - maxBotoes + 1);
+    }
+    for (let i = inicioBtn; i <= fimBtn; i++) {
+      botoes.push(i);
+    }
+    return botoes;
+  };
 
   const sortearFundos = () => {
     const valor = Math.floor(Math.random() * 12) + 1;
@@ -79,16 +202,19 @@ export function EtapaItensEquipamentos({
   const adicionarArmaCatalogo = (
     arma: (typeof catalogo.armasMundanas)[number],
   ) => {
+    const isConsumivel = arma.tipoAlcance === "Consumível";
     onAdicionarItem({
       id: `item-arma-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       nome: arma.categoria,
-      categoria: arma.tipoAlcance.includes("Longo")
-        ? "arma_longo"
-        : arma.tipoAlcance.includes("misto")
-          ? "arma_misto"
-          : "arma_curto",
+      categoria: isConsumivel
+        ? "consumivel"
+        : arma.tipoAlcance.includes("Longo")
+          ? "arma_longo"
+          : arma.tipoAlcance.includes("misto")
+            ? "arma_misto"
+            : "arma_curto",
       paranormal: false,
-      equipado: true,
+      equipado: !isConsumivel,
       precoFundos: arma.precoFundos,
       dano: arma.dano,
       espectroDano: arma.espectroDano,
@@ -97,6 +223,19 @@ export function EtapaItensEquipamentos({
       descricao: arma.exemplos
         ? `Exemplos do tipo: ${arma.exemplos}`
         : undefined,
+      efeitos: [],
+    });
+  };
+
+  const adicionarBugigangaCatalogo = (bg: { numero: number; nome: string }) => {
+    onAdicionarItem({
+      id: `item-bg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      nome: bg.nome,
+      categoria: "bugiganga",
+      paranormal: false,
+      equipado: false,
+      precoFundos: 0,
+      descricao: `Bugiganga da tabela d100 (#${bg.numero})`,
       efeitos: [],
     });
   };
@@ -215,7 +354,7 @@ export function EtapaItensEquipamentos({
                 : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
-            Catálogo & Tabelas
+            Biblioteca & Catálogo
           </button>
         </div>
 
@@ -312,47 +451,175 @@ export function EtapaItensEquipamentos({
             </button>
           </form>
         ) : (
-          /* Catálogo de Armas e Bugigangas */
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="calafrio-tag-sm">
-                ARMAS MUNDANAS DO CATÁLOGO
-              </span>
+          /* Catálogo e Biblioteca de Itens */
+          <div className="space-y-3.5">
+            {/* Cabeçalho de Busca e Sorteador */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+              <div className="relative flex-1">
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={busca}
+                  onChange={(e) => {
+                    setBusca(e.target.value);
+                    setPagina(1);
+                  }}
+                  placeholder="Buscar arma, dano, consumível ou bugiganga..."
+                  className="w-full bg-card pl-8 pr-3 py-2 rounded-lg border border-border text-xs outline-none focus:border-amber-400 font-bold"
+                />
+              </div>
               <button
                 type="button"
                 onClick={sortearBugiganga}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border text-foreground font-bold text-xs rounded-lg cursor-pointer transition-colors"
+                className="flex items-center justify-center gap-1.5 px-3 py-2 bg-muted hover:bg-border text-foreground font-bold text-xs rounded-lg cursor-pointer transition-colors shrink-0"
               >
-                <Dices className="size-3.5 text-amber-400" /> Sortear Bugiganga
-                (d100)
+                <Dices className="size-3.5 text-amber-400" /> Sortear Bugiganga (d100)
               </button>
             </div>
 
-            <div className="max-h-[260px] overflow-y-auto space-y-2 pr-1 text-xs">
-              {catalogo.armasMundanas.map((arma) => (
-                <div
-                  key={arma.id}
-                  className="p-2.5 rounded-lg border border-border bg-card flex items-center justify-between gap-2"
-                >
-                  <div>
-                    <span className="font-bold text-foreground block">
-                      {arma.categoria}
-                    </span>
-                    <span className="text-[11px] text-muted-foreground">
-                      Dano: {arma.dano} ({arma.espectroDano}) ·{" "}
-                      {arma.tipoAlcance} · {arma.precoFundos} F$
-                    </span>
-                  </div>
+            {/* Filtros por Categoria */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+              {FILTROS_CATALOGO.map((f) => {
+                const ativo = filtro === f.id;
+                const contagem =
+                  f.id === "todos"
+                    ? itensCatalogo.length
+                    : itensCatalogo.filter((i) => i.filtro === f.id).length;
+
+                return (
                   <button
+                    key={f.id}
                     type="button"
-                    onClick={() => adicionarArmaCatalogo(arma)}
-                    className="shrink-0 px-2.5 py-1 bg-muted hover:bg-amber-400 hover:text-black font-bold text-xs rounded-lg cursor-pointer transition-colors"
+                    onClick={() => {
+                      setFiltro(f.id);
+                      setPagina(1);
+                    }}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold shrink-0 cursor-pointer transition-colors ${
+                      ativo
+                        ? "bg-amber-400 text-black font-black"
+                        : "bg-muted text-muted-foreground hover:text-foreground"
+                    }`}
                   >
-                    + Adicionar
+                    {f.rotulo} ({contagem})
                   </button>
+                );
+              })}
+            </div>
+
+            {/* Lista Paginada de Itens */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              {itensExibidos.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-3 rounded-lg border border-border bg-card flex flex-col justify-between gap-2 hover:border-border/80 transition-all"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="font-bold text-foreground text-xs leading-snug">
+                        {item.nome}
+                      </span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-semibold uppercase shrink-0">
+                        {item.tag}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-[11px] text-muted-foreground flex-wrap">
+                      {item.dano !== undefined && (
+                        <span className="font-semibold text-foreground/90">
+                          Dano: {item.dano} ({item.espectroDano})
+                        </span>
+                      )}
+                      {item.precoFundos !== undefined && (
+                        <span className="font-bold text-amber-400">
+                          {item.precoFundos > 0 ? `${item.precoFundos} F$` : "Grátis"}
+                        </span>
+                      )}
+                    </div>
+
+                    {item.descricao && (
+                      <p className="text-[11px] text-muted-foreground line-clamp-2">
+                        {item.descricao}
+                      </p>
+                    )}
+                    {item.propriedades && item.propriedades.length > 0 && (
+                      <p className="text-[10px] text-muted-foreground/80 line-clamp-1 italic">
+                        {item.propriedades.join(" ")}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="pt-1 border-t border-border/50 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (item.tipo === "arma" && item.dadosArma) {
+                          adicionarArmaCatalogo(item.dadosArma);
+                        } else if (item.tipo === "bugiganga" && item.dadosBugiganga) {
+                          adicionarBugigangaCatalogo(item.dadosBugiganga);
+                        }
+                      }}
+                      className="px-2.5 py-1 bg-muted hover:bg-amber-400 hover:text-black font-bold text-xs rounded-lg cursor-pointer transition-colors flex items-center gap-1"
+                    >
+                      <Plus className="size-3" /> Adicionar
+                    </button>
+                  </div>
                 </div>
               ))}
+
+              {itensExibidos.length === 0 && (
+                <div className="col-span-full py-8 text-center text-xs text-muted-foreground italic border border-dashed border-border rounded-xl">
+                  Nenhum item encontrado no catálogo com esses filtros.
+                </div>
+              )}
             </div>
+
+            {/* Controles de Paginação */}
+            {totalPaginas > 1 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2 border-t border-border/60 text-xs">
+                <span className="text-[11px] text-muted-foreground font-medium">
+                  Página <span className="font-bold text-foreground">{paginaValida}</span> de{" "}
+                  <span className="font-bold text-foreground">{totalPaginas}</span>{" "}
+                  ({itensFiltrados.length} itens)
+                </span>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    disabled={paginaValida === 1}
+                    onClick={() => setPagina((prev) => Math.max(1, prev - 1))}
+                    className="flex items-center gap-1 px-2.5 py-1 rounded bg-muted hover:bg-border disabled:opacity-30 disabled:pointer-events-none font-bold text-xs cursor-pointer transition-colors"
+                  >
+                    <ChevronLeft className="size-3.5" /> Anterior
+                  </button>
+
+                  <div className="flex items-center gap-1">
+                    {gerarBotoesPagina().map((num) => (
+                      <button
+                        key={num}
+                        type="button"
+                        onClick={() => setPagina(num)}
+                        className={`min-w-7 h-7 flex items-center justify-center rounded text-xs font-bold cursor-pointer transition-colors ${
+                          num === paginaValida
+                            ? "bg-amber-400 text-black font-black"
+                            : "bg-muted text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {num}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    disabled={paginaValida === totalPaginas}
+                    onClick={() => setPagina((prev) => Math.min(totalPaginas, prev + 1))}
+                    className="flex items-center gap-1 px-2.5 py-1 rounded bg-muted hover:bg-border disabled:opacity-30 disabled:pointer-events-none font-bold text-xs cursor-pointer transition-colors"
+                  >
+                    Próxima <ChevronRight className="size-3.5" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

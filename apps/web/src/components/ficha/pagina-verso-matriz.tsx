@@ -8,9 +8,8 @@ import type {
   FichaDerivadaCalafrio,
   HabilidadeUnicaCalafrio,
 } from "@calafrio/core";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { PainelEcosERegras } from "./painel-ecos-e-regras";
 import { FolhaPapel } from "./papel/folha-papel";
 import { LegendaBonusPapel } from "./papel/legenda-bonus-papel";
 import {
@@ -30,17 +29,18 @@ interface PaginaVersoMatrizProps {
   catalogo: CatalogoCalafrio;
   onAlocarSlot: (slot: number, alocacao: AlocacaoSlotMatriz) => void;
   onLimparSlot: (slot: number) => void;
-  onAdicionarHabilidadeUnica: (unica: HabilidadeUnicaCalafrio) => void;
+  onAdicionarHabilidadeUnica?: (unica: HabilidadeUnicaCalafrio) => void;
   onAtualizarHabilidadeUnica?: (
     id: string,
     dados: Partial<HabilidadeUnicaCalafrio>,
   ) => void;
-  onRemoverHabilidadeUnica: (id: string) => void;
+  onRemoverHabilidadeUnica?: (id: string) => void;
   onAdicionarCustomizacaoEco?: (customizacao: CustomizacaoDeEco) => void;
   onRemoverCustomizacaoEco?: (id: string) => void;
   focoAtivoId?: string;
   onAlternarFoco?: (id: string) => void;
   onDefinirAnotacoes: (anotacoes: string) => void;
+  onNavegarParaEcos?: () => void;
 }
 
 export function PaginaVersoMatriz({
@@ -135,25 +135,6 @@ export function PaginaVersoMatriz({
           <span>{aviso.mensagem}</span>
         </div>
       ))}
-
-      <details className="mx-auto max-w-[880px]" open>
-        <summary className="cursor-pointer text-sm font-bold text-muted-foreground hover:text-foreground">
-          Ecos e Habilidades Únicas ({derivada.ecosDisponiveis}/
-          {derivada.ecosMax})
-        </summary>
-        <div className="mt-3">
-          <PainelEcosERegras
-            ficha={ficha}
-            derivada={derivada}
-            catalogo={catalogo}
-            onAdicionarHabilidadeUnica={onAdicionarHabilidadeUnica}
-            onAtualizarHabilidadeUnica={onAtualizarHabilidadeUnica}
-            onRemoverHabilidadeUnica={onRemoverHabilidadeUnica}
-            onAdicionarCustomizacaoEco={onAdicionarCustomizacaoEco}
-            onRemoverCustomizacaoEco={onRemoverCustomizacaoEco}
-          />
-        </div>
-      </details>
 
       {slotSelecionado !== null && (
         <SeletorHabilidadeModal

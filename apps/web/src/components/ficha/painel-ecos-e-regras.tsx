@@ -17,12 +17,12 @@ interface PainelEcosERegrasProps {
   ficha: FichaCalafrio;
   derivada: FichaDerivadaCalafrio;
   catalogo: CatalogoCalafrio;
-  onAdicionarHabilidadeUnica: (unica: HabilidadeUnicaCalafrio) => void;
+  onAdicionarHabilidadeUnica?: (unica: HabilidadeUnicaCalafrio) => void;
   onAtualizarHabilidadeUnica?: (
     id: string,
     dados: Partial<HabilidadeUnicaCalafrio>,
   ) => void;
-  onRemoverHabilidadeUnica: (id: string) => void;
+  onRemoverHabilidadeUnica?: (id: string) => void;
   onAdicionarCustomizacaoEco?: (customizacao: CustomizacaoDeEco) => void;
   onRemoverCustomizacaoEco?: (id: string) => void;
 }
@@ -57,7 +57,7 @@ export function PainelEcosERegras({
     if (unicaEmEdicao && onAtualizarHabilidadeUnica) {
       onAtualizarHabilidadeUnica(unicaEmEdicao.id, unica);
     } else {
-      onAdicionarHabilidadeUnica(unica);
+      onAdicionarHabilidadeUnica?.(unica);
     }
     setModalUnicaAberto(false);
     setUnicaEmEdicao(null);
@@ -156,7 +156,7 @@ export function PainelEcosERegras({
                   </button>
                   <button
                     type="button"
-                    onClick={() => onRemoverHabilidadeUnica(u.id)}
+                    onClick={() => onRemoverHabilidadeUnica?.(u.id)}
                     className="p-1 text-muted-foreground hover:text-red-400 cursor-pointer"
                     title="Excluir habilidade única"
                   >

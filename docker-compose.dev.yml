@@ -1,7 +1,7 @@
 # Dev com hot reload e Postgres local: docker compose -f docker-compose.dev.yml up
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: calafrio
@@ -10,7 +10,7 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U calafrio -d calafrio"]
       interval: 5s
@@ -23,11 +23,15 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "${HOST_PORT:-3001}:3001"
+    env_file:
+      - path: .env
+        required: false
     environment:
       NODE_ENV: development
       WATCHPACK_POLLING: "true"
       CHOKIDAR_USEPOLLING: "true"
       DATABASE_URL: "postgresql://calafrio:calafrio_secret@db:5432/calafrio"
+      AUTH_SECRET: "${AUTH_SECRET:-calafrio-dev-secret-jwt-key-super-secure-token-2026}"
     depends_on:
       db:
         condition: service_healthy

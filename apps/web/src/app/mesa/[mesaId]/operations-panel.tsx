@@ -7,7 +7,7 @@ interface OperationsPanelProps {
 
 export function OperationsPanel({ mesaId }: OperationsPanelProps) {
   return (
-    <aside className="space-y-4">
+    <aside className="entrada-lista space-y-4">
       {/* Card de Combate em Tempo Real (Estilo T20 Master) */}
       <div className="calafrio-card p-4 space-y-3 border-amber-400/40 bg-gradient-to-br from-amber-950/20 via-card to-card">
         <span className="calafrio-tag">COMBATE & ENCONTROS</span>

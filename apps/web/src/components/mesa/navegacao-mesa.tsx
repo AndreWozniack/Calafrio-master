@@ -13,7 +13,7 @@ import { estaNaFicha } from "@/lib/rota-ficha";
 
 const ABAS = [
   { sufixo: "", label: "Painel", Icon: LayoutDashboard },
-  { sufixo: "/players", label: "Investigadores", Icon: Users },
+  { sufixo: "/players", label: "Players", Icon: Users },
   { sufixo: "/combate", label: "Combate", Icon: Swords },
   { sufixo: "/dados", label: "Dados", Icon: Dices },
   { sufixo: "/anotacoes", label: "Anotações", Icon: NotebookPen },

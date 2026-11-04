@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { listarPlayers, obterMesa } from "@/services/armazenamento-calafrio";
 import { DashboardHeader } from "./dashboard-header";
 import { OperationsPanel } from "./operations-panel";
@@ -11,7 +11,9 @@ export default async function MesaDashboardPage({
 }) {
   const { mesaId } = await params;
   const mesa = await obterMesa(mesaId);
-  if (!mesa) notFound();
+  if (!mesa) {
+    redirect("/mesa");
+  }
 
   const players = await listarPlayers(mesaId);
 

@@ -49,7 +49,7 @@ export default async function PlayersPage({
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="entrada-lista space-y-3">
         {players.map((p) => (
           <PlayerRow
             key={p.id}

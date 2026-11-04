@@ -1,27 +1,22 @@
 import type { Metadata } from "next";
-import { Alegreya, Merriweather, Merriweather_Sans } from "next/font/google";
+import { Alegreya, Alegreya_Sans } from "next/font/google";
+import { auth } from "@/auth";
 import { BarraTopo } from "@/components/navegacao/barra-topo";
 import "./globals.css";
 
 const alegreya = Alegreya({
   variable: "--font-alegreya",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   style: ["normal", "italic"],
   display: "swap",
 });
 
-const merriweather = Merriweather({
-  variable: "--font-merriweather",
+const alegreyaSans = Alegreya_Sans({
+  variable: "--font-alegreya-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "700", "900"],
-  display: "swap",
-});
-
-const merriweatherSans = Merriweather_Sans({
-  variable: "--font-merriweather-sans",
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
+  weight: ["300", "400", "500", "700", "800", "900"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -31,16 +26,18 @@ export const metadata: Metadata = {
     "Ficha Viva, Criação de Personagens e Mesa de Combate para Calafrio 2e",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html
       lang="pt-BR"
       suppressHydrationWarning
-      className={`${merriweather.variable} ${merriweatherSans.variable} ${alegreya.variable}`}
+      className={`${alegreya.variable} ${alegreyaSans.variable}`}
     >
       <head>
         <script
@@ -52,8 +49,8 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased min-h-screen flex flex-col bg-background text-foreground font-serif">
-        <BarraTopo />
-        <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6">
+        <BarraTopo user={session?.user} />
+        <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 flex flex-col">
           {children}
         </main>
       </body>

@@ -44,7 +44,7 @@ export function CardRolagemFeed({ rolagem }: { rolagem: RolagemMesa }) {
   const estilo = ESTILOS_DESFECHO[rolagem.desfecho];
   return (
     <li
-      className={`flex items-center gap-3 rounded-lg border p-3 shadow-xs transition-colors ${estilo.container}`}
+      className={`entrada flex items-center gap-3 rounded-lg border p-3 shadow-xs transition-colors ${estilo.container}`}
     >
       <div className={`w-12 text-center text-2xl font-black ${estilo.numero}`}>
         {rolagem.total}

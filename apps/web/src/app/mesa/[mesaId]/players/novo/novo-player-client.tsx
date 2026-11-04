@@ -33,24 +33,24 @@ export function NovoPlayerClient({ mesaId }: { mesaId: string }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-      <AssistenteCriacaoCalafrio
-        aberto={true}
-        ficha={f.ficha}
-        derivada={f.derivada}
-        catalogo={f.catalogo}
-        onDefinirNome={f.definirNome}
-        onDefinirJogador={f.definirJogador}
-        onDefinirApt={f.definirApt}
-        onAdicionarPalavraChave={f.adicionarPalavraChave}
-        onRemoverPalavraChave={f.removerPalavraChave}
-        onAlocarSlot={f.alocarSlotMatriz}
-        onLimparSlot={f.limparSlotMatriz}
-        onAtualizarCarteira={f.definirCarteira}
-        onAdicionarItem={f.adicionarItem}
-        onRemoverItem={f.removerItem}
-        onFechar={handleConcluir}
-      />
-    </div>
+    <AssistenteCriacaoCalafrio
+      aberto={true}
+      ficha={f.ficha}
+      derivada={f.derivada}
+      catalogo={f.catalogo}
+      onDefinirNome={f.definirNome}
+      onDefinirJogador={f.definirJogador}
+      onDefinirApt={f.definirApt}
+      onAdicionarPalavraChave={f.adicionarPalavraChave}
+      onRemoverPalavraChave={f.removerPalavraChave}
+      onAlocarSlot={f.alocarSlotMatriz}
+      onLimparSlot={f.limparSlotMatriz}
+      onAtualizarCarteira={f.definirCarteira}
+      onAdicionarItem={f.adicionarItem}
+      onRemoverItem={f.removerItem}
+      onCancelar={handleCancelar}
+      onConcluir={handleConcluir}
+      onFechar={handleCancelar}
+    />
   );
 }

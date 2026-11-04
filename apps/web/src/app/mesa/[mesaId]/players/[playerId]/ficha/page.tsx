@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { obterMesa, obterPlayer } from "@/services/armazenamento-calafrio";
 import { FichaLiveClient } from "./ficha-live-client";
 
@@ -9,10 +9,14 @@ export default async function FichaPage({
 }) {
   const { mesaId, playerId } = await params;
   const mesa = await obterMesa(mesaId);
-  if (!mesa) notFound();
+  if (!mesa) {
+    redirect("/mesa");
+  }
 
   const player = await obterPlayer(playerId);
-  if (!player || player.mesaId !== mesaId) notFound();
+  if (!player || player.mesaId !== mesaId) {
+    redirect(`/mesa/${mesaId}`);
+  }
 
   return (
     <div className="space-y-6">

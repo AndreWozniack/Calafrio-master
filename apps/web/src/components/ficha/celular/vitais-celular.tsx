@@ -4,6 +4,13 @@ import type { FichaDerivadaCalafrio } from "@calafrio/core";
 import type { FichaViva } from "../fichas-tipos";
 import { CartaoPapel, EtiquetaCelular, PassoCelular } from "./blocos-celular";
 
+/** Reinicia o pulso do número quando o valor muda. */
+function extrairChave(children: React.ReactNode): string {
+  return Array.isArray(children)
+    ? children.map((c) => (typeof c === "object" ? "" : String(c))).join("")
+    : String(children);
+}
+
 function CartaoVital({
   rotulo,
   legenda,
@@ -29,7 +36,9 @@ function CartaoVital({
 function ValorGrande({ children }: { children: React.ReactNode }) {
   return (
     <span className="min-w-0 flex-1 text-center text-2xl font-extrabold leading-none">
-      {children}
+      <span key={String(extrairChave(children))} className="valor-pulso">
+        {children}
+      </span>
     </span>
   );
 }
@@ -70,7 +79,7 @@ export function VitaisCelular({
   derivada: FichaDerivadaCalafrio;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-3 [&>*]:min-w-0">
+    <div className="entrada-lista grid grid-cols-2 gap-3 [&>*]:min-w-0">
       <CartaoVital rotulo="Vida (PV)" legenda="= 3 + 3*APT">
         <Ajustavel
           valor={derivada.pvAtual}

@@ -8,7 +8,8 @@ import type {
   PalavraChaveNaFicha,
 } from "@calafrio/core";
 import { Check, ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { EtapaConceitoApt } from "./criacao/etapa-conceito-apt";
 import { EtapaItensEquipamentos } from "./criacao/etapa-itens-equipamentos";
 import { EtapaMatrizHabilidades } from "./criacao/etapa-matriz-habilidades";
@@ -35,7 +36,13 @@ interface AssistenteCriacaoCalafrioProps {
   onAdicionarItem: (item: ItemNaFichaCalafrio) => void;
   onRemoverItem: (id: string) => void;
   onFechar: () => void;
+  onCancelar?: () => void;
+  onConcluir?: () => void;
 }
+
+const aoMontar = () => () => {};
+const noCliente = () => true;
+const noServidor = () => false;
 
 const ETAPAS = [
   { id: 1, rotulo: "1. Identidade & APT" },
@@ -60,14 +67,43 @@ export function AssistenteCriacaoCalafrio({
   onAdicionarItem,
   onRemoverItem,
   onFechar,
+  onCancelar,
+  onConcluir,
 }: AssistenteCriacaoCalafrioProps) {
   const [etapa, setEtapa] = useState<1 | 2 | 3 | 4>(1);
 
-  if (!aberto) return null;
+  const montado = useSyncExternalStore(aoMontar, noCliente, noServidor);
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-3 sm:p-6 backdrop-blur-sm">
-      <div className="w-full max-w-6xl h-[90vh] max-h-[920px] bg-card rounded-2xl border-2 border-amber-400/80 shadow-2xl flex flex-col overflow-hidden">
+  useEffect(() => {
+    if (!aberto) return;
+    const aoTeclar = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        (onCancelar ?? onFechar)();
+      }
+    };
+    const overflowAnterior = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", aoTeclar);
+    return () => {
+      document.body.style.overflow = overflowAnterior;
+      window.removeEventListener("keydown", aoTeclar);
+    };
+  }, [aberto, onCancelar, onFechar]);
+
+  if (!aberto || !montado) return null;
+
+  return createPortal(
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Criação de Player"
+      onClick={onCancelar ?? onFechar}
+      className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-3 sm:p-6 backdrop-blur-sm"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-6xl h-[90vh] max-h-[920px] bg-card rounded-2xl border-2 border-amber-400/80 shadow-2xl flex flex-col overflow-hidden"
+      >
         {/* Cabeçalho Superior Fixo */}
         <div className="flex items-center justify-between px-6 py-3.5 border-b border-border bg-muted/40 shrink-0">
           <div className="flex items-center gap-3">
@@ -78,7 +114,7 @@ export function AssistenteCriacaoCalafrio({
           </div>
           <button
             type="button"
-            onClick={onFechar}
+            onClick={onCancelar ?? onFechar}
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground font-bold cursor-pointer transition-colors"
           >
             <X className="size-4" /> Cancelar
@@ -86,12 +122,12 @@ export function AssistenteCriacaoCalafrio({
         </div>
 
         {/* Corpo Principal Dividido em 2 Colunas */}
-        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col lg:flex-row overflow-hidden">
           {/* Coluna Esquerda: Preview da Ficha */}
           <PreviewFichaCriacao ficha={ficha} derivada={derivada} />
 
           {/* Coluna Direita: Conteúdo da Etapa Atual */}
-          <div className="flex-1 flex flex-col overflow-hidden bg-background">
+          <div className="flex-1 min-h-0 flex flex-col overflow-hidden bg-background">
             {/* Navegador de Passos (Tabs) */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-3 border-b border-border/80 bg-muted/20 shrink-0">
               {ETAPAS.map((item) => {
@@ -118,7 +154,7 @@ export function AssistenteCriacaoCalafrio({
             </div>
 
             {/* Conteúdo com rolagem própria */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+            <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-6">
               {etapa === 1 && (
                 <EtapaConceitoApt
                   ficha={ficha}
@@ -188,7 +224,7 @@ export function AssistenteCriacaoCalafrio({
               ) : (
                 <button
                   type="button"
-                  onClick={onFechar}
+                  onClick={onConcluir ?? onFechar}
                   className="flex items-center gap-1.5 px-6 py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs rounded-lg cursor-pointer transition-colors shadow-md"
                 >
                   <Check className="size-4" /> Concluir Criação
@@ -198,6 +234,7 @@ export function AssistenteCriacaoCalafrio({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

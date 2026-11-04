@@ -1,5 +1,6 @@
 import { ArrowLeft, Copy, Shield, Users } from "lucide-react";
 import Link from "next/link";
+import { BannerEscudo } from "@/components/navegacao/banner-escudo";
 
 interface DashboardHeaderProps {
   mesaId: string;
@@ -14,30 +15,30 @@ export function DashboardHeader({
   totalPlayers,
 }: DashboardHeaderProps) {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-4">
+    <BannerEscudo>
       <div className="space-y-1">
         <Link
           href="/mesa"
-          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground font-bold mb-1 transition-colors"
+          className="inline-flex items-center gap-1 text-xs text-white/70 hover:text-white font-bold mb-1 transition-colors"
         >
           <ArrowLeft className="size-3.5" /> Voltar às Mesas
         </Link>
         <div className="flex items-center gap-2.5 flex-wrap">
-          <h1 className="text-2xl font-black font-heading text-foreground uppercase tracking-wide">
+          <h1 className="text-2xl sm:text-3xl font-black font-heading text-white uppercase tracking-wide">
             {nome}
           </h1>
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold uppercase bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40">
             <Shield className="size-3" /> Mestre
           </span>
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-white/70">
           Código de acesso:{" "}
-          <span className="font-mono font-bold text-foreground">
+          <span className="font-mono font-bold text-white">
             {codigoConvite}
           </span>{" "}
           · {totalPlayers} Investigador(es) na equipe
         </p>
       </div>
-    </div>
+    </BannerEscudo>
   );
 }

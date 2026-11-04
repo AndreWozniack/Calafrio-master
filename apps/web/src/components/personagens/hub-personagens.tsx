@@ -73,7 +73,7 @@ export function HubPersonagens({
       )}
 
       {/* Lista de Fichas / Empty State */}
-      <div className="space-y-3">
+      <div className="entrada-lista space-y-3">
         {filtrados.map((p) => (
           <CardInvestigadorRow
             key={p.id}

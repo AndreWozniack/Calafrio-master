@@ -1,12 +1,17 @@
-export function CalafrioLogo({ className = "h-8" }: { className?: string }) {
+import Image from "next/image";
+
+export function CalafrioLogo({ className = "h-7 sm:h-8" }: { className?: string }) {
   return (
-    <div
-      className={`flex items-center gap-2 font-black tracking-widest uppercase select-none ${className}`}
-    >
-      <span className="text-xl sm:text-2xl font-black bg-black text-white px-2 py-0.5 border border-white/20 calafrio-tag">
-        CALAFRIO
-      </span>
-      <span className="text-[10px] text-accent-ink font-bold tracking-widest border border-amber-400/40 px-1 py-0.5 rounded-xs">
+    <div className={`flex items-center gap-2.5 select-none ${className}`}>
+      <Image
+        src="/assets/Calafrio.svg"
+        alt="Calafrio RPG"
+        width={549}
+        height={99}
+        priority
+        className="h-6 sm:h-7.5 w-auto object-contain dark:invert transition-[filter]"
+      />
+      <span className="text-[10px] font-bold tracking-widest border border-amber-500/40 text-amber-800 dark:text-amber-300 px-1.5 py-0.5 rounded-xs uppercase">
         2e TTRPG
       </span>
     </div>

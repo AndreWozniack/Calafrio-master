@@ -111,7 +111,7 @@ export function VisaoBestiario() {
             >
               Importar presets oficiais de Lacaios
             </button>
-            <div className="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
+            <div className="entrada-lista space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
               {criaturas.map((c) => (
                 <div
                   key={c.id}

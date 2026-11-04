@@ -73,7 +73,7 @@ export function CardResultado({
     <button
       type="button"
       onClick={onSelecionar}
-      className={`grid w-full cursor-pointer grid-cols-[minmax(0,1fr)_auto] items-start gap-3 border-2 px-3 py-2.5 text-left active:bg-black/5 ${
+      className={`pressionavel grid w-full cursor-pointer grid-cols-[minmax(0,1fr)_auto] items-start gap-3 border-2 px-3 py-2.5 text-left active:bg-black/5 ${
         selecionado ? "border-black bg-amber-100" : "border-black/25 bg-white"
       }`}
     >

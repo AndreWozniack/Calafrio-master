@@ -13,6 +13,10 @@ const isDev =
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
+  secret:
+    process.env.AUTH_SECRET ??
+    process.env.NEXTAUTH_SECRET ??
+    (isDev ? "calafrio-dev-secret-jwt-key-super-secure-token-2026" : undefined),
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID,
@@ -43,31 +47,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
   pages: {
     signIn: "/login",
+    error: "/login",
   },
   callbacks: {
     authorized({ auth }) {
       return !!auth?.user;
     },
     async signIn({ user, account }) {
-      if (!account?.providerAccountId || !user.email) return false;
+      const idExterno = account?.providerAccountId || user?.id;
+      if (!idExterno || !user?.email) return false;
       const conta = await provisionarConta({
-        idExterno: account.providerAccountId,
+        idExterno,
         email: user.email,
         nome: user.name ?? user.email,
         avatarUrl: user.image,
       });
       return conta !== null;
     },
-    async jwt({ token, account }) {
-      if (account?.providerAccountId) {
-        const dbUser = await buscarUsuarioPorGoogleId(
-          account.providerAccountId,
-        );
+    async jwt({ token, account, user }) {
+      const idExterno =
+        account?.providerAccountId || (user as { id?: string } | undefined)?.id;
+      if (idExterno) {
+        const dbUser = await buscarUsuarioPorGoogleId(idExterno);
         if (dbUser) {
           token.userId = dbUser.id;
           token.role = dbUser.role;
         } else {
-          token.userId = account.providerAccountId;
+          token.userId = idExterno;
           token.role = "user";
         }
       }

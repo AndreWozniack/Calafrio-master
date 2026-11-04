@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import {
+  buscarUsuarioPorEmail,
   buscarUsuarioPorGoogleId,
   inserirUsuario,
   promoverAdmin,
@@ -12,6 +13,21 @@ import {
  * `EMAILS_PERMITIDOS` com e-mails separados por vírgula pra fechar.
  */
 export function podeEntrar(email: string): boolean {
+  const isDev =
+    process.env.NODE_ENV !== "production" ||
+    process.env.ALLOW_DEV_LOGIN === "true";
+
+  if (isDev) {
+    return true;
+  }
+
+  if (
+    process.env.ADMIN_EMAIL &&
+    email.toLowerCase() === process.env.ADMIN_EMAIL.toLowerCase()
+  ) {
+    return true;
+  }
+
   const permitidos = new Set(
     (process.env.EMAILS_PERMITIDOS ?? "")
       .split(",")
@@ -39,20 +55,28 @@ export async function provisionarConta(
   if (!podeEntrar(identidade.email)) return null;
   const ehAdmin = identidade.email === process.env.ADMIN_EMAIL;
 
-  const existente = await buscarUsuarioPorGoogleId(identidade.idExterno);
+  let existente = await buscarUsuarioPorGoogleId(identidade.idExterno);
   if (!existente) {
-    const novoUsuario = await inserirUsuario({
-      id: crypto.randomUUID(),
-      googleId: identidade.idExterno,
-      nome: identidade.nome,
-      email: identidade.email,
-      avatarUrl: identidade.avatarUrl ?? null,
-      role: ehAdmin ? "admin" : "user",
-    });
+    existente = await buscarUsuarioPorEmail(identidade.email);
+  }
 
-    if (novoUsuario) return novoUsuario;
+  if (!existente) {
+    try {
+      const novoUsuario = await inserirUsuario({
+        id: crypto.randomUUID(),
+        googleId: identidade.idExterno,
+        nome: identidade.nome,
+        email: identidade.email.toLowerCase().trim(),
+        avatarUrl: identidade.avatarUrl ?? null,
+        role: ehAdmin ? "admin" : "user",
+      });
 
-    // Fallback caso db esteja nulo/offline
+      if (novoUsuario) return novoUsuario;
+    } catch (err) {
+      console.error("Erro ao inserir usuario no banco:", err);
+    }
+
+    // Fallback caso db esteja offline
     return {
       id: `fallback-${identidade.idExterno}`,
       googleId: identidade.idExterno,

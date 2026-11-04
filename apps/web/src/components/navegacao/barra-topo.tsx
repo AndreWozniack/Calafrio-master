@@ -1,16 +1,25 @@
 "use client";
 
-import { BookOpen, Skull, Swords } from "lucide-react";
+import { BookOpen, LogIn, Skull, Swords } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { estaNaFicha } from "@/lib/rota-ficha";
 import { CalafrioLogo } from "../svg/calafrio-ornamentos";
 import { AlternarTema } from "./alternar-tema";
+import { UsuarioMenu } from "./usuario-menu";
 
-export function BarraTopo() {
+interface BarraTopoProps {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  } | null;
+}
+
+export function BarraTopo({ user }: BarraTopoProps) {
   const pathname = usePathname();
 
-  if (estaNaFicha(pathname)) return null;
+  if (estaNaFicha(pathname) || pathname === "/login") return null;
 
   const links = [
     { href: "/mesa", label: "Suas Mesas", icon: Swords },
@@ -48,6 +57,18 @@ export function BarraTopo() {
             );
           })}
           <AlternarTema />
+
+          {user ? (
+            <UsuarioMenu user={user} />
+          ) : (
+            <Link
+              href="/login"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-black text-white text-xs font-bold border border-black shadow-[1px_1px_0px_#000] hover:bg-neutral-800 transition-colors"
+            >
+              <LogIn className="size-3.5" />
+              <span>Entrar</span>
+            </Link>
+          )}
         </nav>
       </div>
     </header>

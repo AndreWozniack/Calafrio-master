@@ -88,7 +88,7 @@ export function VisaoBiblioteca() {
       {abaAtiva === "glossario" && (
         <div className="calafrio-card p-4 space-y-3">
           <span className="calafrio-tag">GLOSSÁRIO OFICIAL — CALAFRIO 2E</span>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+          <div className="entrada-lista grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
             {catalogo.glossario.map((g) => (
               <div
                 key={g.termo}

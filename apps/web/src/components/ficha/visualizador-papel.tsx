@@ -1,9 +1,9 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useRef } from "react";
-import { flushSync } from "react-dom";
+import { useEffect, useRef, useState } from "react";
 import type { FichaViva, ModoVisualizacao, PaginaFicha } from "./fichas-tipos";
+import { PaginaEcosAprimoramentos } from "./pagina-ecos-aprimoramentos";
 import { PaginaFrenteFicha } from "./pagina-frente-ficha";
 import { PaginaVersoMatriz } from "./pagina-verso-matriz";
 
@@ -16,67 +16,6 @@ interface VisualizadorPapelProps {
 }
 
 const LIMITE_SWIPE_PX = 60;
-const PERSPECTIVA = "perspective(2000px)";
-const ANGULO_BORDA = 84;
-const DURACAO_SAIDA_MS = 230;
-const DURACAO_ENTRADA_MS = 360;
-
-const girar = (graus: number, opacidade: number) => ({
-  transform: `${PERSPECTIVA} rotateY(${graus}deg)`,
-  opacity: opacidade,
-});
-
-const ehTelaDuasPaginas = () => window.matchMedia("(min-width: 1024px)").matches;
-const prefereMovimentoReduzido = () =>
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-/**
- * Virada em duas fases, só com transform/opacity (compositor):
- * a folha atual gira até ficar de borda, a troca acontece no instante invisível
- * e a nova folha desdobra do outro lado. A folha sempre pivota na lombada.
- */
-async function animarVirada(
-  saindo: HTMLElement,
-  entrando: HTMLElement,
-  sentido: 1 | -1,
-  trocar: () => void,
-) {
-  const origem = sentido === 1 ? "left center" : "right center";
-  for (const el of [saindo, entrando]) {
-    el.style.transformOrigin = origem;
-    el.style.willChange = "transform, opacity";
-  }
-
-  const saida = saindo.animate(
-    [girar(0, 1), girar(-ANGULO_BORDA * sentido, 0.5)],
-    {
-      duration: DURACAO_SAIDA_MS,
-      easing: "cubic-bezier(0.55, 0, 0.9, 0.6)",
-      fill: "forwards",
-    },
-  );
-  await saida.finished;
-
-  Object.assign(entrando.style, girar(ANGULO_BORDA * sentido, 0.5));
-  flushSync(trocar);
-
-  const entrada = entrando.animate(
-    [girar(ANGULO_BORDA * sentido, 0.5), girar(0, 1)],
-    { duration: DURACAO_ENTRADA_MS, easing: "cubic-bezier(0.1, 0.8, 0.2, 1)" },
-  );
-  entrada.finished
-    .catch(() => undefined)
-    .finally(() => {
-      saida.cancel();
-      for (const el of [saindo, entrando]) {
-        el.style.transform = "";
-        el.style.opacity = "";
-        el.style.transformOrigin = "";
-        el.style.willChange = "";
-      }
-    });
-  await entrada.finished.catch(() => undefined);
-}
 
 function digitando(alvo: EventTarget | null) {
   return (
@@ -121,6 +60,12 @@ function SetaVirar({
   );
 }
 
+const ORDEM_PAGINAS: Record<PaginaFicha, number> = {
+  frente: 1,
+  verso: 2,
+  ecos: 3,
+};
+
 export function VisualizadorPapel({
   f,
   modo,
@@ -128,37 +73,26 @@ export function VisualizadorPapel({
   onMudarPagina,
   onAbrirRolagem,
 }: VisualizadorPapelProps) {
+  const [direcao, setDirecao] = useState<"avancar" | "voltar" | null>(null);
   const inicioToque = useRef<number | null>(null);
-  const virando = useRef(false);
-  const refFrente = useRef<HTMLDivElement>(null);
-  const refVerso = useRef<HTMLDivElement>(null);
 
   const virar = (destino: PaginaFicha) => {
-    if (destino === pagina || virando.current) return;
-    const saindo = (pagina === "frente" ? refFrente : refVerso).current;
-    const entrando = (destino === "frente" ? refFrente : refVerso).current;
-    const semAnimacao =
-      !saindo ||
-      !entrando ||
-      prefereMovimentoReduzido() ||
-      (modo === "duas" && ehTelaDuasPaginas());
-    if (semAnimacao) {
-      onMudarPagina(destino);
-      return;
-    }
-    virando.current = true;
-    void animarVirada(saindo, entrando, destino === "verso" ? 1 : -1, () =>
-      onMudarPagina(destino),
-    ).finally(() => {
-      virando.current = false;
-    });
+    if (destino === pagina) return;
+    setDirecao(ORDEM_PAGINAS[destino] > ORDEM_PAGINAS[pagina] ? "avancar" : "voltar");
+    onMudarPagina(destino);
   };
 
   useEffect(() => {
     const aoTeclar = (e: KeyboardEvent) => {
       if (digitando(e.target) || document.querySelector(".fixed.inset-0")) return;
-      if (e.key === "ArrowRight" && pagina === "frente") virar("verso");
-      if (e.key === "ArrowLeft" && pagina === "verso") virar("frente");
+      if (e.key === "ArrowRight") {
+        if (pagina === "frente") virar("verso");
+        else if (pagina === "verso") virar("ecos");
+      }
+      if (e.key === "ArrowLeft") {
+        if (pagina === "ecos") virar("verso");
+        else if (pagina === "verso") virar("frente");
+      }
     };
     window.addEventListener("keydown", aoTeclar);
     return () => window.removeEventListener("keydown", aoTeclar);
@@ -166,8 +100,19 @@ export function VisualizadorPapel({
 
   const duas = modo === "duas";
   const controlesVisiveis = duas ? "lg:hidden" : "";
-  const mostrar = (alvo: PaginaFicha) =>
-    pagina === alvo ? "block" : duas ? "hidden lg:block" : "hidden";
+  const animacao =
+    direcao === null ? "" : direcao === "avancar" ? "folheada-avancar" : "folheada-voltar";
+
+  const mostrar = (alvo: PaginaFicha) => {
+    if (pagina === alvo) return "block";
+    if (!duas) return "hidden";
+    if (pagina === "ecos") {
+      return alvo === "verso" ? "hidden lg:block" : "hidden";
+    }
+    return alvo === (pagina === "frente" ? "verso" : "frente")
+      ? "hidden lg:block"
+      : "hidden";
+  };
 
   return (
     <div
@@ -179,28 +124,111 @@ export function VisualizadorPapel({
         if (inicioToque.current === null || digitando(e.target)) return;
         const dx = e.changedTouches[0].clientX - inicioToque.current;
         inicioToque.current = null;
-        if (dx < -LIMITE_SWIPE_PX) virar("verso");
-        if (dx > LIMITE_SWIPE_PX) virar("frente");
+        if (dx < -LIMITE_SWIPE_PX) {
+          if (pagina === "frente") virar("verso");
+          else if (pagina === "verso") virar("ecos");
+        }
+        if (dx > LIMITE_SWIPE_PX) {
+          if (pagina === "ecos") virar("verso");
+          else if (pagina === "verso") virar("frente");
+        }
       }}
     >
-      {pagina === "frente" ? (
+      {/* Abas físicas estilo fichário/dossiê (modo uma página) */}
+      {!duas && (
+        <div className="flex items-end gap-1.5 px-2 -mb-[2px] z-10 relative">
+          <button
+            type="button"
+            onClick={() => virar("frente")}
+            className={`cursor-pointer px-4 py-2 text-xs font-black uppercase tracking-wider rounded-t-md transition-all flex items-center gap-2 ${
+              pagina === "frente"
+                ? "bg-[#fbfbf9] text-black border-2 border-b-0 border-black shadow-[0_-2px_6px_rgba(0,0,0,0.06)] relative z-20 pb-2.5 font-heading"
+                : "bg-[#e5e5e0] text-black/60 border border-b-0 border-black/30 hover:bg-[#eaeae5] hover:text-black font-heading"
+            }`}
+          >
+            <span
+              className={`size-2 rounded-full ${
+                pagina === "frente" ? "bg-black" : "bg-black/40"
+              }`}
+            />
+            1 · Identidade
+          </button>
+          <button
+            type="button"
+            onClick={() => virar("verso")}
+            className={`cursor-pointer px-4 py-2 text-xs font-black uppercase tracking-wider rounded-t-md transition-all flex items-center gap-2 ${
+              pagina === "verso"
+                ? "bg-[#fbfbf9] text-black border-2 border-b-0 border-black shadow-[0_-2px_6px_rgba(0,0,0,0.06)] relative z-20 pb-2.5 font-heading"
+                : "bg-[#e5e5e0] text-black/60 border border-b-0 border-black/30 hover:bg-[#eaeae5] hover:text-black font-heading"
+            }`}
+          >
+            <span
+              className={`size-2 rounded-full ${
+                pagina === "verso" ? "bg-black" : "bg-black/40"
+              }`}
+            />
+            2 · Matriz
+          </button>
+          <button
+            type="button"
+            onClick={() => virar("ecos")}
+            className={`cursor-pointer px-4 py-2 text-xs font-black uppercase tracking-wider rounded-t-md transition-all flex items-center gap-2 ${
+              pagina === "ecos"
+                ? "bg-[#fbfbf9] text-black border-2 border-b-0 border-black shadow-[0_-2px_6px_rgba(0,0,0,0.06)] relative z-20 pb-2.5 font-heading"
+                : "bg-[#e5e5e0] text-black/60 border border-b-0 border-black/30 hover:bg-[#eaeae5] hover:text-black font-heading"
+            }`}
+          >
+            <span
+              className={`size-2 rounded-full ${
+                pagina === "ecos" ? "bg-black" : "bg-black/40"
+              }`}
+            />
+            3 · Ecos & Aprimoramentos
+          </button>
+        </div>
+      )}
+
+      {/* Setas Laterais de Navegação */}
+      {pagina === "frente" && (
         <SetaVirar
           sentido="direita"
-          rotulo="Virar para o verso (Matriz)"
+          rotulo="Virar para a Matriz de Habilidades"
           onClick={() => virar("verso")}
           visibilidade={`flex ${controlesVisiveis}`}
         />
-      ) : (
+      )}
+      {pagina === "verso" && (
+        <>
+          <SetaVirar
+            sentido="esquerda"
+            rotulo="Voltar para a Frente (Identidade)"
+            onClick={() => virar("frente")}
+            visibilidade={`flex ${controlesVisiveis}`}
+          />
+          <SetaVirar
+            sentido="direita"
+            rotulo="Avançar para Ecos & Aprimoramentos"
+            onClick={() => virar("ecos")}
+            visibilidade={`flex ${controlesVisiveis}`}
+          />
+        </>
+      )}
+      {pagina === "ecos" && (
         <SetaVirar
           sentido="esquerda"
-          rotulo="Voltar para a frente"
-          onClick={() => virar("frente")}
+          rotulo="Voltar para a Matriz de Habilidades"
+          onClick={() => virar("verso")}
           visibilidade={`flex ${controlesVisiveis}`}
         />
       )}
 
+      {/* Grade de Páginas */}
       <div className={`grid items-start gap-6 ${duas ? "lg:grid-cols-2" : ""}`}>
-        <div ref={refFrente} className={mostrar("frente")}>
+        {/* Página 1: Frente */}
+        <div
+          key={`frente-${pagina}`}
+          className={`${mostrar("frente")} ${pagina === "frente" && !duas ? animacao : ""}`}
+        >
           <PaginaFrenteFicha
             ficha={f.ficha}
             derivada={f.derivada}
@@ -222,7 +250,12 @@ export function VisualizadorPapel({
             onAbrirRolagem={onAbrirRolagem}
           />
         </div>
-        <div ref={refVerso} className={mostrar("verso")}>
+
+        {/* Página 2: Verso (Matriz) */}
+        <div
+          key={`verso-${pagina}`}
+          className={`${mostrar("verso")} ${pagina === "verso" && !duas ? animacao : ""}`}
+        >
           <PaginaVersoMatriz
             ficha={f.ficha}
             derivada={f.derivada}
@@ -249,14 +282,50 @@ export function VisualizadorPapel({
             focoAtivoId={f.estado.focoAtivoId}
             onAlternarFoco={f.alternarFoco}
             onDefinirAnotacoes={f.definirAnotacoes}
+            onNavegarParaEcos={() => virar("ecos")}
+          />
+        </div>
+
+        {/* Página 3: Ecos & Aprimoramentos */}
+        <div
+          key={`ecos-${pagina}`}
+          className={`${mostrar("ecos")} ${pagina === "ecos" && !duas ? animacao : ""}`}
+        >
+          <PaginaEcosAprimoramentos
+            ficha={f.ficha}
+            derivada={f.derivada}
+            catalogo={f.catalogo}
+            onAdicionarHabilidadeUnica={(unica) =>
+              f.dispatch({ tipo: "adicionarHabilidadeUnica", unica })
+            }
+            onAtualizarHabilidadeUnica={(id, dados) =>
+              f.dispatch({ tipo: "atualizarHabilidadeUnica", id, dados })
+            }
+            onRemoverHabilidadeUnica={(id) =>
+              f.dispatch({ tipo: "removerHabilidadeUnica", id })
+            }
+            onAdicionarCustomizacaoEco={(customizacao) =>
+              f.dispatch({ tipo: "adicionarCustomizacaoEco", customizacao })
+            }
+            onRemoverCustomizacaoEco={(id) =>
+              f.dispatch({ tipo: "removerCustomizacaoEco", id })
+            }
+            onDefinirAnotacoes={f.definirAnotacoes}
           />
         </div>
       </div>
 
+      {/* Controles de Paginação Rodapé */}
       <div
         className={`mt-4 flex items-center justify-center gap-2.5 text-xs font-bold ${controlesVisiveis}`}
       >
-        {(["frente", "verso"] as const).map((alvo) => (
+        {(
+          [
+            ["frente", "1 · Frente (Identidade)"],
+            ["verso", "2 · Verso (Matriz)"],
+            ["ecos", "3 · Ecos & Aprimoramentos"],
+          ] as const
+        ).map(([alvo, rotulo]) => (
           <button
             key={alvo}
             type="button"
@@ -267,7 +336,7 @@ export function VisualizadorPapel({
                 : "bg-white text-black hover:bg-black/10"
             }`}
           >
-            {alvo === "frente" ? "1 · Frente (Identidade)" : "2 · Verso (Matriz)"}
+            {rotulo}
           </button>
         ))}
       </div>

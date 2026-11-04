@@ -5,6 +5,7 @@ import { ALTURA_FOLHA, LARGURA_FOLHA } from "./unidades";
 export function FolhaPapel({ children }: { children: ReactNode }) {
   return (
     <div
+      data-papel
       className="relative mx-auto w-full max-w-[880px] overflow-hidden bg-[#fbfbf9] text-black shadow-xl ring-1 ring-black/15 [&_input]:font-bold [&_textarea]:font-semibold"
       style={{
         containerType: "inline-size",

@@ -1,5 +1,6 @@
 import { ArrowRight, BookOpen, Plus, Users } from "lucide-react";
 import Link from "next/link";
+import { DivisorSeta } from "@/components/navegacao/divisor-seta";
 import type { PlayerCalafrio } from "@/services/armazenamento-calafrio";
 
 interface PlayersPanelProps {
@@ -10,7 +11,7 @@ interface PlayersPanelProps {
 export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
   return (
     <section className="space-y-4">
-      <div className="flex items-center justify-between gap-3 border-b border-border pb-3">
+      <div className="flex items-center justify-between gap-3">
         <div>
           <span className="calafrio-tag-sm">PLAYERS DA MESA</span>
           <h2 className="text-lg font-black text-foreground flex items-center gap-2 mt-1">
@@ -27,7 +28,9 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <DivisorSeta />
+
+      <div className="entrada-lista grid grid-cols-1 md:grid-cols-2 gap-3">
         {players.map((p) => {
           const ocupacao =
             p.ficha.palavrasChave.find((pc) => pc.categoria === "ocupacao")
@@ -37,7 +40,7 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
             <Link
               key={p.id}
               href={`/mesa/${mesaId}/players/${p.id}/ficha`}
-              className="p-4 rounded-xl border border-border bg-card/60 hover:bg-card hover:border-amber-400/40 transition-all flex flex-col justify-between space-y-3 group cursor-pointer shadow-sm"
+              className="elevar p-4 rounded-xl border border-border bg-card/60 hover:bg-card hover:border-amber-400/40 transition-all flex flex-col justify-between space-y-3 group cursor-pointer shadow-sm"
             >
               <div className="flex items-start justify-between gap-2">
                 <div>

@@ -8,6 +8,7 @@ import {
   ImagePlus,
   Moon,
   Skull,
+  Sparkles,
   Sun,
   User,
 } from "lucide-react";
@@ -15,6 +16,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import type { FichaViva } from "../fichas-tipos";
 import { lerImagemRedimensionada } from "../papel/retrato-papel";
+import { EcosCelular } from "./ecos-celular";
 import {
   CarteiraCelular,
   InventarioCelular,
@@ -23,12 +25,13 @@ import {
 import { MatrizCelular } from "./matriz-celular";
 import { VitaisCelular } from "./vitais-celular";
 
-type Aba = "ficha" | "mochila" | "matriz";
+type Aba = "ficha" | "mochila" | "matriz" | "ecos";
 
 const ABAS: { id: Aba; rotulo: string; Icone: typeof User }[] = [
   { id: "ficha", rotulo: "Ficha", Icone: User },
   { id: "mochila", rotulo: "Mochila", Icone: Backpack },
   { id: "matriz", rotulo: "Matriz", Icone: Grid3x3 },
+  { id: "ecos", rotulo: "Ecos", Icone: Sparkles },
 ];
 
 function Cabecalho({ f }: { f: FichaViva }) {
@@ -90,7 +93,7 @@ function AcoesRapidas({
   onDanoCura: () => void;
 }) {
   const base =
-    "flex min-h-14 cursor-pointer flex-col items-center justify-center gap-1 text-xs font-extrabold active:scale-95";
+    "pressionavel flex min-h-14 cursor-pointer flex-col items-center justify-center gap-1 text-xs font-extrabold";
   return (
     <div className="grid grid-cols-2 gap-2">
       <button
@@ -140,6 +143,7 @@ export function FichaCelular({
 
   return (
     <div
+      data-papel
       className="-mx-3 -mt-3 min-h-screen space-y-5 overflow-x-clip px-3 pb-28 pt-4 text-black"
       style={{
         fontFamily: "var(--font-alegreya), Georgia, serif",
@@ -148,6 +152,7 @@ export function FichaCelular({
         backgroundSize: "40vw",
       }}
     >
+      <div key={aba} className="entrada-lista space-y-5">
       {aba === "ficha" && (
         <>
           <div className="flex items-center justify-between gap-3">
@@ -181,8 +186,10 @@ export function FichaCelular({
       )}
       {aba === "mochila" && <InventarioCelular f={f} />}
       {aba === "matriz" && <MatrizCelular f={f} />}
+      {aba === "ecos" && <EcosCelular f={f} />}
+      </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-3 border-t-[3px] border-black bg-white pb-[env(safe-area-inset-bottom)]">
+      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t-[3px] border-black bg-white pb-[env(safe-area-inset-bottom)]">
         {ABAS.map(({ id, rotulo, Icone }) => (
           <button
             key={id}
@@ -191,7 +198,7 @@ export function FichaCelular({
               setAba(id);
               window.scrollTo({ top: 0 });
             }}
-            className={`flex min-h-16 cursor-pointer flex-col items-center justify-center gap-0.5 text-xs font-extrabold ${
+            className={`pressionavel flex min-h-16 cursor-pointer flex-col items-center justify-center gap-0.5 text-xs font-extrabold transition-colors duration-200 ${
               aba === id ? "bg-black text-white" : "text-black"
             }`}
           >

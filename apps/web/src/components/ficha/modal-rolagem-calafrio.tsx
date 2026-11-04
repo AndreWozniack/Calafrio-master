@@ -77,7 +77,10 @@ function ConteudoModal({
   const [resultadoContestacao, setResultadoContestacao] =
     useState<ResultadoContestacao | null>(null);
 
+  const [numeroRolagem, setNumeroRolagem] = useState(0);
+
   const rolar = () => {
+    setNumeroRolagem((n) => n + 1);
     if (tipo === "acao") {
       const res = rolarTesteAcao({
         apt: derivada.apt,
@@ -196,8 +199,10 @@ function ConteudoModal({
           </div>
         )}
 
-        {resultadoAcao && <ResultadoAcao r={resultadoAcao} />}
-        {resultadoContestacao && <ResultadoDisputa r={resultadoContestacao} />}
+        {resultadoAcao && <ResultadoAcao key={numeroRolagem} r={resultadoAcao} />}
+        {resultadoContestacao && (
+          <ResultadoDisputa key={numeroRolagem} r={resultadoContestacao} />
+        )}
       </div>
     </CascaModal>
   );
@@ -214,7 +219,7 @@ function ResultadoAcao({ r }: { r: ResultadoTesteAcao }) {
           : `Falha vs dificuldade ${r.dificuldade}`;
   return (
     <div
-      className={`space-y-1 border-[3px] p-4 text-center ${r.sucesso ? ESTILO_VITORIA : ESTILO_DERROTA}`}
+      className={`resultado-pop space-y-1 border-[3px] p-4 text-center ${r.sucesso ? ESTILO_VITORIA : ESTILO_DERROTA}`}
     >
       <div className="text-5xl font-black leading-none">{r.total}</div>
       <div className="text-sm font-bold">
@@ -229,7 +234,7 @@ function ResultadoDisputa({ r }: { r: ResultadoContestacao }) {
   const venceu = r.vencedor === "atacante";
   return (
     <div
-      className={`space-y-2 border-[3px] p-4 text-center ${venceu ? ESTILO_VITORIA : ESTILO_DERROTA}`}
+      className={`resultado-pop space-y-2 border-[3px] p-4 text-center ${venceu ? ESTILO_VITORIA : ESTILO_DERROTA}`}
     >
       <div className="flex items-center justify-around">
         <div>
