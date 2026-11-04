@@ -5,7 +5,8 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     env_file:
-      - .env
+      - path: .env
+        required: false
     environment:
       NODE_ENV: production
       PORT: "3001"
@@ -32,4 +33,4 @@ services:
 
 networks:
   dokploy-network:
-    external: true
+    name: dokploy-network

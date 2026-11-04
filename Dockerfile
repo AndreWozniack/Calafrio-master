@@ -1,23 +1,20 @@
 FROM node:22-alpine AS base
-RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 WORKDIR /app
+RUN corepack enable
 
-FROM base AS deps
-COPY package.json pnpm-workspace.yaml ./
-COPY packages/tema/package.json ./packages/tema/
-COPY packages/core/package.json ./packages/core/
-COPY packages/ficha-app/package.json ./packages/ficha-app/
-COPY apps/web/package.json ./apps/web/
-RUN pnpm install --no-frozen-lockfile
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/web/package.json apps/web/
+COPY packages/core/package.json packages/core/
+COPY packages/ficha-app/package.json packages/ficha-app/
+COPY packages/tema/package.json packages/tema/
+RUN pnpm install --frozen-lockfile --filter @calafrio/web...
 
-FROM base AS builder
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN pnpm build
+RUN pnpm --filter @calafrio/web build
 
-FROM base AS runner
 ENV NODE_ENV=production
 ENV PORT=3001
-COPY --from=builder /app ./
 EXPOSE 3001
-CMD ["pnpm", "--filter", "@calafrio/web", "start"]
+
+WORKDIR /app/apps/web
+CMD ["pnpm", "start"]
