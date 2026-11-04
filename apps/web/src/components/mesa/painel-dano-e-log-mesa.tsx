@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import type { CombatenteMesa } from "./card-combatente-mesa";
 
 interface PainelDanoELogMesaProps {
@@ -30,7 +31,9 @@ export function PainelDanoELogMesa({
         <span className="calafrio-tag">APLICAR IMPACTO / DANO</span>
         <div className="space-y-2 text-xs">
           <div>
-            <label className="block text-muted-foreground mb-1">Combatente Alvo:</label>
+            <label className="block text-muted-foreground mb-1">
+              Combatente Alvo:
+            </label>
             <select
               value={alvoId}
               onChange={(e) => setAlvoId(e.target.value)}
@@ -47,7 +50,9 @@ export function PainelDanoELogMesa({
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-muted-foreground mb-1">Dano Sofrido:</label>
+              <label className="block text-muted-foreground mb-1">
+                Dano Sofrido:
+              </label>
               <input
                 type="number"
                 min={1}
@@ -57,7 +62,9 @@ export function PainelDanoELogMesa({
               />
             </div>
             <div>
-              <label className="block text-muted-foreground mb-1">Mitigar com PA (1:1):</label>
+              <label className="block text-muted-foreground mb-1">
+                Mitigar com PA (1:1):
+              </label>
               <input
                 type="number"
                 min={0}

@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
 import {
   type CriaturaCalafrio,
-  motorBestiarioUnificado,
   carregarCatalogoCalafrio,
+  motorBestiarioUnificado,
 } from "@calafrio/core";
 import { Skull, Trash2 } from "lucide-react";
-import { FormularioCriarCriatura } from "./formulario-criar-criatura";
+import { useState } from "react";
 import { FichaCriaturaAtiva } from "./ficha-criatura-ativa";
+import { FormularioCriarCriatura } from "./formulario-criar-criatura";
 
 export function VisaoBestiario() {
   const catalogo = carregarCatalogoCalafrio();
@@ -45,9 +45,14 @@ export function VisaoBestiario() {
     criaturas[0]?.id ?? "",
   );
 
-  const criaturaAtiva = criaturas.find((c) => c.id === criaturaSelecionadaId) ?? criaturas[0];
+  const criaturaAtiva =
+    criaturas.find((c) => c.id === criaturaSelecionadaId) ?? criaturas[0];
 
-  const lidarCriar = (nome: string, apt: number, categoria: CriaturaCalafrio["categoria"]) => {
+  const lidarCriar = (
+    nome: string,
+    apt: number,
+    categoria: CriaturaCalafrio["categoria"],
+  ) => {
     const base = motorBestiarioUnificado.gerarPadraoPorApt(apt);
     const nova: CriaturaCalafrio = {
       ...base,
@@ -74,7 +79,8 @@ export function VisaoBestiario() {
         <div>
           <span className="calafrio-tag">BESTIÁRIO & NPCS DO MESTRE</span>
           <p className="text-xs text-muted-foreground mt-1">
-            Crie e gerencie criaturas, lacaios e assombrações do submundo curitibano.
+            Crie e gerencie criaturas, lacaios e assombrações do submundo
+            curitibano.
           </p>
         </div>
       </div>
@@ -102,7 +108,9 @@ export function VisaoBestiario() {
                     <div className="font-bold flex items-center gap-1.5">
                       <Skull className="size-3 text-amber-400" />
                       <span>{c.nome}</span>
-                      <span className="text-[10px] text-muted-foreground font-semibold uppercase">({c.categoria})</span>
+                      <span className="text-[10px] text-muted-foreground font-semibold uppercase">
+                        ({c.categoria})
+                      </span>
                     </div>
                     <div className="text-[10px] text-muted-foreground">
                       APT {c.apt} · {c.pvMax} PV · {c.pd} PD
@@ -112,7 +120,9 @@ export function VisaoBestiario() {
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setCriaturas((prev) => prev.filter((item) => item.id !== c.id));
+                      setCriaturas((prev) =>
+                        prev.filter((item) => item.id !== c.id),
+                      );
                     }}
                     className="p-1 text-muted-foreground hover:text-red-400 cursor-pointer"
                   >

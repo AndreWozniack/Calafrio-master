@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 export interface CombatenteMesa {
   id: string;
   nome: string;
@@ -70,13 +68,17 @@ export function CardCombatenteMesa({
         {/* Vitais */}
         <div className="grid grid-cols-2 gap-2 mt-3 text-xs text-center font-bold">
           <div className="p-2 rounded bg-red-950/30 border border-red-800/40">
-            <span className="text-red-300 block text-[10px] uppercase">Vida (PV)</span>
+            <span className="text-red-300 block text-[10px] uppercase">
+              Vida (PV)
+            </span>
             <span className="text-lg font-black text-red-400">
               {c.pvAtual} / {c.pvMax}
             </span>
           </div>
           <div className="p-2 rounded bg-cyan-950/30 border border-cyan-800/40">
-            <span className="text-cyan-300 block text-[10px] uppercase">ÂNIMUM (PA)</span>
+            <span className="text-cyan-300 block text-[10px] uppercase">
+              ÂNIMUM (PA)
+            </span>
             <span className="text-lg font-black text-cyan-400">
               {c.paAtual} / {c.paMax}
             </span>
@@ -86,7 +88,9 @@ export function CardCombatenteMesa({
         {/* Rastreador de Ações do Turno */}
         <div className="mt-3 pt-2 border-t border-border/60 space-y-1.5 text-xs">
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground font-semibold">Ações Padrão (2):</span>
+            <span className="text-muted-foreground font-semibold">
+              Ações Padrão (2):
+            </span>
             <div className="flex gap-1">
               {[1, 2].map((num) => (
                 <button
@@ -107,7 +111,9 @@ export function CardCombatenteMesa({
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground font-semibold">Ação Livre (1):</span>
+            <span className="text-muted-foreground font-semibold">
+              Ação Livre (1):
+            </span>
             <button
               type="button"
               onClick={() => onGastarAcaoLivre(c.id)}
@@ -122,7 +128,9 @@ export function CardCombatenteMesa({
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground font-semibold">Reflexo (1/rodada):</span>
+            <span className="text-muted-foreground font-semibold">
+              Reflexo (1/rodada):
+            </span>
             <button
               type="button"
               onClick={() => onGastarReflexo(c.id)}
@@ -139,7 +147,8 @@ export function CardCombatenteMesa({
 
         {inconsciente && (
           <div className="mt-2 p-2 bg-red-950/80 border border-red-500 rounded text-center text-xs font-black text-red-200 animate-pulse">
-            ⚠️ 0 PV: INCONSCIENTE! Morre em {Math.max(1, Math.floor(60 / 2 ** c.quedas))}s
+            ⚠️ 0 PV: INCONSCIENTE! Morre em{" "}
+            {Math.max(1, Math.floor(60 / 2 ** c.quedas))}s
           </div>
         )}
       </div>

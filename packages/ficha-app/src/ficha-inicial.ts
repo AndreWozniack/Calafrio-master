@@ -1,7 +1,4 @@
-import {
-  type FichaCalafrio,
-  criarFichaCalafrioVazia,
-} from "@calafrio/core";
+import { criarFichaCalafrioVazia, type FichaCalafrio } from "@calafrio/core";
 
 export const FICHA_EXEMPLO_BRENDO: FichaCalafrio = {
   id: "brendo-grunevald",

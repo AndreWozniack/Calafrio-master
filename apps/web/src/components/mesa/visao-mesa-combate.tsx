@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
 import { RotateCw, Timer } from "lucide-react";
+import { useState } from "react";
 import {
   CardCombatenteMesa,
   type CombatenteMesa,
@@ -123,7 +123,11 @@ export function VisaoMesaCombate() {
     );
   };
 
-  const lidarAplicarDano = (alvoId: string, danoQtd: number, paMitigar: number) => {
+  const lidarAplicarDano = (
+    alvoId: string,
+    danoQtd: number,
+    paMitigar: number,
+  ) => {
     const alvo = combatentes.find((c) => c.id === alvoId);
     if (!alvo) return;
 
@@ -161,11 +165,13 @@ export function VisaoMesaCombate() {
           <div className="flex items-center gap-2">
             <span className="calafrio-tag">MESA DE COMBATE EM TEMPO REAL</span>
             <span className="text-xs text-amber-400 font-bold flex items-center gap-1">
-              <Timer className="size-3.5" /> Rodada {rodada} ({segundosCombate}s)
+              <Timer className="size-3.5" /> Rodada {rodada} ({segundosCombate}
+              s)
             </span>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Turnos sequenciais no sentido horário. 2 Ações Padrão + 1 Ação Livre por turno; 1 Reflexo por rodada.
+            Turnos sequenciais no sentido horário. 2 Ações Padrão + 1 Ação Livre
+            por turno; 1 Reflexo por rodada.
           </p>
         </div>
 

@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
 import { carregarCatalogoCalafrio } from "@calafrio/core";
-import { SecaoHabilidadesBiblioteca } from "./secao-habilidades-biblioteca";
-import { SecaoTabelasD100 } from "./secao-tabelas-d100";
+import { useMemo, useState } from "react";
 import { SecaoArsenalESuporte } from "./secao-arsenal-e-suporte";
+import { SecaoHabilidadesBiblioteca } from "./secao-habilidades-biblioteca";
 import { SecaoPdfViewer } from "./secao-pdf-viewer";
+import { SecaoTabelasD100 } from "./secao-tabelas-d100";
 
 export function VisaoBiblioteca() {
   const catalogo = useMemo(() => carregarCatalogoCalafrio(), []);
@@ -90,9 +90,16 @@ export function VisaoBiblioteca() {
           <span className="calafrio-tag">GLOSSÁRIO OFICIAL — CALAFRIO 2E</span>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
             {catalogo.glossario.map((g) => (
-              <div key={g.termo} className="p-3 rounded bg-muted/30 border border-border">
-                <div className="font-black text-sm text-amber-400 mb-1">{g.termo}</div>
-                <p className="text-xs text-foreground/80 leading-relaxed">{g.definicao}</p>
+              <div
+                key={g.termo}
+                className="p-3 rounded bg-muted/30 border border-border"
+              >
+                <div className="font-black text-sm text-amber-400 mb-1">
+                  {g.termo}
+                </div>
+                <p className="text-xs text-foreground/80 leading-relaxed">
+                  {g.definicao}
+                </p>
               </div>
             ))}
           </div>

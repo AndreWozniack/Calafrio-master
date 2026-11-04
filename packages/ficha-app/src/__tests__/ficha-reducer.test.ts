@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { criarFichaCalafrioVazia } from "@calafrio/core";
+import { describe, expect, it } from "vitest";
 import { fichaCalafrioReducer } from "../ficha-reducer";
 
 describe("fichaCalafrioReducer", () => {

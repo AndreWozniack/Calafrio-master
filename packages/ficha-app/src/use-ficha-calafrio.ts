@@ -1,40 +1,39 @@
 "use client";
 
 import {
+  aplicarAtividadeHabilidade,
+  aplicarDanoCalafrio,
+  aplicarDescansoCalafrio,
   type CatalogoCalafrio,
+  carregarCatalogoCalafrio,
+  criarEstadoDeJogoInicial,
+  type EspectroDeDano,
   type EstadoDeJogoCalafrio,
   type FichaCalafrio,
   type FichaDerivadaCalafrio,
-  carregarCatalogoCalafrio,
-  criarEstadoDeJogoInicial,
   montarFichaCalafrio,
-  aplicarDanoCalafrio,
-  aplicarAtividadeHabilidade,
-  aplicarDescansoCalafrio,
-  type EspectroDeDano,
 } from "@calafrio/core";
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { obterFichaInicial } from "./ficha-inicial";
-import { type AcaoFichaCalafrio, fichaCalafrioReducer } from "./ficha-reducer";
+import { fichaCalafrioReducer } from "./ficha-reducer";
 
 const CHAVE_LOCAL_STORAGE = "calafrio:ficha-ativa:v1";
 
 export function useFichaCalafrio() {
-  const catalogo: CatalogoCalafrio = useMemo(() => carregarCatalogoCalafrio(), []);
-
-  const [ficha, dispatch] = useReducer(
-    fichaCalafrioReducer,
-    undefined,
-    () => {
-      if (typeof window !== "undefined") {
-        try {
-          const salvo = localStorage.getItem(CHAVE_LOCAL_STORAGE);
-          if (salvo) return JSON.parse(salvo) as FichaCalafrio;
-        } catch {}
-      }
-      return obterFichaInicial();
-    },
+  const catalogo: CatalogoCalafrio = useMemo(
+    () => carregarCatalogoCalafrio(),
+    [],
   );
+
+  const [ficha, dispatch] = useReducer(fichaCalafrioReducer, undefined, () => {
+    if (typeof window !== "undefined") {
+      try {
+        const salvo = localStorage.getItem(CHAVE_LOCAL_STORAGE);
+        if (salvo) return JSON.parse(salvo) as FichaCalafrio;
+      } catch {}
+    }
+    return obterFichaInicial();
+  });
 
   const [estado, setEstado] = useState<EstadoDeJogoCalafrio>(() =>
     criarEstadoDeJogoInicial(),
@@ -83,7 +82,11 @@ export function useFichaCalafrio() {
   );
 
   const descansar = useCallback(
-    (tipo: "curto" | "longo", horas?: number, modo: "fixo" | "rolado" = "fixo") => {
+    (
+      tipo: "curto" | "longo",
+      horas?: number,
+      modo: "fixo" | "rolado" = "fixo",
+    ) => {
       setEstado((prev) =>
         aplicarDescansoCalafrio(ficha, catalogo, prev, {
           tipo,

@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import type {
   FichaCalafrio,
   FichaDerivadaCalafrio,
@@ -8,7 +7,9 @@ import type {
   PersonalidadeCalafrio,
 } from "@calafrio/core";
 import { TOKENS_PERSONALIDADE } from "@calafrio/tema";
-import { Plus, Trash2, Sparkles, AlertCircle } from "lucide-react";
+import { Plus, Sparkles, Trash2 } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 
 interface PainelEcosERegrasProps {
   ficha: FichaCalafrio;
@@ -25,9 +26,13 @@ export function PainelEcosERegras({
 }: PainelEcosERegrasProps) {
   const [nome, setNome] = useState("");
   const [custo, setCusto] = useState(3);
-  const [recurso, setRecurso] = useState<HabilidadeUnicaCalafrio["recurso"]>("pa");
-  const [tipoAcao, setTipoAcao] = useState<HabilidadeUnicaCalafrio["tipoAcao"]>("padrao");
-  const [personalidade, setPersonalidade] = useState<PersonalidadeCalafrio | "nenhum">("nenhum");
+  const [recurso, setRecurso] =
+    useState<HabilidadeUnicaCalafrio["recurso"]>("pa");
+  const [tipoAcao, setTipoAcao] =
+    useState<HabilidadeUnicaCalafrio["tipoAcao"]>("padrao");
+  const [personalidade, setPersonalidade] = useState<
+    PersonalidadeCalafrio | "nenhum"
+  >("nenhum");
   const [descricao, setDescricao] = useState("");
 
   const lidarCriarUnica = (e: React.FormEvent) => {
@@ -40,7 +45,8 @@ export function PainelEcosERegras({
       custo,
       recurso,
       tipoAcao,
-      personalidadeAlinhamento: personalidade === "nenhum" ? undefined : personalidade,
+      personalidadeAlinhamento:
+        personalidade === "nenhum" ? undefined : personalidade,
       descricao: descricao.trim(),
       ecosInvestidos: 1,
       efeitos: [],
@@ -55,19 +61,25 @@ export function PainelEcosERegras({
       {/* Resumo de Ecos */}
       <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-amber-500/10 border border-amber-500/40 rounded">
         <div>
-          <span className="calafrio-tag">ECOS: {derivada.ecosDisponiveis} / {derivada.ecosMax}</span>
+          <span className="calafrio-tag">
+            ECOS: {derivada.ecosDisponiveis} / {derivada.ecosMax}
+          </span>
           <p className="text-[11px] text-muted-foreground mt-1">
-            Cada Eco permite criar uma Habilidade Única, aprimorar uma existente ou reescrever uma regra (aprovado pelo MdJ).
+            Cada Eco permite criar uma Habilidade Única, aprimorar uma existente
+            ou reescrever uma regra (aprovado pelo MdJ).
           </p>
         </div>
       </div>
 
       {/* Lista de Habilidades Únicas Criadas */}
       <div className="space-y-2">
-        <span className="calafrio-tag-sm">HABILIDADES ÚNICAS (CRIADAS COM ECOS)</span>
+        <span className="calafrio-tag-sm">
+          HABILIDADES ÚNICAS (CRIADAS COM ECOS)
+        </span>
         {ficha.habilidadesUnicas.length === 0 ? (
           <p className="text-xs text-muted-foreground italic py-2">
-            Nenhuma habilidade única criada ainda. Crie uma abaixo usando seus Ecos!
+            Nenhuma habilidade única criada ainda. Crie uma abaixo usando seus
+            Ecos!
           </p>
         ) : (
           ficha.habilidadesUnicas.map((u) => (
@@ -77,7 +89,9 @@ export function PainelEcosERegras({
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-amber-300 text-sm">{u.nome}</span>
+                  <span className="font-bold text-amber-300 text-sm">
+                    {u.nome}
+                  </span>
                   <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
                     {u.tipoAcao} · {u.custo} {u.recurso.toUpperCase()}
                   </span>
@@ -85,11 +99,13 @@ export function PainelEcosERegras({
                     <span
                       style={{
                         backgroundColor:
-                          TOKENS_PERSONALIDADE[u.personalidadeAlinhamento].corPositiva,
+                          TOKENS_PERSONALIDADE[u.personalidadeAlinhamento]
+                            .corPositiva,
                       }}
                       className="text-black font-extrabold text-[9px] px-1.5 py-0.5 rounded-xs"
                     >
-                      Alinha: {TOKENS_PERSONALIDADE[u.personalidadeAlinhamento].nome}
+                      Alinha:{" "}
+                      {TOKENS_PERSONALIDADE[u.personalidadeAlinhamento].nome}
                     </span>
                   )}
                 </div>
@@ -108,7 +124,10 @@ export function PainelEcosERegras({
       </div>
 
       {/* Criador de Habilidade Única */}
-      <form onSubmit={lidarCriarUnica} className="p-3 bg-muted/30 rounded border border-border space-y-3">
+      <form
+        onSubmit={lidarCriarUnica}
+        className="p-3 bg-muted/30 rounded border border-border space-y-3"
+      >
         <div className="flex items-center gap-1.5 font-bold text-xs text-amber-400">
           <Sparkles className="size-3.5" />
           <span>Criar Nova Habilidade Única (1 Eco)</span>
@@ -159,7 +178,9 @@ export function PainelEcosERegras({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <label className="text-xs text-muted-foreground">Personalidade (se acordado c/ MdJ para matriz):</label>
+          <label className="text-xs text-muted-foreground">
+            Personalidade (se acordado c/ MdJ para matriz):
+          </label>
           <select
             value={personalidade}
             onChange={(e) => setPersonalidade(e.target.value as any)}

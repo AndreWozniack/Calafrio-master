@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
 import type {
   CatalogoCalafrio,
   FichaCalafrio,
   FichaDerivadaCalafrio,
   PalavraChaveNaFicha,
 } from "@calafrio/core";
-import { Sparkles, Dices, ChevronRight, ChevronLeft, Check } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Dices } from "lucide-react";
+import { useState } from "react";
 
 interface AssistenteCriacaoCalafrioProps {
   aberto: boolean;
@@ -52,7 +52,9 @@ export function AssistenteCriacaoCalafrio({
   };
 
   const sortearPalavra = (cat: "talento" | "falha" | "extra") => {
-    const idx = Math.floor(Math.random() * catalogo.palavrasChaveGenericas.length);
+    const idx = Math.floor(
+      Math.random() * catalogo.palavrasChaveGenericas.length,
+    );
     const item = catalogo.palavrasChaveGenericas[idx];
     onAdicionarPalavraChave({
       id: `pc-${cat}-${Date.now()}`,
@@ -74,7 +76,9 @@ export function AssistenteCriacaoCalafrio({
         {/* Cabeçalho do Wizard */}
         <div className="flex items-center justify-between border-b border-border pb-3">
           <div>
-            <span className="calafrio-tag">ASSISTENTE DE CRIAÇÃO — CALAFRIO 2E</span>
+            <span className="calafrio-tag">
+              ASSISTENTE DE CRIAÇÃO — CALAFRIO 2E
+            </span>
             <div className="text-xs text-muted-foreground mt-0.5">
               Etapa {etapa} de 4
             </div>
@@ -90,16 +94,24 @@ export function AssistenteCriacaoCalafrio({
 
         {/* Indicador de Passos */}
         <div className="grid grid-cols-4 gap-2 text-center text-xs font-bold">
-          <div className={`p-1.5 rounded ${etapa === 1 ? "bg-amber-400 text-black" : "bg-muted text-muted-foreground"}`}>
+          <div
+            className={`p-1.5 rounded ${etapa === 1 ? "bg-amber-400 text-black" : "bg-muted text-muted-foreground"}`}
+          >
             1. Conceito & APT
           </div>
-          <div className={`p-1.5 rounded ${etapa === 2 ? "bg-amber-400 text-black" : "bg-muted text-muted-foreground"}`}>
+          <div
+            className={`p-1.5 rounded ${etapa === 2 ? "bg-amber-400 text-black" : "bg-muted text-muted-foreground"}`}
+          >
             2. Palavras-chave
           </div>
-          <div className={`p-1.5 rounded ${etapa === 3 ? "bg-amber-400 text-black" : "bg-muted text-muted-foreground"}`}>
+          <div
+            className={`p-1.5 rounded ${etapa === 3 ? "bg-amber-400 text-black" : "bg-muted text-muted-foreground"}`}
+          >
             3. Habilidades
           </div>
-          <div className={`p-1.5 rounded ${etapa === 4 ? "bg-amber-400 text-black" : "bg-muted text-muted-foreground"}`}>
+          <div
+            className={`p-1.5 rounded ${etapa === 4 ? "bg-amber-400 text-black" : "bg-muted text-muted-foreground"}`}
+          >
             4. Dinheiro & Itens
           </div>
         </div>
@@ -109,7 +121,9 @@ export function AssistenteCriacaoCalafrio({
           {etapa === 1 && (
             <div className="space-y-4 p-2">
               <div>
-                <label className="block text-foreground font-bold mb-1">Nome do Personagem:</label>
+                <label className="block text-foreground font-bold mb-1">
+                  Nome do Personagem:
+                </label>
                 <input
                   type="text"
                   value={ficha.nome}
@@ -120,9 +134,13 @@ export function AssistenteCriacaoCalafrio({
               </div>
 
               <div>
-                <label className="block text-foreground font-bold mb-1">Aptidão Inicial (APT):</label>
+                <label className="block text-foreground font-bold mb-1">
+                  Aptidão Inicial (APT):
+                </label>
                 <p className="text-muted-foreground text-[11px] mb-2">
-                  Em Calafrio, personagens iniciam suas aventuras com <strong>1 APT</strong> (recém descoberta do paranormal). O MdJ concede novos pontos a cada missão.
+                  Em Calafrio, personagens iniciam suas aventuras com{" "}
+                  <strong>1 APT</strong> (recém descoberta do paranormal). O MdJ
+                  concede novos pontos a cada missão.
                 </p>
                 <div className="flex items-center gap-3">
                   {[1, 2, 3, 4, 5, 6].map((valor) => (
@@ -131,7 +149,9 @@ export function AssistenteCriacaoCalafrio({
                       type="button"
                       onClick={() => onDefinirApt(valor)}
                       className={`size-10 rounded font-black text-sm cursor-pointer ${
-                        ficha.aptBase === valor ? "bg-amber-400 text-black" : "bg-muted text-muted-foreground"
+                        ficha.aptBase === valor
+                          ? "bg-amber-400 text-black"
+                          : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {valor}
@@ -141,12 +161,22 @@ export function AssistenteCriacaoCalafrio({
               </div>
 
               <div className="p-3 bg-muted/30 rounded border border-border space-y-1">
-                <span className="font-bold text-amber-300">Valores derivados para APT {ficha.aptBase}:</span>
+                <span className="font-bold text-amber-300">
+                  Valores derivados para APT {ficha.aptBase}:
+                </span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-center font-bold">
-                  <div className="p-2 bg-card rounded">PD: {3 * ficha.aptBase}</div>
-                  <div className="p-2 bg-card rounded">PV: {3 + 3 * ficha.aptBase}</div>
-                  <div className="p-2 bg-card rounded">PA: {3 + 3 * ficha.aptBase}</div>
-                  <div className="p-2 bg-card rounded">Ecos: {ficha.aptBase}</div>
+                  <div className="p-2 bg-card rounded">
+                    PD: {3 * ficha.aptBase}
+                  </div>
+                  <div className="p-2 bg-card rounded">
+                    PV: {3 + 3 * ficha.aptBase}
+                  </div>
+                  <div className="p-2 bg-card rounded">
+                    PA: {3 + 3 * ficha.aptBase}
+                  </div>
+                  <div className="p-2 bg-card rounded">
+                    Ecos: {ficha.aptBase}
+                  </div>
                 </div>
               </div>
             </div>
@@ -155,7 +185,11 @@ export function AssistenteCriacaoCalafrio({
           {etapa === 2 && (
             <div className="space-y-3 p-2">
               <p className="text-muted-foreground">
-                Personagens iniciam com <strong>três palavras-chave obrigatórias:</strong> uma <em>Ocupação</em>, um <em>Maior Talento</em> e uma <em>Pior Falha</em>. Cada APT adicional concede +1 palavra-chave.
+                Personagens iniciam com{" "}
+                <strong>três palavras-chave obrigatórias:</strong> uma{" "}
+                <em>Ocupação</em>, um <em>Maior Talento</em> e uma{" "}
+                <em>Pior Falha</em>. Cada APT adicional concede +1
+                palavra-chave.
               </p>
 
               <div className="flex flex-wrap gap-2">
@@ -164,29 +198,43 @@ export function AssistenteCriacaoCalafrio({
                   onClick={sortearOcupacao}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border rounded font-bold cursor-pointer"
                 >
-                  <Dices className="size-3.5 text-amber-400" /> Sortear Ocupação (d100)
+                  <Dices className="size-3.5 text-amber-400" /> Sortear Ocupação
+                  (d100)
                 </button>
                 <button
                   type="button"
                   onClick={() => sortearPalavra("talento")}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border rounded font-bold cursor-pointer"
                 >
-                  <Dices className="size-3.5 text-amber-400" /> Sortear Talento (d100)
+                  <Dices className="size-3.5 text-amber-400" /> Sortear Talento
+                  (d100)
                 </button>
                 <button
                   type="button"
                   onClick={() => sortearPalavra("falha")}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border rounded font-bold cursor-pointer"
                 >
-                  <Dices className="size-3.5 text-amber-400" /> Sortear Falha (d100)
+                  <Dices className="size-3.5 text-amber-400" /> Sortear Falha
+                  (d100)
                 </button>
               </div>
 
               <div className="space-y-1 pt-2">
-                <span className="font-bold text-foreground">Palavras-chave Atuais ({ficha.palavrasChave.length} de {2 + ficha.aptBase}):</span>
+                <span className="font-bold text-foreground">
+                  Palavras-chave Atuais ({ficha.palavrasChave.length} de{" "}
+                  {2 + ficha.aptBase}):
+                </span>
                 {ficha.palavrasChave.map((pc) => (
-                  <div key={pc.id} className="flex items-center justify-between p-2 rounded bg-card border border-border">
-                    <span className="font-bold">{pc.nome} <span className="text-[10px] text-muted-foreground uppercase">({pc.categoria})</span></span>
+                  <div
+                    key={pc.id}
+                    className="flex items-center justify-between p-2 rounded bg-card border border-border"
+                  >
+                    <span className="font-bold">
+                      {pc.nome}{" "}
+                      <span className="text-[10px] text-muted-foreground uppercase">
+                        ({pc.categoria})
+                      </span>
+                    </span>
                     <button
                       type="button"
                       onClick={() => onRemoverPalavraChave(pc.id)}
@@ -203,15 +251,25 @@ export function AssistenteCriacaoCalafrio({
           {etapa === 3 && (
             <div className="space-y-3 p-2">
               <p className="text-muted-foreground">
-                Suas habilidades são organizadas na <strong>Matriz 3×3 (Verso da Ficha)</strong>. Você pode memorizar até <strong>{ficha.aptBase} habilidades</strong> (= APT).
+                Suas habilidades são organizadas na{" "}
+                <strong>Matriz 3×3 (Verso da Ficha)</strong>. Você pode
+                memorizar até <strong>{ficha.aptBase} habilidades</strong> (=
+                APT).
               </p>
               <div className="p-3 bg-muted/40 rounded border border-border space-y-2">
-                <span className="font-bold text-amber-300">Regra de Domínio:</span>
+                <span className="font-bold text-amber-300">
+                  Regra de Domínio:
+                </span>
                 <p className="text-[11px] text-muted-foreground">
-                  Escolha se deseja atuar no <strong>Domínio Positivo</strong> ou <strong>Domínio Negativo</strong> das emoções. Não é permitido misturar domínios (a menos que liberado pelo MdJ com um Eco).
+                  Escolha se deseja atuar no <strong>Domínio Positivo</strong>{" "}
+                  ou <strong>Domínio Negativo</strong> das emoções. Não é
+                  permitido misturar domínios (a menos que liberado pelo MdJ com
+                  um Eco).
                 </p>
                 <p className="text-[11px] text-foreground font-semibold">
-                  Alinhe habilidades da mesma personalidade em linhas, colunas, diagonais ou blocos 2x2 para ganhar bônus permanentes de vitais!
+                  Alinhe habilidades da mesma personalidade em linhas, colunas,
+                  diagonais ou blocos 2x2 para ganhar bônus permanentes de
+                  vitais!
                 </p>
               </div>
             </div>
@@ -220,9 +278,12 @@ export function AssistenteCriacaoCalafrio({
           {etapa === 4 && (
             <div className="space-y-4 p-2">
               <div>
-                <label className="block text-foreground font-bold mb-1">Fundos Iniciais (F$):</label>
+                <label className="block text-foreground font-bold mb-1">
+                  Fundos Iniciais (F$):
+                </label>
                 <p className="text-muted-foreground text-[11px] mb-2">
-                  Escolha entre <strong>1 a 12 Fundos</strong> conforme a classe social do seu personagem, ou lance o d12:
+                  Escolha entre <strong>1 a 12 Fundos</strong> conforme a classe
+                  social do seu personagem, ou lance o d12:
                 </p>
                 <div className="flex items-center gap-3">
                   <input
@@ -230,7 +291,12 @@ export function AssistenteCriacaoCalafrio({
                     min={1}
                     max={12}
                     value={ficha.carteira.fundos}
-                    onChange={(e) => onAtualizarCarteira(Number(e.target.value), ficha.carteira.espirions)}
+                    onChange={(e) =>
+                      onAtualizarCarteira(
+                        Number(e.target.value),
+                        ficha.carteira.espirions,
+                      )
+                    }
                     className="w-20 bg-muted text-center p-2 rounded border border-border font-bold text-sm"
                   />
                   <button
@@ -244,10 +310,15 @@ export function AssistenteCriacaoCalafrio({
               </div>
 
               <div className="p-3 bg-muted/30 rounded border border-border text-xs space-y-1">
-                <span className="font-bold text-foreground">Equipamentos Iniciais Recomendados:</span>
+                <span className="font-bold text-foreground">
+                  Equipamentos Iniciais Recomendados:
+                </span>
                 <ul className="list-disc list-inside text-muted-foreground space-y-0.5">
                   <li>3 objetos mundanos guiados pelas palavras-chave</li>
-                  <li>1 arma do arsenal (ou parartefato se começar acima do nível 1)</li>
+                  <li>
+                    1 arma do arsenal (ou parartefato se começar acima do nível
+                    1)
+                  </li>
                   <li>2 bugigangas de baixo valor da tabela d100</li>
                 </ul>
               </div>

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
 import type { CatalogoCalafrio } from "@calafrio/core";
 import { Dices } from "lucide-react";
+import { useState } from "react";
 
 interface SecaoTabelasD100Props {
   catalogo: CatalogoCalafrio;
@@ -68,8 +68,13 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
           <span className="calafrio-tag-sm">100 OCUPAÇÕES</span>
           <div className="max-h-96 overflow-y-auto space-y-1 text-xs pr-1">
             {catalogo.ocupacoes.map((item) => (
-              <div key={item.numero} className="flex gap-2 py-1 border-b border-border/40">
-                <span className="w-7 font-black text-amber-400 shrink-0">{item.numero}.</span>
+              <div
+                key={item.numero}
+                className="flex gap-2 py-1 border-b border-border/40"
+              >
+                <span className="w-7 font-black text-amber-400 shrink-0">
+                  {item.numero}.
+                </span>
                 <span>{item.nome}</span>
               </div>
             ))}
@@ -81,8 +86,13 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
           <span className="calafrio-tag-sm">100 PALAVRAS-CHAVE</span>
           <div className="max-h-96 overflow-y-auto space-y-1 text-xs pr-1">
             {catalogo.palavrasChaveGenericas.map((item) => (
-              <div key={item.numero} className="flex gap-2 py-1 border-b border-border/40">
-                <span className="w-7 font-black text-amber-400 shrink-0">{item.numero}.</span>
+              <div
+                key={item.numero}
+                className="flex gap-2 py-1 border-b border-border/40"
+              >
+                <span className="w-7 font-black text-amber-400 shrink-0">
+                  {item.numero}.
+                </span>
                 <span>{item.nome}</span>
               </div>
             ))}
@@ -94,8 +104,13 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
           <span className="calafrio-tag-sm">100 BUGIGANGAS</span>
           <div className="max-h-96 overflow-y-auto space-y-1 text-xs pr-1">
             {catalogo.bugigangas.map((item) => (
-              <div key={item.numero} className="flex gap-2 py-1 border-b border-border/40">
-                <span className="w-7 font-black text-amber-400 shrink-0">{item.numero}.</span>
+              <div
+                key={item.numero}
+                className="flex gap-2 py-1 border-b border-border/40"
+              >
+                <span className="w-7 font-black text-amber-400 shrink-0">
+                  {item.numero}.
+                </span>
                 <span>{item.nome}</span>
               </div>
             ))}

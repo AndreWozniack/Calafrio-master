@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
 import type { FichaCalafrio, ItemNaFichaCalafrio } from "@calafrio/core";
-import { Plus, Trash2, Shield, Swords, Sparkles } from "lucide-react";
+import { Plus, Shield, Sparkles, Trash2 } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 
 interface PainelInventarioProps {
   ficha: FichaCalafrio;
@@ -20,7 +21,8 @@ export function PainelInventario({
   onAtualizarCarteira,
 }: PainelInventarioProps) {
   const [nome, setNome] = useState("");
-  const [categoria, setCategoria] = useState<ItemNaFichaCalafrio["categoria"]>("arma_curto");
+  const [categoria, setCategoria] =
+    useState<ItemNaFichaCalafrio["categoria"]>("arma_curto");
   const [paranormal, setParanormal] = useState(false);
   const [dano, setDano] = useState<number | undefined>(undefined);
 
@@ -54,7 +56,10 @@ export function PainelInventario({
               min={0}
               value={ficha.carteira.fundos}
               onChange={(e) =>
-                onAtualizarCarteira(Number(e.target.value), ficha.carteira.espirions)
+                onAtualizarCarteira(
+                  Number(e.target.value),
+                  ficha.carteira.espirions,
+                )
               }
               className="w-16 bg-card text-foreground px-2 py-1 rounded border border-border text-center"
             />
@@ -66,7 +71,10 @@ export function PainelInventario({
               min={0}
               value={ficha.carteira.espirions}
               onChange={(e) =>
-                onAtualizarCarteira(ficha.carteira.fundos, Number(e.target.value))
+                onAtualizarCarteira(
+                  ficha.carteira.fundos,
+                  Number(e.target.value),
+                )
               }
               className="w-16 bg-card text-foreground px-2 py-1 rounded border border-border text-center"
             />
@@ -101,9 +109,17 @@ export function PainelInventario({
                     ? "bg-amber-400 text-black font-bold"
                     : "bg-muted text-muted-foreground"
                 }`}
-                title={item.equipado ? "Equipado (clique para guardar)" : "Guardado (clique para equipar)"}
+                title={
+                  item.equipado
+                    ? "Equipado (clique para guardar)"
+                    : "Guardado (clique para equipar)"
+                }
               >
-                {item.equipado ? <Shield className="size-3.5" /> : <Shield className="size-3.5 opacity-40" />}
+                {item.equipado ? (
+                  <Shield className="size-3.5" />
+                ) : (
+                  <Shield className="size-3.5 opacity-40" />
+                )}
               </button>
 
               <div className="min-w-0">
@@ -119,7 +135,9 @@ export function PainelInventario({
                   )}
                 </div>
                 {item.descricao && (
-                  <p className="text-[11px] text-muted-foreground line-clamp-1">{item.descricao}</p>
+                  <p className="text-[11px] text-muted-foreground line-clamp-1">
+                    {item.descricao}
+                  </p>
                 )}
               </div>
             </div>
@@ -136,7 +154,10 @@ export function PainelInventario({
       </div>
 
       {/* Adicionar Item Rápido */}
-      <form onSubmit={lidarAdicionar} className="flex flex-wrap items-center gap-2 pt-2 border-t border-border">
+      <form
+        onSubmit={lidarAdicionar}
+        className="flex flex-wrap items-center gap-2 pt-2 border-t border-border"
+      >
         <input
           type="text"
           value={nome}

@@ -1,8 +1,4 @@
-import type {
-  DjanhoCatalogo,
-  FamiliarCatalogo,
-  LacaioCatalogo,
-} from "./tipos";
+import type { DjanhoCatalogo, FamiliarCatalogo, LacaioCatalogo } from "./tipos";
 
 export const TABELA_FAMILIARES: readonly FamiliarCatalogo[] = [
   {

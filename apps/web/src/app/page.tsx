@@ -1,18 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
 import { useFichaCalafrio } from "@calafrio/ficha-app";
+import { Dices, Moon, Sparkles, Sun } from "lucide-react";
+import { useState } from "react";
+import { AssistenteCriacaoCalafrio } from "@/components/ficha/assistente-criacao-calafrio";
+import { ModalRolagemCalafrio } from "@/components/ficha/modal-rolagem-calafrio";
 import { PaginaFrenteFicha } from "@/components/ficha/pagina-frente-ficha";
 import { PaginaVersoMatriz } from "@/components/ficha/pagina-verso-matriz";
-import { ModalRolagemCalafrio } from "@/components/ficha/modal-rolagem-calafrio";
-import { AssistenteCriacaoCalafrio } from "@/components/ficha/assistente-criacao-calafrio";
-import { Sparkles, Dices, Moon, Sun, ShieldAlert, Heart, Zap } from "lucide-react";
 
 export default function PaginaFichaPrincipal() {
   const f = useFichaCalafrio();
   const [paginaAtiva, setPaginaAtiva] = useState<"frente" | "verso">("frente");
   const [mostrarRolagem, setMostrarRolagem] = useState(false);
-  const [palavraChaveRolagem, setPalavraChaveRolagem] = useState<string | undefined>(undefined);
+  const [palavraChaveRolagem, setPalavraChaveRolagem] = useState<
+    string | undefined
+  >(undefined);
   const [mostrarAssistente, setMostrarAssistente] = useState(false);
 
   return (
@@ -73,7 +75,8 @@ export default function PaginaFichaPrincipal() {
             className="flex items-center gap-1 px-2.5 py-1.5 bg-muted hover:bg-border rounded text-xs font-bold cursor-pointer text-muted-foreground hover:text-foreground"
             title="Descanso Longo (8h: +6 PV e todo o PA)"
           >
-            <Moon className="size-3.5 text-cyan-400" /> Descanso Longo (+6 PV / Full PA)
+            <Moon className="size-3.5 text-cyan-400" /> Descanso Longo (+6 PV /
+            Full PA)
           </button>
 
           {/* Rolar d20 */}
@@ -103,7 +106,9 @@ export default function PaginaFichaPrincipal() {
           onRemoverPalavraChave={(id) =>
             f.dispatch({ tipo: "removerPalavraChave", id })
           }
-          onAdicionarItem={(item) => f.dispatch({ tipo: "adicionarItem", item })}
+          onAdicionarItem={(item) =>
+            f.dispatch({ tipo: "adicionarItem", item })
+          }
           onAlternarEquipado={(id) =>
             f.dispatch({ tipo: "alternarEquipadoItem", id })
           }
@@ -126,7 +131,9 @@ export default function PaginaFichaPrincipal() {
           onAlocarSlot={(slot, alocacao) =>
             f.dispatch({ tipo: "alocarSlotMatriz", slot, alocacao })
           }
-          onLimparSlot={(slot) => f.dispatch({ tipo: "limparSlotMatriz", slot })}
+          onLimparSlot={(slot) =>
+            f.dispatch({ tipo: "limparSlotMatriz", slot })
+          }
           onAdicionarHabilidadeUnica={(unica) =>
             f.dispatch({ tipo: "adicionarHabilidadeUnica", unica })
           }

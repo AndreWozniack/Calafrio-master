@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
 import {
   type CriaturaCalafrio,
-  type EspectroDeDano,
   calcularDanoContraCriatura,
+  type EspectroDeDano,
 } from "@calafrio/core";
 import { TOKENS_ESPECTRO_DANO } from "@calafrio/tema";
+import { useState } from "react";
 
 interface FichaCriaturaAtivaProps {
   criatura: CriaturaCalafrio;
@@ -18,7 +18,8 @@ export function FichaCriaturaAtiva({
   onAtualizar,
 }: FichaCriaturaAtivaProps) {
   const [danoSimulado, setDanoSimulado] = useState(5);
-  const [espectroSimulado, setEspectroSimulado] = useState<EspectroDeDano>("rubro");
+  const [espectroSimulado, setEspectroSimulado] =
+    useState<EspectroDeDano>("rubro");
 
   const alternarResistencia = (espectro: EspectroDeDano) => {
     const atual = criatura.resistencias[espectro];
@@ -52,7 +53,10 @@ export function FichaCriaturaAtiva({
             className="text-lg font-black bg-transparent border-b border-border/40 focus:border-amber-400 px-1 py-0.5"
           />
           <div className="text-xs text-muted-foreground mt-0.5">
-            Categoria: <span className="uppercase font-bold text-amber-400">{criatura.categoria}</span>
+            Categoria:{" "}
+            <span className="uppercase font-bold text-amber-400">
+              {criatura.categoria}
+            </span>
           </div>
         </div>
 
@@ -73,7 +77,9 @@ export function FichaCriaturaAtiva({
           />
         </div>
         <div className="p-3 bg-muted/40 rounded border border-red-900/40 text-center">
-          <span className="calafrio-tag-sm mb-1 bg-red-950 text-red-200">VIDA (PV)</span>
+          <span className="calafrio-tag-sm mb-1 bg-red-950 text-red-200">
+            VIDA (PV)
+          </span>
           <input
             type="number"
             value={criatura.pvMax}
@@ -82,7 +88,9 @@ export function FichaCriaturaAtiva({
           />
         </div>
         <div className="p-3 bg-muted/40 rounded border border-cyan-900/40 text-center">
-          <span className="calafrio-tag-sm mb-1 bg-cyan-950 text-cyan-200">ÂNIMUM (PA)</span>
+          <span className="calafrio-tag-sm mb-1 bg-cyan-950 text-cyan-200">
+            ÂNIMUM (PA)
+          </span>
           <input
             type="number"
             value={criatura.paMax}
@@ -95,7 +103,9 @@ export function FichaCriaturaAtiva({
           <input
             type="number"
             value={criatura.velocidade}
-            onChange={(e) => onAtualizar({ velocidade: Number(e.target.value) })}
+            onChange={(e) =>
+              onAtualizar({ velocidade: Number(e.target.value) })
+            }
             className="w-full text-center text-xl font-black bg-transparent mt-1"
           />
         </div>
@@ -103,43 +113,51 @@ export function FichaCriaturaAtiva({
 
       {/* Resistências / Vulnerabilidades / Imunidades por Espectro */}
       <div className="space-y-2">
-        <span className="calafrio-tag-sm">RESISTÊNCIAS AOS ESPECTROS DE DANO</span>
+        <span className="calafrio-tag-sm">
+          RESISTÊNCIAS AOS ESPECTROS DE DANO
+        </span>
         <p className="text-[11px] text-muted-foreground">
-          Clique no espectro para alternar: <em>Neutro ➔ Resistente (metade) ➔ Vulnerável (dobro) ➔ Imune (0)</em>.
+          Clique no espectro para alternar:{" "}
+          <em>Neutro ➔ Resistente (metade) ➔ Vulnerável (dobro) ➔ Imune (0)</em>
+          .
         </p>
         <div className="flex flex-wrap gap-2 pt-1">
-          {(["fisico", "castanho", "rubro", "ceruleo", "alvo"] as const).map((esp) => {
-            const token = TOKENS_ESPECTRO_DANO[esp];
-            const estado = criatura.resistencias[esp];
-            return (
-              <button
-                key={esp}
-                type="button"
-                onClick={() => alternarResistencia(esp)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-bold border cursor-pointer transition-colors ${
-                  estado === "resistente"
-                    ? "bg-blue-950/60 border-blue-500 text-blue-200"
-                    : estado === "vulneravel"
-                      ? "bg-red-950/60 border-red-500 text-red-200"
-                      : estado === "imune"
-                        ? "bg-amber-950/60 border-amber-400 text-amber-200"
-                        : "bg-card border-border text-muted-foreground"
-                }`}
-              >
-                <span>{token.emoji}</span>
-                <span>{token.rotulo}:</span>
-                <span className="uppercase text-[10px]">
-                  {estado ? estado : "Neutro"}
-                </span>
-              </button>
-            );
-          })}
+          {(["fisico", "castanho", "rubro", "ceruleo", "alvo"] as const).map(
+            (esp) => {
+              const token = TOKENS_ESPECTRO_DANO[esp];
+              const estado = criatura.resistencias[esp];
+              return (
+                <button
+                  key={esp}
+                  type="button"
+                  onClick={() => alternarResistencia(esp)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-bold border cursor-pointer transition-colors ${
+                    estado === "resistente"
+                      ? "bg-blue-950/60 border-blue-500 text-blue-200"
+                      : estado === "vulneravel"
+                        ? "bg-red-950/60 border-red-500 text-red-200"
+                        : estado === "imune"
+                          ? "bg-amber-950/60 border-amber-400 text-amber-200"
+                          : "bg-card border-border text-muted-foreground"
+                  }`}
+                >
+                  <span>{token.emoji}</span>
+                  <span>{token.rotulo}:</span>
+                  <span className="uppercase text-[10px]">
+                    {estado ? estado : "Neutro"}
+                  </span>
+                </button>
+              );
+            },
+          )}
         </div>
       </div>
 
       {/* Simulador de Dano Rápido */}
       <div className="p-3 bg-muted/30 rounded border border-border space-y-2 text-xs">
-        <span className="font-bold text-foreground">Simulador de Impacto / Dano Sofrido:</span>
+        <span className="font-bold text-foreground">
+          Simulador de Impacto / Dano Sofrido:
+        </span>
         <div className="flex flex-wrap items-center gap-3">
           <label className="flex items-center gap-1">
             <span>Dano Bruto:</span>
@@ -173,7 +191,9 @@ export function FichaCriaturaAtiva({
 
       {/* Notas do Mestre */}
       <div>
-        <label className="block text-xs font-bold text-muted-foreground mb-1">Notas Narrativas do Mestre:</label>
+        <label className="block text-xs font-bold text-muted-foreground mb-1">
+          Notas Narrativas do Mestre:
+        </label>
         <textarea
           value={criatura.notas ?? ""}
           onChange={(e) => onAtualizar({ notas: e.target.value })}

@@ -122,8 +122,7 @@ export function aplicarDescansoCalafrio(
   }
 
   // Descanso longo (8h: 4h sono + 4h lazer): regenera 6 PV (ou 1d6 PV no PDF de consulta) + todo o PA
-  const recPv =
-    opcoes.modo === "fixo" ? 6 : (opcoes.valoresRolados?.[0] ?? 6);
+  const recPv = opcoes.modo === "fixo" ? 6 : (opcoes.valoresRolados?.[0] ?? 6);
 
   return {
     ...estado,

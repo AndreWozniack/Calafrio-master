@@ -1,8 +1,8 @@
 "use client";
 
+import { BookOpen, Skull, Swords, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Skull, Swords, User } from "lucide-react";
 import { CalafrioLogo } from "../svg/calafrio-ornamentos";
 
 export function BarraTopo() {

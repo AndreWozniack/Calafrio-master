@@ -48,10 +48,7 @@ export function rolarTesteAcao(opcoes: {
   if (opcoes.dadosInjetados) {
     dados = opcoes.dadosInjetados.filter((d): d is number => d !== undefined);
   } else {
-    dados =
-      opcoes.modo === "normal"
-        ? [rolarD20()]
-        : [rolarD20(), rolarD20()];
+    dados = opcoes.modo === "normal" ? [rolarD20()] : [rolarD20(), rolarD20()];
   }
 
   let dadoEscolhido = dados[0];
@@ -112,7 +109,10 @@ export function rolarContestacao(opcoes: {
   let dadoAtacante = dadosAtacante[0];
   if (opcoes.modoAtacante === "vantagem" && dadosAtacante.length > 1) {
     dadoAtacante = Math.max(dadosAtacante[0], dadosAtacante[1]);
-  } else if (opcoes.modoAtacante === "desvantagem" && dadosAtacante.length > 1) {
+  } else if (
+    opcoes.modoAtacante === "desvantagem" &&
+    dadosAtacante.length > 1
+  ) {
     dadoAtacante = Math.min(dadosAtacante[0], dadosAtacante[1]);
   }
 
@@ -128,9 +128,7 @@ export function rolarContestacao(opcoes: {
   // Vítima
   const dadosVitima =
     opcoes.dadosVitima?.filter((d): d is number => d !== undefined) ??
-    (opcoes.modoVitima === "normal"
-      ? [rolarD20()]
-      : [rolarD20(), rolarD20()]);
+    (opcoes.modoVitima === "normal" ? [rolarD20()] : [rolarD20(), rolarD20()]);
 
   let dadoVitima = dadosVitima[0];
   if (opcoes.modoVitima === "vantagem" && dadosVitima.length > 1) {

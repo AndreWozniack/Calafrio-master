@@ -1,8 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import type { FichaCalafrio, FichaDerivadaCalafrio, PalavraChaveNaFicha } from "@calafrio/core";
-import { Plus, Trash2, Dices, Sparkles } from "lucide-react";
+import type {
+  FichaCalafrio,
+  FichaDerivadaCalafrio,
+  PalavraChaveNaFicha,
+} from "@calafrio/core";
+import { Dices, Plus, Trash2 } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 
 interface PainelPalavrasChaveProps {
   ficha: FichaCalafrio;
@@ -20,7 +25,9 @@ export function PainelPalavrasChave({
   onRolarTeste,
 }: PainelPalavrasChaveProps) {
   const [nomeNovo, setNomeNovo] = useState("");
-  const [categoriaNova, setCategoriaNova] = useState<"ocupacao" | "talento" | "falha" | "extra">("extra");
+  const [categoriaNova, setCategoriaNova] = useState<
+    "ocupacao" | "talento" | "falha" | "extra"
+  >("extra");
 
   const lidarAdicionar = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +48,8 @@ export function PainelPalavrasChave({
         <div className="flex items-center gap-2">
           <span className="calafrio-tag">PALAVRAS-CHAVE:</span>
           <span className="text-xs text-muted-foreground font-semibold">
-            {derivada.palavrasChaveOcupadas} / {derivada.limitePalavrasChave} (2 + APT)
+            {derivada.palavrasChaveOcupadas} / {derivada.limitePalavrasChave} (2
+            + APT)
           </span>
         </div>
       </div>
@@ -60,7 +68,9 @@ export function PainelPalavrasChave({
               <span className="text-[10px] font-black uppercase px-1.5 py-0.5 rounded bg-black/60 text-muted-foreground">
                 {pc.categoria}
               </span>
-              <span className="font-bold truncate text-foreground">{pc.nome}</span>
+              <span className="font-bold truncate text-foreground">
+                {pc.nome}
+              </span>
               {pc.concedidaPor && (
                 <span className="text-[10px] text-amber-400 font-semibold truncate">
                   (concedida por {pc.concedidaPor})
@@ -94,7 +104,10 @@ export function PainelPalavrasChave({
         ))}
       </div>
 
-      <form onSubmit={lidarAdicionar} className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/60">
+      <form
+        onSubmit={lidarAdicionar}
+        className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/60"
+      >
         <select
           value={categoriaNova}
           onChange={(e) => setCategoriaNova(e.target.value as any)}

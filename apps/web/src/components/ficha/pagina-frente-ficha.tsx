@@ -1,10 +1,14 @@
 "use client";
 
-import React from "react";
-import type { FichaCalafrio, FichaDerivadaCalafrio, ItemNaFichaCalafrio, PalavraChaveNaFicha } from "@calafrio/core";
-import { PainelPalavrasChave } from "./painel-palavras-chave";
+import type {
+  FichaCalafrio,
+  FichaDerivadaCalafrio,
+  ItemNaFichaCalafrio,
+  PalavraChaveNaFicha,
+} from "@calafrio/core";
+import { Dices } from "lucide-react";
 import { PainelInventario } from "./painel-inventario";
-import { Heart, Zap, Shield, Flame, Activity, Dices } from "lucide-react";
+import { PainelPalavrasChave } from "./painel-palavras-chave";
 
 interface PaginaFrenteFichaProps {
   ficha: FichaCalafrio;
@@ -56,7 +60,9 @@ export function PaginaFrenteFicha({
 
           <div className="p-3 bg-muted/20 border border-dashed border-border rounded flex flex-col items-center justify-center text-center py-6">
             <span className="text-3xl mb-1">👤</span>
-            <span className="text-xs text-muted-foreground font-semibold">Ilustração do Neural</span>
+            <span className="text-xs text-muted-foreground font-semibold">
+              Ilustração do Neural
+            </span>
           </div>
 
           <button
@@ -74,7 +80,9 @@ export function PaginaFrenteFicha({
           <div className="flex flex-wrap items-center justify-between p-3 bg-muted/40 rounded border border-border">
             <div className="flex items-center gap-2">
               <span className="calafrio-tag">APTIDÃO (APT):</span>
-              <span className="text-xs text-muted-foreground">= Concedido pelo MdJ (1 a 6)</span>
+              <span className="text-xs text-muted-foreground">
+                = Concedido pelo MdJ (1 a 6)
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -102,44 +110,68 @@ export function PaginaFrenteFicha({
             {/* Defesa */}
             <div className="p-3 bg-card border border-border rounded text-center">
               <span className="calafrio-tag-sm mb-1">DEFESA (PD)</span>
-              <div className="text-2xl font-black text-foreground mt-1">{derivada.pd}</div>
-              <span className="text-[10px] text-muted-foreground">= 3 × APT</span>
+              <div className="text-2xl font-black text-foreground mt-1">
+                {derivada.pd}
+              </div>
+              <span className="text-[10px] text-muted-foreground">
+                = 3 × APT
+              </span>
             </div>
 
             {/* Vida */}
             <div className="p-3 bg-card border border-red-900/40 rounded text-center">
-              <span className="calafrio-tag-sm mb-1 bg-red-950 text-red-200">VIDA (PV)</span>
+              <span className="calafrio-tag-sm mb-1 bg-red-950 text-red-200">
+                VIDA (PV)
+              </span>
               <div className="text-2xl font-black text-red-400 mt-1">
-                {derivada.pvAtual} <span className="text-xs text-muted-foreground">/ {derivada.pvMax}</span>
+                {derivada.pvAtual}{" "}
+                <span className="text-xs text-muted-foreground">
+                  / {derivada.pvMax}
+                </span>
               </div>
-              <span className="text-[10px] text-muted-foreground">= 3 + 3 × APT</span>
+              <span className="text-[10px] text-muted-foreground">
+                = 3 + 3 × APT
+              </span>
             </div>
 
             {/* Ânimum */}
             <div className="p-3 bg-card border border-cyan-900/40 rounded text-center">
-              <span className="calafrio-tag-sm mb-1 bg-cyan-950 text-cyan-200">ÂNIMUM (PA)</span>
+              <span className="calafrio-tag-sm mb-1 bg-cyan-950 text-cyan-200">
+                ÂNIMUM (PA)
+              </span>
               <div className="text-2xl font-black text-cyan-400 mt-1">
-                {derivada.paAtual} <span className="text-xs text-muted-foreground">/ {derivada.paMax}</span>
+                {derivada.paAtual}{" "}
+                <span className="text-xs text-muted-foreground">
+                  / {derivada.paMax}
+                </span>
               </div>
-              <span className="text-[10px] text-muted-foreground">= 3 + 3 × APT</span>
+              <span className="text-[10px] text-muted-foreground">
+                = 3 + 3 × APT
+              </span>
             </div>
 
             {/* Velocidade */}
             <div className="p-3 bg-card border border-border rounded text-center">
               <span className="calafrio-tag-sm mb-1">VELOCIDADE</span>
-              <div className="text-2xl font-black text-foreground mt-1">{derivada.velocidade}m</div>
-              <span className="text-[10px] text-muted-foreground">= 6 + Bônus</span>
+              <div className="text-2xl font-black text-foreground mt-1">
+                {derivada.velocidade}m
+              </div>
+              <span className="text-[10px] text-muted-foreground">
+                = 6 + Bônus
+              </span>
             </div>
           </div>
 
           {/* Ecos & Alertas */}
           <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-amber-500/10 border border-amber-500/30 rounded text-xs">
             <span className="font-bold text-amber-300">
-              Ecos Totais: {derivada.ecosDisponiveis} disponíveis (de {derivada.ecosMax} base)
+              Ecos Totais: {derivada.ecosDisponiveis} disponíveis (de{" "}
+              {derivada.ecosMax} base)
             </span>
             {derivada.inconsciente && (
               <span className="font-black text-red-400 animate-pulse uppercase">
-                ⚠️ INCONSCIENTE! Morre em {derivada.segundosAteMorrer}s sem socorro
+                ⚠️ INCONSCIENTE! Morre em {derivada.segundosAteMorrer}s sem
+                socorro
               </span>
             )}
           </div>

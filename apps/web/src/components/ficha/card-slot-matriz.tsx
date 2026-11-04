@@ -1,14 +1,13 @@
 "use client";
 
-import React from "react";
 import type {
   AlocacaoSlotMatriz,
   CatalogoCalafrio,
   HabilidadeUnicaCalafrio,
 } from "@calafrio/core";
 import { TOKENS_PERSONALIDADE } from "@calafrio/tema";
-import { CadeadoFocoIcon } from "../svg/calafrio-ornamentos";
 import { Plus, Trash2 } from "lucide-react";
+import { CadeadoFocoIcon } from "../svg/calafrio-ornamentos";
 
 interface CardSlotMatrizProps {
   numeroSlot: number; // 0 a 8 (#1 a #9)
@@ -48,7 +47,9 @@ export function CardSlotMatriz({
         <div className="text-center py-4 text-xs text-muted-foreground/60 italic">
           Espaço livre da matriz
         </div>
-        <div className="text-[10px] text-muted-foreground/40 text-right">3×3</div>
+        <div className="text-[10px] text-muted-foreground/40 text-right">
+          3×3
+        </div>
       </div>
     );
   }
@@ -108,7 +109,10 @@ export function CardSlotMatriz({
 
   const hab = catalogo.habilidadesParanormais.find((h) => h.id === alocacao.id);
   const tokenPers = hab ? TOKENS_PERSONALIDADE[hab.personalidade] : null;
-  const corCard = hab?.dominio === "positivo" ? tokenPers?.corPositiva : tokenPers?.corNegativa;
+  const corCard =
+    hab?.dominio === "positivo"
+      ? tokenPers?.corPositiva
+      : tokenPers?.corNegativa;
 
   return (
     <div
@@ -123,7 +127,8 @@ export function CardSlotMatriz({
               style={{ backgroundColor: corCard }}
               className="text-white font-extrabold text-[9px] px-1.5 py-0.5 rounded-xs"
             >
-              {tokenPers.emoji} {tokenPers.nome} ({hab?.dominio === "positivo" ? "+" : "-"})
+              {tokenPers.emoji} {tokenPers.nome} (
+              {hab?.dominio === "positivo" ? "+" : "-"})
             </span>
           )}
           <CadeadoFocoIcon foco={hab?.requerFoco ?? "nao"} />
@@ -148,7 +153,10 @@ export function CardSlotMatriz({
             {hab?.custoPA === 0 ? "Passiva (0 PA)" : `${hab?.custoPA} PA`}
           </span>
           {hab?.permiteCustoEmPV && (
-            <span className="text-red-400 font-bold" title="Pode ser pago com PV">
+            <span
+              className="text-red-400 font-bold"
+              title="Pode ser pago com PV"
+            >
               / PV
             </span>
           )}

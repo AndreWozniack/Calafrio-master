@@ -1,17 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
 import type { CriaturaCalafrio } from "@calafrio/core";
 import { Plus } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 
 interface FormularioCriarCriaturaProps {
-  onCriar: (nome: string, apt: number, categoria: CriaturaCalafrio["categoria"]) => void;
+  onCriar: (
+    nome: string,
+    apt: number,
+    categoria: CriaturaCalafrio["categoria"],
+  ) => void;
 }
 
-export function FormularioCriarCriatura({ onCriar }: FormularioCriarCriaturaProps) {
+export function FormularioCriarCriatura({
+  onCriar,
+}: FormularioCriarCriaturaProps) {
   const [nomeNovo, setNomeNovo] = useState("");
   const [aptNova, setAptNova] = useState(2);
-  const [categoriaNova, setCategoriaNova] = useState<CriaturaCalafrio["categoria"]>("ameaca");
+  const [categoriaNova, setCategoriaNova] =
+    useState<CriaturaCalafrio["categoria"]>("ameaca");
 
   const lidarSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +41,9 @@ export function FormularioCriarCriatura({ onCriar }: FormularioCriarCriaturaProp
       />
       <div className="grid grid-cols-2 gap-2 text-xs">
         <div>
-          <label className="block text-muted-foreground mb-1">Aptidão (APT):</label>
+          <label className="block text-muted-foreground mb-1">
+            Aptidão (APT):
+          </label>
           <input
             type="number"
             min={1}

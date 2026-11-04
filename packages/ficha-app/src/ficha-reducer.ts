@@ -15,12 +15,20 @@ export type AcaoFichaCalafrio =
   | { tipo: "definirApt"; apt: number }
   | { tipo: "definirCarteira"; fundos: number; espirions: number }
   | { tipo: "adicionarPalavraChave"; palavra: PalavraChaveNaFicha }
-  | { tipo: "atualizarPalavraChave"; id: string; dados: Partial<PalavraChaveNaFicha> }
+  | {
+      tipo: "atualizarPalavraChave";
+      id: string;
+      dados: Partial<PalavraChaveNaFicha>;
+    }
   | { tipo: "removerPalavraChave"; id: string }
   | { tipo: "alocarSlotMatriz"; slot: number; alocacao: AlocacaoSlotMatriz }
   | { tipo: "limparSlotMatriz"; slot: number }
   | { tipo: "adicionarHabilidadeUnica"; unica: HabilidadeUnicaCalafrio }
-  | { tipo: "atualizarHabilidadeUnica"; id: string; dados: Partial<HabilidadeUnicaCalafrio> }
+  | {
+      tipo: "atualizarHabilidadeUnica";
+      id: string;
+      dados: Partial<HabilidadeUnicaCalafrio>;
+    }
   | { tipo: "removerHabilidadeUnica"; id: string }
   | { tipo: "adicionarCustomizacaoEco"; customizacao: CustomizacaoDeEco }
   | { tipo: "removerCustomizacaoEco"; id: string }
@@ -30,7 +38,11 @@ export type AcaoFichaCalafrio =
   | { tipo: "removerItem"; id: string }
   | { tipo: "adicionarEfeitoCustomizado"; efeito: EfeitoCustomizadoNaFicha }
   | { tipo: "removerEfeitoCustomizado"; id: string }
-  | { tipo: "definirSuporteTabela"; tipoTabela: "djanho" | "familiar" | "lacaio"; dado: number }
+  | {
+      tipo: "definirSuporteTabela";
+      tipoTabela: "djanho" | "familiar" | "lacaio";
+      dado: number;
+    }
   | { tipo: "definirAnotacoes"; anotacoes: string }
   | { tipo: "carregarFicha"; ficha: FichaCalafrio };
 
@@ -103,7 +115,9 @@ export function fichaCalafrioReducer(
     case "removerHabilidadeUnica":
       return {
         ...state,
-        habilidadesUnicas: state.habilidadesUnicas.filter((u) => u.id !== action.id),
+        habilidadesUnicas: state.habilidadesUnicas.filter(
+          (u) => u.id !== action.id,
+        ),
         matrizHabilidades: state.matrizHabilidades.filter(
           (m) => !(m.tipo === "unica" && m.id === action.id),
         ),
@@ -116,7 +130,9 @@ export function fichaCalafrioReducer(
     case "removerCustomizacaoEco":
       return {
         ...state,
-        customizacoesEco: state.customizacoesEco.filter((c) => c.id !== action.id),
+        customizacoesEco: state.customizacoesEco.filter(
+          (c) => c.id !== action.id,
+        ),
       };
     case "adicionarItem":
       return {

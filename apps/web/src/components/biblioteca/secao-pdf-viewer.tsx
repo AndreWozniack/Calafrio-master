@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
 import { ExternalLink } from "lucide-react";
+import { useState } from "react";
 
 export function SecaoPdfViewer() {
   const [pdfAtivo, setPdfAtivo] = useState<string>(
@@ -16,7 +16,9 @@ export function SecaoPdfViewer() {
           <button
             type="button"
             onClick={() =>
-              setPdfAtivo("/assets/calafrio/2e-V1HabilidadesParanormais_Calafrio.pdf")
+              setPdfAtivo(
+                "/assets/calafrio/2e-V1HabilidadesParanormais_Calafrio.pdf",
+              )
             }
             className={`px-3 py-1.5 rounded cursor-pointer ${
               pdfAtivo.includes("Habilidades")

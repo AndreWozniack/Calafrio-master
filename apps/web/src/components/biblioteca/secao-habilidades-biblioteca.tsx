@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
 import type { CatalogoCalafrio } from "@calafrio/core";
 import { TOKENS_PERSONALIDADE } from "@calafrio/tema";
 import { Search } from "lucide-react";
+import { useState } from "react";
 
 interface SecaoHabilidadesBibliotecaProps {
   catalogo: CatalogoCalafrio;
@@ -13,11 +13,15 @@ export function SecaoHabilidadesBiblioteca({
   catalogo,
 }: SecaoHabilidadesBibliotecaProps) {
   const [busca, setBusca] = useState("");
-  const [filtroPersonalidade, setFiltroPersonalidade] = useState<string>("todas");
+  const [filtroPersonalidade, setFiltroPersonalidade] =
+    useState<string>("todas");
   const [filtroDominio, setFiltroDominio] = useState<string>("todos");
 
   const habilidadesFiltradas = catalogo.habilidadesParanormais.filter((h) => {
-    if (filtroPersonalidade !== "todas" && h.personalidade !== filtroPersonalidade) {
+    if (
+      filtroPersonalidade !== "todas" &&
+      h.personalidade !== filtroPersonalidade
+    ) {
       return false;
     }
     if (filtroDominio !== "todos" && h.dominio !== filtroDominio) {

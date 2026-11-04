@@ -434,10 +434,7 @@ export function montarFichaCalafrio(
     });
   }
 
-  const pvAtual = Math.max(
-    0,
-    pvMax + estado.pvTemporario - estado.danoSofrido,
-  );
+  const pvAtual = Math.max(0, pvMax + estado.pvTemporario - estado.danoSofrido);
   const paAtual = pvUnificadoComPa
     ? pvAtual
     : Math.max(0, paMax + estado.paTemporario - estado.paGasto);

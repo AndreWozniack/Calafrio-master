@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import type {
   AlocacaoSlotMatriz,
   CatalogoCalafrio,
@@ -9,9 +8,10 @@ import type {
   HabilidadeUnicaCalafrio,
 } from "@calafrio/core";
 import { TOKENS_PERSONALIDADE } from "@calafrio/tema";
+import { AlertTriangle, Sparkles } from "lucide-react";
+import { useState } from "react";
 import { CardSlotMatriz } from "./card-slot-matriz";
 import { PainelEcosERegras } from "./painel-ecos-e-regras";
-import { Sparkles, AlertTriangle, CheckCircle2 } from "lucide-react";
 
 interface PaginaVersoMatrizProps {
   ficha: FichaCalafrio;
@@ -39,10 +39,15 @@ export function PaginaVersoMatriz({
   onDefinirAnotacoes,
 }: PaginaVersoMatrizProps) {
   const [slotSelecionado, setSlotSelecionado] = useState<number | null>(null);
-  const [filtroPersonalidade, setFiltroPersonalidade] = useState<string>("todas");
+  const [filtroPersonalidade, setFiltroPersonalidade] =
+    useState<string>("todas");
 
   const habilidadesDisponiveis = catalogo.habilidadesParanormais.filter((h) => {
-    if (filtroPersonalidade !== "todas" && h.personalidade !== filtroPersonalidade) return false;
+    if (
+      filtroPersonalidade !== "todas" &&
+      h.personalidade !== filtroPersonalidade
+    )
+      return false;
     // se já tem domínio definido, priorizar avisar
     return true;
   });
@@ -56,11 +61,14 @@ export function PaginaVersoMatriz({
             <div className="flex items-center gap-2">
               <span className="calafrio-tag">HABILIDADES PARANORMAIS</span>
               <span className="text-xs text-muted-foreground font-semibold">
-                NÚMERO MÁX. DE HABILIDADES = APT ({derivada.habilidadesMemorizadasCount} / {derivada.limiteHabilidadesMemorizadas})
+                NÚMERO MÁX. DE HABILIDADES = APT (
+                {derivada.habilidadesMemorizadasCount} /{" "}
+                {derivada.limiteHabilidadesMemorizadas})
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Alinhe habilidades da mesma personalidade para destravar bônus geométricos:
+              Alinhe habilidades da mesma personalidade para destravar bônus
+              geométricos:
             </p>
           </div>
 
@@ -111,7 +119,9 @@ export function PaginaVersoMatriz({
         {/* O Grid 3x3 */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
           {Array.from({ length: 9 }).map((_, idx) => {
-            const alocacao = ficha.matrizHabilidades.find((m) => m.slot === idx);
+            const alocacao = ficha.matrizHabilidades.find(
+              (m) => m.slot === idx,
+            );
             return (
               <CardSlotMatriz
                 key={idx}
@@ -134,7 +144,9 @@ export function PaginaVersoMatriz({
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
           <div className="calafrio-card p-5 max-w-2xl w-full max-h-[85vh] flex flex-col space-y-4 shadow-2xl border-2 border-amber-400">
             <div className="flex items-center justify-between border-b border-border pb-2">
-              <span className="calafrio-tag">ALOCAR NO SLOT #{slotSelecionado + 1}</span>
+              <span className="calafrio-tag">
+                ALOCAR NO SLOT #{slotSelecionado + 1}
+              </span>
               <button
                 type="button"
                 onClick={() => setSlotSelecionado(null)}
@@ -151,7 +163,9 @@ export function PaginaVersoMatriz({
                 type="button"
                 onClick={() => setFiltroPersonalidade("todas")}
                 className={`text-xs px-2 py-1 rounded cursor-pointer ${
-                  filtroPersonalidade === "todas" ? "bg-amber-400 text-black font-bold" : "bg-muted"
+                  filtroPersonalidade === "todas"
+                    ? "bg-amber-400 text-black font-bold"
+                    : "bg-muted"
                 }`}
               >
                 Todas
@@ -162,7 +176,9 @@ export function PaginaVersoMatriz({
                   type="button"
                   onClick={() => setFiltroPersonalidade(key)}
                   className={`text-xs px-2 py-1 rounded cursor-pointer ${
-                    filtroPersonalidade === key ? "bg-amber-400 text-black font-bold" : "bg-muted text-muted-foreground"
+                    filtroPersonalidade === key
+                      ? "bg-amber-400 text-black font-bold"
+                      : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {token.emoji} {token.nome}
@@ -192,10 +208,16 @@ export function PaginaVersoMatriz({
                       className="p-2.5 rounded border border-amber-500/40 bg-card hover:bg-amber-950/30 cursor-pointer flex items-center justify-between transition-colors"
                     >
                       <div>
-                        <div className="font-bold text-sm text-amber-300">{u.nome}</div>
-                        <p className="text-xs text-foreground/80 line-clamp-1">{u.descricao}</p>
+                        <div className="font-bold text-sm text-amber-300">
+                          {u.nome}
+                        </div>
+                        <p className="text-xs text-foreground/80 line-clamp-1">
+                          {u.descricao}
+                        </p>
                       </div>
-                      <span className="text-xs font-bold text-amber-400">{u.custo} {u.recurso.toUpperCase()}</span>
+                      <span className="text-xs font-bold text-amber-400">
+                        {u.custo} {u.recurso.toUpperCase()}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -207,7 +229,10 @@ export function PaginaVersoMatriz({
               </span>
               {habilidadesDisponiveis.map((hab) => {
                 const token = TOKENS_PERSONALIDADE[hab.personalidade];
-                const cor = hab.dominio === "positivo" ? token.corPositiva : token.corNegativa;
+                const cor =
+                  hab.dominio === "positivo"
+                    ? token.corPositiva
+                    : token.corNegativa;
                 return (
                   <div
                     key={hab.id}
@@ -224,7 +249,9 @@ export function PaginaVersoMatriz({
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm text-foreground">{hab.nome}</span>
+                        <span className="font-bold text-sm text-foreground">
+                          {hab.nome}
+                        </span>
                         <span
                           style={{ backgroundColor: cor }}
                           className="text-[9px] text-white font-extrabold px-1.5 py-0.5 rounded-xs"
@@ -235,7 +262,9 @@ export function PaginaVersoMatriz({
                           {hab.tipoAcao}
                         </span>
                       </div>
-                      <p className="text-xs text-foreground/80 line-clamp-1 mt-0.5">{hab.descricao}</p>
+                      <p className="text-xs text-foreground/80 line-clamp-1 mt-0.5">
+                        {hab.descricao}
+                      </p>
                     </div>
 
                     <div className="text-right shrink-0">
