@@ -142,7 +142,10 @@ export function VisualizadorPapel({
 
   const duas = modo === "duas";
   const controlesVisiveis = duas ? "lg:hidden" : "";
+<<<<<<< Updated upstream
   const configZoom = obterConfigZoomFicha(zoom);
+=======
+>>>>>>> Stashed changes
 
   const renderPagina = (alvo: PaginaFicha) => {
     switch (alvo) {
@@ -151,7 +154,10 @@ export function VisualizadorPapel({
           <PaginaFrenteFicha
             ficha={f.ficha}
             derivada={f.derivada}
+<<<<<<< Updated upstream
             zoom={zoom}
+=======
+>>>>>>> Stashed changes
             onDefinirNome={f.definirNome}
             onDefinirApt={f.definirApt}
             onDefinirRetrato={(url) =>
@@ -176,7 +182,10 @@ export function VisualizadorPapel({
             ficha={f.ficha}
             derivada={f.derivada}
             catalogo={f.catalogo}
+<<<<<<< Updated upstream
             zoom={zoom}
+=======
+>>>>>>> Stashed changes
             onAlocarSlot={(slot, alocacao) =>
               f.alocarSlotMatriz(slot, alocacao.tipo, alocacao.id)
             }
@@ -207,7 +216,10 @@ export function VisualizadorPapel({
             ficha={f.ficha}
             derivada={f.derivada}
             catalogo={f.catalogo}
+<<<<<<< Updated upstream
             zoom={zoom}
+=======
+>>>>>>> Stashed changes
             onAdicionarHabilidadeUnica={(unica) =>
               f.dispatch({ tipo: "adicionarHabilidadeUnica", unica })
             }
@@ -340,6 +352,7 @@ export function VisualizadorPapel({
 
       {/* Visualização de Páginas com Sobreposição Física */}
       {!duas ? (
+<<<<<<< Updated upstream
         <div className="relative w-full">
           {/* Bordas decorativas da pilha de folhas embaixo (Stack Paper Effect) */}
           <div
@@ -404,6 +417,60 @@ export function VisualizadorPapel({
         </div>
       )}
 
+=======
+        <div className="relative w-full overflow-x-clip rounded-sm">
+          {transicao ? (
+            transicao.tipo === "avancar" ? (
+              <>
+                {/* Folha de baixo (fica parada no lugar) */}
+                <div
+                  key={`baixo-${transicao.baixo}`}
+                  className="relative z-10 w-full pointer-events-none"
+                >
+                  {renderPagina(transicao.baixo)}
+                </div>
+                {/* Folha de cima (entra deslizando da direita por cima) */}
+                <div
+                  key={`cima-${transicao.cima}`}
+                  className="absolute inset-0 z-20 w-full folha-sobrepor-entrar pointer-events-none"
+                >
+                  {renderPagina(transicao.cima)}
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Folha de baixo (já está no lugar esperando, sendo revelada) */}
+                <div
+                  key={`baixo-${transicao.baixo}`}
+                  className="relative z-10 w-full pointer-events-none"
+                >
+                  {renderPagina(transicao.baixo)}
+                </div>
+                {/* Folha de cima (desliza para a direita saindo de cima) */}
+                <div
+                  key={`cima-${transicao.cima}`}
+                  className="absolute inset-0 z-20 w-full folha-sobrepor-sair pointer-events-none"
+                >
+                  {renderPagina(transicao.cima)}
+                </div>
+              </>
+            )
+          ) : (
+            /* Em repouso (interativa) */
+            <div key={`atual-${pagina}`} className="relative z-10 w-full">
+              {renderPagina(pagina)}
+            </div>
+          )}
+        </div>
+      ) : (
+        /* Modo 2 páginas lado a lado */
+        <div className="grid items-start gap-6 lg:grid-cols-2">
+          <div>{renderPagina("frente")}</div>
+          <div>{renderPagina(pagina === "ecos" ? "ecos" : "verso")}</div>
+        </div>
+      )}
+
+>>>>>>> Stashed changes
       <div
         className={`mt-4 flex items-center justify-center gap-2.5 text-xs font-bold ${controlesVisiveis}`}
       >

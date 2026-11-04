@@ -41,6 +41,7 @@
   --color-info: var(--info);
 }
 
+<<<<<<< Updated upstream
 html {
   font-size: 17.5px;
 }
@@ -51,6 +52,8 @@ html {
   }
 }
 
+=======
+>>>>>>> Stashed changes
 html,
 body {
   min-height: 100dvh;
@@ -60,8 +63,11 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-alegreya), Georgia, Cambria, "Times New Roman", Times, serif;
+<<<<<<< Updated upstream
   font-size: 1rem;
   line-height: 1.5;
+=======
+>>>>>>> Stashed changes
 }
 
 .font-heading {
@@ -135,7 +141,11 @@ textarea {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
+<<<<<<< Updated upstream
 /* ===== Pilha de folhas de papel (Sobreposição física: entrar e sair por cima) ===== */
+=======
+/* ===== Pilha de folhas de papel (Sobreposição física com profundidade) ===== */
+>>>>>>> Stashed changes
 @keyframes folha-sobrepor-entrar {
   0% {
     transform: translate3d(100%, 0, 0);
@@ -154,6 +164,7 @@ textarea {
   }
 }
 
+<<<<<<< Updated upstream
 .folha-camada-cima-entrar {
   animation: folha-sobrepor-entrar 0.35s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
   box-shadow: -22px 0 40px -5px rgba(0, 0, 0, 0.42), -8px 0 16px -2px rgba(0, 0, 0, 0.28);
@@ -163,15 +174,67 @@ textarea {
 
 .folha-camada-cima-sair {
   animation: folha-sobrepor-sair 0.35s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+=======
+@keyframes folha-fundo-entrar {
+  0% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+  100% {
+    filter: brightness(0.91);
+    transform: scale(0.995);
+  }
+}
+
+@keyframes folha-fundo-revelar {
+  0% {
+    filter: brightness(0.91);
+    transform: scale(0.995);
+  }
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+}
+
+.folha-camada-cima-entrar {
+  animation: folha-sobrepor-entrar 0.36s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+  box-shadow: -22px 0 40px -5px rgba(0, 0, 0, 0.42), -8px 0 16px -2px rgba(0, 0, 0, 0.28);
+  border-left: 2px solid rgba(0, 0, 0, 0.35);
+  will-change: transform;
+}
+
+.folha-camada-cima-sair {
+  animation: folha-sobrepor-sair 0.36s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+>>>>>>> Stashed changes
   box-shadow: -22px 0 40px -5px rgba(0, 0, 0, 0.42), -8px 0 16px -2px rgba(0, 0, 0, 0.28);
   border-left: 2px solid rgba(0, 0, 0, 0.35);
   pointer-events: none;
   will-change: transform;
+<<<<<<< Updated upstream
+=======
+}
+
+.folha-camada-baixo-avancar {
+  animation: folha-fundo-entrar 0.36s ease-out forwards;
+  will-change: filter, transform;
+}
+
+.folha-camada-baixo-voltar {
+  animation: folha-fundo-revelar 0.36s ease-out forwards;
+  will-change: filter, transform;
+>>>>>>> Stashed changes
 }
 
 @media (prefers-reduced-motion: reduce) {
   .folha-camada-cima-entrar,
+<<<<<<< Updated upstream
   .folha-camada-cima-sair {
+=======
+  .folha-camada-cima-sair,
+  .folha-camada-baixo-avancar,
+  .folha-camada-baixo-voltar {
+>>>>>>> Stashed changes
     animation: none !important;
   }
 }
@@ -356,8 +419,22 @@ body:has([data-pagina-login])::after {
 }
 
 /* No mobile (onde a ficha ocupa 100% da tela), ajusta o body e o main para que a folha seja contínua e sem tarjas no scroll */
+<<<<<<< Updated upstream
 /* No mobile, remove o padding do main na ficha para ocupar a tela sem descompasso */
 @media (max-width: 639px) {
+=======
+@media (max-width: 639px) {
+  html:has([data-papel]),
+  body:has([data-papel]) {
+    background-color: #fbfbf9 !important;
+    color: #111113 !important;
+  }
+
+  .dark body:has([data-papel])::before {
+    display: none !important;
+  }
+
+>>>>>>> Stashed changes
   main:has([data-papel]) {
     padding: 0 !important;
     max-width: 100% !important;
@@ -378,8 +455,12 @@ body:has([data-pagina-login])::after {
   }
 }
 
+<<<<<<< Updated upstream
 /* Fundo com ornamento temático em todo o sistema (inclusive na ficha) */
 body::before {
+=======
+.dark body::before {
+>>>>>>> Stashed changes
   content: "";
   position: fixed;
   inset: 0;
