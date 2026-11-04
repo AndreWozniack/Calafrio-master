@@ -14,7 +14,7 @@ import { PaginaVersoMatriz } from "./pagina-verso-matriz";
 
 interface VisualizadorPapelProps {
   f: FichaViva;
-  modo: ModoVisualizacao;
+  modo?: ModoVisualizacao;
   pagina: PaginaFicha;
   onMudarPagina: (pagina: PaginaFicha) => void;
   onAbrirRolagem: (nome?: string) => void;
@@ -34,12 +34,10 @@ function SetaVirar({
   sentido,
   rotulo,
   onClick,
-  visibilidade,
 }: {
   sentido: "esquerda" | "direita";
   rotulo: string;
   onClick: () => void;
-  visibilidade: string;
 }) {
   const Icone = sentido === "direita" ? ChevronRight : ChevronLeft;
   return (
@@ -48,7 +46,7 @@ function SetaVirar({
       onClick={onClick}
       aria-label={rotulo}
       title={rotulo}
-      className={`group absolute top-1/2 -translate-y-1/2 z-40 flex size-12 sm:size-14 cursor-pointer items-center justify-center rounded-full border-2 border-black bg-[#fbfbf9]/95 text-black shadow-[2px_3px_0px_#000] backdrop-blur transition-all duration-300 ease-out hover:scale-110 hover:shadow-[3px_5px_0px_#000] active:scale-95 active:shadow-[1px_1px_0px_#000] ${visibilidade} ${
+      className={`group absolute top-1/2 -translate-y-1/2 z-40 flex size-12 sm:size-14 cursor-pointer items-center justify-center rounded-full border-2 border-black bg-[#fbfbf9]/95 text-black shadow-[2px_3px_0px_#000] backdrop-blur transition-all duration-300 ease-out hover:scale-110 hover:shadow-[3px_5px_0px_#000] active:scale-95 active:shadow-[1px_1px_0px_#000] ${
         sentido === "direita"
           ? "right-2 sm:-right-6 md:-right-7 lg:-right-8"
           : "left-2 sm:-left-6 md:-left-7 lg:-left-8"
@@ -74,7 +72,6 @@ const ORDEM_PAGINAS: Record<PaginaFicha, number> = {
 
 export function VisualizadorPapel({
   f,
-  modo,
   pagina,
   onMudarPagina,
   onAbrirRolagem,
@@ -122,9 +119,6 @@ export function VisualizadorPapel({
     window.addEventListener("keydown", aoTeclar);
     return () => window.removeEventListener("keydown", aoTeclar);
   });
-
-  const duas = modo === "duas";
-  const controlesVisiveis = duas ? "lg:hidden" : "";
 
   // Determina quais folhas estão ativas/visíveis na pilha real
   const mostrarVerso =
@@ -237,7 +231,7 @@ export function VisualizadorPapel({
 
   return (
     <div
-      className={`relative ${duas ? "w-full" : "mx-auto max-w-[880px]"}`}
+      className="relative mx-auto max-w-[880px]"
       onTouchStart={(e) => {
         inicioToque.current = e.touches[0].clientX;
       }}
@@ -255,39 +249,37 @@ export function VisualizadorPapel({
         }
       }}
     >
-      {/* Abas físicas estilo fichário/dossiê (modo uma página) */}
-      {!duas && (
-        <div className="flex items-end gap-1.5 px-2 -mb-[2px] z-30 relative">
-          {(
-            [
-              ["frente", "1 · Identidade"],
-              ["verso", "2 · Matriz"],
-              ["ecos", "3 · Ecos & Aprimoramentos"],
-            ] as const
-          ).map(([alvo, rotulo]) => {
-            const ativa = pagina === alvo;
-            return (
-              <button
-                key={alvo}
-                type="button"
-                onClick={() => virar(alvo)}
-                className={`cursor-pointer px-4 py-2 text-xs font-black uppercase tracking-wider rounded-t-md transition-all flex items-center gap-2 font-heading ${
-                  ativa
-                    ? "bg-[#fbfbf9] text-black border-2 border-b-0 border-black shadow-[0_-2px_6px_rgba(0,0,0,0.06)] relative z-20 pb-2.5"
-                    : "bg-[#e5e5e0] text-black/60 border border-b-0 border-black/30 hover:bg-[#eaeae5] hover:text-black"
+      {/* Abas físicas estilo fichário/dossiê */}
+      <div className="flex items-end gap-1.5 px-2 -mb-[2px] z-30 relative">
+        {(
+          [
+            ["frente", "1 · Identidade"],
+            ["verso", "2 · Matriz"],
+            ["ecos", "3 · Ecos & Aprimoramentos"],
+          ] as const
+        ).map(([alvo, rotulo]) => {
+          const ativa = pagina === alvo;
+          return (
+            <button
+              key={alvo}
+              type="button"
+              onClick={() => virar(alvo)}
+              className={`cursor-pointer px-4 py-2 text-xs font-black uppercase tracking-wider rounded-t-md transition-all flex items-center gap-2 font-heading ${
+                ativa
+                  ? "bg-[#fbfbf9] text-black border-2 border-b-0 border-black shadow-[0_-2px_6px_rgba(0,0,0,0.06)] relative z-20 pb-2.5"
+                  : "bg-[#e5e5e0] text-black/60 border border-b-0 border-black/30 hover:bg-[#eaeae5] hover:text-black"
+              }`}
+            >
+              <span
+                className={`size-2 rounded-full ${
+                  ativa ? "bg-black" : "bg-black/40"
                 }`}
-              >
-                <span
-                  className={`size-2 rounded-full ${
-                    ativa ? "bg-black" : "bg-black/40"
-                  }`}
-                />
-                {rotulo}
-              </button>
-            );
-          })}
-        </div>
-      )}
+              />
+              {rotulo}
+            </button>
+          );
+        })}
+      </div>
 
       {/* Setas Laterais de Navegação */}
       {pagina === "frente" && (
@@ -295,7 +287,6 @@ export function VisualizadorPapel({
           sentido="direita"
           rotulo="Virar para a Matriz de Habilidades"
           onClick={() => virar("verso")}
-          visibilidade={`flex ${controlesVisiveis}`}
         />
       )}
       {pagina === "verso" && (
@@ -304,13 +295,11 @@ export function VisualizadorPapel({
             sentido="esquerda"
             rotulo="Voltar para a Frente (Identidade)"
             onClick={() => virar("frente")}
-            visibilidade={`flex ${controlesVisiveis}`}
           />
           <SetaVirar
             sentido="direita"
             rotulo="Avançar para Ecos & Aprimoramentos"
             onClick={() => virar("ecos")}
-            visibilidade={`flex ${controlesVisiveis}`}
           />
         </>
       )}
@@ -319,94 +308,83 @@ export function VisualizadorPapel({
           sentido="esquerda"
           rotulo="Voltar para a Matriz de Habilidades"
           onClick={() => virar("verso")}
-          visibilidade={`flex ${controlesVisiveis}`}
         />
       )}
 
       {/* Pilha Real de Folhas Físicas */}
-      {!duas ? (
-        <div className="relative w-full pb-4 sm:pb-6 pr-3 sm:pr-6">
-          <div className="relative w-full overflow-x-clip">
-            {/* Folha 1 (Frente / Identidade) — Base da mesa: NUNCA SE MEXE */}
-            <div
-              className={`relative w-full rounded-sm transition-shadow duration-300 ${
-                pagina === "frente" && !transicao
-                  ? "z-30 pointer-events-auto shadow-xl"
-                  : "z-10 pointer-events-none shadow-md"
-              }`}
-            >
-              {renderPagina("frente")}
+      <div className="relative w-full pb-4 sm:pb-6 pr-3 sm:pr-6">
+        <div className="relative w-full overflow-x-clip">
+          {/* Folha 1 (Frente / Identidade) — Base da mesa: NUNCA SE MEXE */}
+          <div
+            className={`relative w-full rounded-sm transition-shadow duration-300 ${
+              pagina === "frente" && !transicao
+                ? "z-30 pointer-events-auto shadow-xl"
+                : "z-10 pointer-events-none shadow-md"
+            }`}
+          >
+            {renderPagina("frente")}
 
-              {/* Faixa tátil clicável na margem exposta da Folha 1 */}
-              {pagina !== "frente" && (
-                <button
-                  type="button"
-                  onClick={() => virar("frente")}
-                  title="Voltar para a Folha 1 (Identidade)"
-                  aria-label="Voltar para a Folha 1 (Identidade)"
-                  className="absolute top-0 left-0 w-3 sm:w-6 h-full z-40 cursor-pointer pointer-events-auto bg-transparent hover:bg-black/5 transition-colors"
-                />
-              )}
-            </div>
-
-            {/* Folha 2 (Verso / Matriz) — Sobreposta à Folha 1 em posição física fixa */}
-            {mostrarVerso && (
-              <div
-                className={`absolute inset-0 translate-x-1.5 sm:translate-x-3 translate-y-1 sm:translate-y-2 ${
-                  pagina === "verso" && !transicao
-                    ? "z-30 pointer-events-auto"
-                    : "z-20 pointer-events-none"
-                }`}
-              >
-                <div
-                  className={`relative w-full rounded-sm shadow-xl ${animacaoVerso}`}
-                >
-                  {renderPagina("verso")}
-
-                  {/* Faixa tátil clicável na margem exposta da Folha 2 quando a Folha 3 está por cima */}
-                  {pagina === "ecos" && (
-                    <button
-                      type="button"
-                      onClick={() => virar("verso")}
-                      title="Voltar para a Folha 2 (Matriz)"
-                      aria-label="Voltar para a Folha 2 (Matriz)"
-                      className="absolute top-0 left-0 w-3 sm:w-6 h-full z-40 cursor-pointer pointer-events-auto bg-transparent hover:bg-black/5 transition-colors"
-                    />
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Folha 3 (Ecos & Aprimoramentos) — Sobreposta à Folha 2 em posição física fixa */}
-            {mostrarEcos && (
-              <div
-                className={`absolute inset-0 translate-x-3 sm:translate-x-6 translate-y-2 sm:translate-y-4 ${
-                  pagina === "ecos" && !transicao
-                    ? "z-30 pointer-events-auto"
-                    : "z-20 pointer-events-none"
-                }`}
-              >
-                <div
-                  className={`relative w-full rounded-sm shadow-2xl ${animacaoEcos}`}
-                >
-                  {renderPagina("ecos")}
-                </div>
-              </div>
+            {/* Faixa tátil clicável na margem exposta da Folha 1 */}
+            {pagina !== "frente" && (
+              <button
+                type="button"
+                onClick={() => virar("frente")}
+                title="Voltar para a Folha 1 (Identidade)"
+                aria-label="Voltar para a Folha 1 (Identidade)"
+                className="absolute top-0 left-0 w-3 sm:w-6 h-full z-40 cursor-pointer pointer-events-auto bg-transparent hover:bg-black/5 transition-colors"
+              />
             )}
           </div>
+
+          {/* Folha 2 (Verso / Matriz) — Sobreposta à Folha 1 em posição física fixa */}
+          {mostrarVerso && (
+            <div
+              className={`absolute inset-0 translate-x-1.5 sm:translate-x-3 translate-y-1 sm:translate-y-2 ${
+                pagina === "verso" && !transicao
+                  ? "z-30 pointer-events-auto"
+                  : "z-20 pointer-events-none"
+              }`}
+            >
+              <div
+                className={`relative w-full rounded-sm shadow-xl ${animacaoVerso}`}
+              >
+                {renderPagina("verso")}
+
+                {/* Faixa tátil clicável na margem exposta da Folha 2 quando a Folha 3 está por cima */}
+                {pagina === "ecos" && (
+                  <button
+                    type="button"
+                    onClick={() => virar("verso")}
+                    title="Voltar para a Folha 2 (Matriz)"
+                    aria-label="Voltar para a Folha 2 (Matriz)"
+                    className="absolute top-0 left-0 w-3 sm:w-6 h-full z-40 cursor-pointer pointer-events-auto bg-transparent hover:bg-black/5 transition-colors"
+                  />
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Folha 3 (Ecos & Aprimoramentos) — Sobreposta à Folha 2 em posição física fixa */}
+          {mostrarEcos && (
+            <div
+              className={`absolute inset-0 translate-x-3 sm:translate-x-6 translate-y-2 sm:translate-y-4 ${
+                pagina === "ecos" && !transicao
+                  ? "z-30 pointer-events-auto"
+                  : "z-20 pointer-events-none"
+              }`}
+            >
+              <div
+                className={`relative w-full rounded-sm shadow-2xl ${animacaoEcos}`}
+              >
+                {renderPagina("ecos")}
+              </div>
+            </div>
+          )}
         </div>
-      ) : (
-        /* Modo 2 páginas lado a lado */
-        <div className="grid items-start gap-6 lg:grid-cols-2">
-          <div>{renderPagina("frente")}</div>
-          <div>{renderPagina(pagina === "ecos" ? "ecos" : "verso")}</div>
-        </div>
-      )}
+      </div>
 
       {/* Controles de Paginação Rodapé */}
-      <div
-        className={`mt-4 flex items-center justify-center gap-2.5 text-xs font-bold ${controlesVisiveis}`}
-      >
+      <div className="mt-4 flex items-center justify-center gap-2.5 text-xs font-bold">
         {(
           [
             ["frente", "1 · Identidade"],
