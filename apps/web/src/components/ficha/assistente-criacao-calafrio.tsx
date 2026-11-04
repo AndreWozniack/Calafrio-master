@@ -102,20 +102,20 @@ export function AssistenteCriacaoCalafrio({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-6xl h-[90vh] max-h-[920px] bg-card rounded-2xl border-2 border-amber-400/80 shadow-2xl flex flex-col overflow-hidden"
+        className="w-full max-w-6xl h-[90vh] max-h-[920px] bg-card rounded-2xl border-2 border-amber-400/80 shadow-2xl flex flex-col overflow-hidden font-sans"
       >
         {/* Cabeçalho Superior Fixo */}
         <div className="flex items-center justify-between px-6 py-3.5 border-b border-border bg-muted/40 shrink-0">
           <div className="flex items-center gap-3">
             <span className="calafrio-tag">CRIAÇÃO DE PLAYER</span>
-            <span className="text-xs text-muted-foreground font-semibold">
+            <span className="text-sm text-foreground/75 font-bold">
               Calafrio 2ª Edição
             </span>
           </div>
           <button
             type="button"
             onClick={onCancelar ?? onFechar}
-            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground font-bold cursor-pointer transition-colors"
+            className="flex items-center gap-1.5 text-xs sm:text-sm text-foreground/70 hover:text-foreground font-bold cursor-pointer transition-colors px-2.5 py-1 rounded-md hover:bg-muted"
           >
             <X className="size-4" /> Cancelar
           </button>
@@ -129,7 +129,7 @@ export function AssistenteCriacaoCalafrio({
           {/* Coluna Direita: Conteúdo da Etapa Atual */}
           <div className="flex-1 min-h-0 flex flex-col overflow-hidden bg-background">
             {/* Navegador de Passos (Tabs) */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-3 border-b border-border/80 bg-muted/20 shrink-0">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 border-b border-border bg-muted/30 shrink-0">
               {ETAPAS.map((item) => {
                 const isAtivo = etapa === item.id;
                 const isPassado = etapa > item.id;
@@ -139,12 +139,12 @@ export function AssistenteCriacaoCalafrio({
                     key={item.id}
                     type="button"
                     onClick={() => setEtapa(item.id)}
-                    className={`py-2 px-2.5 rounded-lg text-xs font-black transition-all cursor-pointer text-center truncate ${
+                    className={`py-2.5 px-3 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer text-center truncate ${
                       isAtivo
-                        ? "bg-amber-400 text-black shadow-sm"
+                        ? "bg-amber-400 text-neutral-950 shadow-sm font-black ring-1 ring-amber-500/50"
                         : isPassado
-                          ? "bg-muted text-foreground hover:bg-muted/80"
-                          : "bg-transparent text-muted-foreground hover:text-foreground"
+                          ? "bg-muted text-foreground hover:bg-muted/80 font-bold border border-border/50"
+                          : "bg-transparent text-foreground/60 hover:text-foreground hover:bg-muted/40 font-semibold"
                     }`}
                   >
                     {item.rotulo}
@@ -197,17 +197,17 @@ export function AssistenteCriacaoCalafrio({
             </div>
 
             {/* Rodapé Fixo de Navegação */}
-            <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-card/60 shrink-0">
+            <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-card/80 shrink-0">
               <button
                 type="button"
                 disabled={etapa === 1}
                 onClick={() => setEtapa((prev) => Math.max(1, prev - 1) as any)}
-                className="flex items-center gap-1.5 px-4 py-2 bg-muted hover:bg-border disabled:opacity-30 disabled:pointer-events-none rounded-lg font-bold text-xs cursor-pointer transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2.5 bg-muted hover:bg-muted/80 disabled:opacity-30 disabled:pointer-events-none rounded-lg font-bold text-sm text-foreground cursor-pointer transition-colors border border-border/60"
               >
                 <ChevronLeft className="size-4" /> Anterior
               </button>
 
-              <div className="text-xs text-muted-foreground font-semibold">
+              <div className="text-sm text-foreground/80 font-bold">
                 Etapa {etapa} de 4
               </div>
 
@@ -217,7 +217,7 @@ export function AssistenteCriacaoCalafrio({
                   onClick={() =>
                     setEtapa((prev) => Math.min(4, prev + 1) as any)
                   }
-                  className="flex items-center gap-1.5 px-5 py-2 bg-amber-400 hover:bg-amber-300 text-black font-black text-xs rounded-lg cursor-pointer transition-colors shadow-sm"
+                  className="flex items-center gap-1.5 px-6 py-2.5 bg-amber-400 hover:bg-amber-300 text-neutral-950 font-black text-sm rounded-lg cursor-pointer transition-colors shadow-sm"
                 >
                   Próximo <ChevronRight className="size-4" />
                 </button>
@@ -225,7 +225,7 @@ export function AssistenteCriacaoCalafrio({
                 <button
                   type="button"
                   onClick={onConcluir ?? onFechar}
-                  className="flex items-center gap-1.5 px-6 py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs rounded-lg cursor-pointer transition-colors shadow-md"
+                  className="flex items-center gap-1.5 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm rounded-lg cursor-pointer transition-colors shadow-md"
                 >
                   <Check className="size-4" /> Concluir Criação
                 </button>

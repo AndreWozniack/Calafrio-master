@@ -266,26 +266,26 @@ export function EtapaItensEquipamentos({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
       <div>
-        <h4 className="text-base font-black text-foreground uppercase tracking-wide">
+        <h4 className="text-lg font-black text-foreground uppercase tracking-wide">
           4. Carteira & Inventário ({ficha.inventario.length} itens adicionados)
         </h4>
-        <p className="text-xs text-muted-foreground mt-0.5">
+        <p className="text-sm text-foreground/75 mt-1">
           Defina o dinheiro inicial e equipe itens criados livremente ou do
           catálogo.
         </p>
       </div>
 
       {/* Carteira */}
-      <div className="p-4 rounded-xl border border-border bg-muted/40 space-y-3">
+      <div className="p-4 sm:p-5 rounded-xl border-2 border-border bg-card shadow-xs space-y-3">
         <span className="calafrio-tag-sm">CARTEIRA INICIAL</span>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-foreground font-bold mb-1">
+            <label className="block text-foreground font-bold text-sm mb-1.5">
               Fundos Mundanos (F$)
             </label>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <input
                 type="number"
                 min={0}
@@ -297,21 +297,21 @@ export function EtapaItensEquipamentos({
                     ficha.carteira.espirions,
                   )
                 }
-                placeholder="Fundos mundanos"
-                className="w-24 bg-card p-2 rounded-lg border border-border text-sm font-bold text-center outline-none focus:border-amber-400"
+                placeholder="0"
+                className="w-24 bg-muted/30 p-2.5 rounded-lg border-2 border-border text-base font-bold text-center outline-none focus:border-amber-400 text-foreground"
               />
               <button
                 type="button"
                 onClick={sortearFundos}
-                className="flex items-center gap-1.5 px-3 py-2 bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs rounded-lg cursor-pointer transition-colors"
+                className="flex items-center gap-1.5 px-3.5 py-2.5 bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold text-sm rounded-lg cursor-pointer transition-colors shadow-xs"
               >
-                <Dices className="size-3.5" /> Sortear (1d12)
+                <Dices className="size-4" /> Sortear (1d12)
               </button>
             </div>
           </div>
 
           <div>
-            <label className="block text-foreground font-bold mb-1">
+            <label className="block text-foreground font-bold text-sm mb-1.5">
               Espírions Paranormais (E$P)
             </label>
             <input
@@ -324,8 +324,8 @@ export function EtapaItensEquipamentos({
                   Math.max(0, Number(e.target.value)),
                 )
               }
-              placeholder="Moeda paranormal inicial"
-              className="w-24 bg-card p-2 rounded-lg border border-border text-sm font-bold text-center outline-none focus:border-amber-400"
+              placeholder="0"
+              className="w-24 bg-muted/30 p-2.5 rounded-lg border-2 border-border text-base font-bold text-center outline-none focus:border-amber-400 text-foreground"
             />
           </div>
         </div>
@@ -333,25 +333,25 @@ export function EtapaItensEquipamentos({
 
       {/* Seleção de Modo: Criar Livre vs Catálogo */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 border-b border-border pb-2">
+        <div className="flex items-center gap-2 border-b border-border pb-2.5">
           <button
             type="button"
             onClick={() => setModoAba("livre")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-black cursor-pointer transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-bold cursor-pointer transition-colors ${
               modoAba === "livre"
-                ? "bg-amber-400 text-black"
-                : "bg-muted text-muted-foreground hover:text-foreground"
+                ? "bg-amber-400 text-neutral-950 font-black shadow-xs"
+                : "bg-muted text-foreground/70 hover:text-foreground hover:bg-muted/80"
             }`}
           >
-            <PackagePlus className="size-3.5 inline mr-1" /> Criar Item Livre
+            <PackagePlus className="size-4 inline mr-1.5" /> Criar Item Livre
           </button>
           <button
             type="button"
             onClick={() => setModoAba("catalogo")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-black cursor-pointer transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-bold cursor-pointer transition-colors ${
               modoAba === "catalogo"
-                ? "bg-amber-400 text-black"
-                : "bg-muted text-muted-foreground hover:text-foreground"
+                ? "bg-amber-400 text-neutral-950 font-black shadow-xs"
+                : "bg-muted text-foreground/70 hover:text-foreground hover:bg-muted/80"
             }`}
           >
             Biblioteca & Catálogo
@@ -362,11 +362,11 @@ export function EtapaItensEquipamentos({
           /* Formulário de Criação Livre */
           <form
             onSubmit={criarItemLivre}
-            className="p-4 rounded-xl border border-border bg-card/60 space-y-3 text-xs"
+            className="p-4 sm:p-5 rounded-xl border-2 border-border bg-card shadow-xs space-y-3.5 text-sm"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label className="block text-foreground font-bold mb-1">
+                <label className="block text-foreground font-bold mb-1.5 text-sm">
                   Nome do Item
                 </label>
                 <input
@@ -375,12 +375,12 @@ export function EtapaItensEquipamentos({
                   onChange={(e) => setNomeLivre(e.target.value)}
                   placeholder="Nome do item ou equipamento"
                   required
-                  className="w-full bg-muted/60 p-2 rounded-lg border border-border font-bold outline-none focus:border-amber-400"
+                  className="w-full bg-muted/30 p-2.5 rounded-lg border-2 border-border font-bold outline-none focus:border-amber-400 text-foreground text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-foreground font-bold mb-1">
+                <label className="block text-foreground font-bold mb-1.5 text-sm">
                   Categoria
                 </label>
                 <select
@@ -388,7 +388,7 @@ export function EtapaItensEquipamentos({
                   onChange={(e) =>
                     setCategoriaLivre(e.target.value as CategoriaItemCalafrio)
                   }
-                  className="w-full bg-muted/60 p-2 rounded-lg border border-border font-bold outline-none cursor-pointer"
+                  className="w-full bg-muted/30 p-2.5 rounded-lg border-2 border-border font-bold outline-none cursor-pointer text-foreground text-sm"
                 >
                   {CATEGORIAS_ITEM.map((cat) => (
                     <option key={cat.valor} value={cat.valor}>
@@ -399,7 +399,7 @@ export function EtapaItensEquipamentos({
               </div>
 
               <div>
-                <label className="block text-foreground font-bold mb-1">
+                <label className="block text-foreground font-bold mb-1.5 text-sm">
                   Dano (se for arma)
                 </label>
                 <input
@@ -412,12 +412,12 @@ export function EtapaItensEquipamentos({
                     )
                   }
                   placeholder="Pontos de dano numérico"
-                  className="w-full bg-muted/60 p-2 rounded-lg border border-border font-bold outline-none focus:border-amber-400"
+                  className="w-full bg-muted/30 p-2.5 rounded-lg border-2 border-border font-bold outline-none focus:border-amber-400 text-foreground text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-foreground font-bold mb-1">
+                <label className="block text-foreground font-bold mb-1.5 text-sm">
                   Alcance ou Tipo
                 </label>
                 <input
@@ -425,12 +425,12 @@ export function EtapaItensEquipamentos({
                   value={alcanceLivre}
                   onChange={(e) => setAlcanceLivre(e.target.value)}
                   placeholder="Alcance do ataque ou aplicação"
-                  className="w-full bg-muted/60 p-2 rounded-lg border border-border font-bold outline-none focus:border-amber-400"
+                  className="w-full bg-muted/30 p-2.5 rounded-lg border-2 border-border font-bold outline-none focus:border-amber-400 text-foreground text-sm"
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-foreground font-bold mb-1">
+                <label className="block text-foreground font-bold mb-1.5 text-sm">
                   Descrição e Propriedades
                 </label>
                 <textarea
@@ -438,14 +438,14 @@ export function EtapaItensEquipamentos({
                   value={descricaoLivre}
                   onChange={(e) => setDescricaoLivre(e.target.value)}
                   placeholder="Descrição, efeitos especiais ou notas de uso"
-                  className="w-full bg-muted/60 p-2 rounded-lg border border-border font-medium outline-none focus:border-amber-400"
+                  className="w-full bg-muted/30 p-2.5 rounded-lg border-2 border-border font-medium outline-none focus:border-amber-400 text-foreground text-sm"
                 />
               </div>
             </div>
 
             <button
               type="submit"
-              className="flex items-center gap-1.5 px-4 py-2 bg-amber-400 hover:bg-amber-300 text-black font-black rounded-lg cursor-pointer transition-colors"
+              className="flex items-center gap-2 px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-neutral-950 font-black text-sm rounded-lg cursor-pointer transition-colors shadow-xs"
             >
               <Plus className="size-4" /> Adicionar Item Livre ao Inventário
             </button>
@@ -454,9 +454,9 @@ export function EtapaItensEquipamentos({
           /* Catálogo e Biblioteca de Itens */
           <div className="space-y-3.5">
             {/* Cabeçalho de Busca e Sorteador */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
               <div className="relative flex-1">
-                <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-foreground/60" />
                 <input
                   type="text"
                   value={busca}
@@ -465,20 +465,20 @@ export function EtapaItensEquipamentos({
                     setPagina(1);
                   }}
                   placeholder="Buscar arma, dano, consumível ou bugiganga..."
-                  className="w-full bg-card pl-8 pr-3 py-2 rounded-lg border border-border text-xs outline-none focus:border-amber-400 font-bold"
+                  className="w-full bg-card pl-9 pr-3 py-2.5 rounded-lg border-2 border-border text-sm outline-none focus:border-amber-400 font-bold text-foreground shadow-xs placeholder:text-foreground/40"
                 />
               </div>
               <button
                 type="button"
                 onClick={sortearBugiganga}
-                className="flex items-center justify-center gap-1.5 px-3 py-2 bg-muted hover:bg-border text-foreground font-bold text-xs rounded-lg cursor-pointer transition-colors shrink-0"
+                className="flex items-center justify-center gap-2 px-3.5 py-2.5 bg-muted/60 hover:bg-muted text-foreground font-bold text-sm rounded-lg border-2 border-border cursor-pointer transition-colors shrink-0 shadow-xs"
               >
-                <Dices className="size-3.5 text-amber-400" /> Sortear Bugiganga (d100)
+                <Dices className="size-4 text-amber-600 dark:text-amber-400" /> Sortear Bugiganga (d100)
               </button>
             </div>
 
             {/* Filtros por Categoria */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs sm:text-sm">
               {FILTROS_CATALOGO.map((f) => {
                 const ativo = filtro === f.id;
                 const contagem =
@@ -494,10 +494,10 @@ export function EtapaItensEquipamentos({
                       setFiltro(f.id);
                       setPagina(1);
                     }}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold shrink-0 cursor-pointer transition-colors ${
+                    className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold shrink-0 cursor-pointer transition-colors ${
                       ativo
-                        ? "bg-amber-400 text-black font-black"
-                        : "bg-muted text-muted-foreground hover:text-foreground"
+                        ? "bg-amber-400 text-neutral-950 font-black shadow-xs"
+                        : "bg-muted text-foreground/75 hover:text-foreground hover:bg-muted/80 border border-border/50"
                     }`}
                   >
                     {f.rotulo} ({contagem})
@@ -507,48 +507,48 @@ export function EtapaItensEquipamentos({
             </div>
 
             {/* Lista Paginada de Itens */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {itensExibidos.map((item) => (
                 <div
                   key={item.id}
-                  className="p-3 rounded-lg border border-border bg-card flex flex-col justify-between gap-2 hover:border-border/80 transition-all"
+                  className="p-3.5 rounded-xl border-2 border-border bg-card flex flex-col justify-between gap-2.5 hover:border-border/90 transition-all shadow-xs"
                 >
                   <div className="space-y-1">
                     <div className="flex items-start justify-between gap-2">
-                      <span className="font-bold text-foreground text-xs leading-snug">
+                      <span className="font-bold text-foreground text-sm leading-snug">
                         {item.nome}
                       </span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-semibold uppercase shrink-0">
+                      <span className="text-xs px-2 py-0.5 rounded-md bg-muted text-foreground/85 font-bold uppercase shrink-0 border border-border/60">
                         {item.tag}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 text-[11px] text-muted-foreground flex-wrap">
+                    <div className="flex items-center gap-2.5 text-xs text-foreground/80 flex-wrap">
                       {item.dano !== undefined && (
                         <span className="font-semibold text-foreground/90">
                           Dano: {item.dano} ({item.espectroDano})
                         </span>
                       )}
                       {item.precoFundos !== undefined && (
-                        <span className="font-bold text-amber-400">
+                        <span className="font-black text-amber-800 dark:text-amber-400">
                           {item.precoFundos > 0 ? `${item.precoFundos} F$` : "Grátis"}
                         </span>
                       )}
                     </div>
 
                     {item.descricao && (
-                      <p className="text-[11px] text-muted-foreground line-clamp-2">
+                      <p className="text-xs text-foreground/80 line-clamp-2 leading-relaxed">
                         {item.descricao}
                       </p>
                     )}
                     {item.propriedades && item.propriedades.length > 0 && (
-                      <p className="text-[10px] text-muted-foreground/80 line-clamp-1 italic">
+                      <p className="text-xs text-foreground/60 line-clamp-1 italic">
                         {item.propriedades.join(" ")}
                       </p>
                     )}
                   </div>
 
-                  <div className="pt-1 border-t border-border/50 flex justify-end">
+                  <div className="pt-2 border-t border-border flex justify-end">
                     <button
                       type="button"
                       onClick={() => {
@@ -558,16 +558,16 @@ export function EtapaItensEquipamentos({
                           adicionarBugigangaCatalogo(item.dadosBugiganga);
                         }
                       }}
-                      className="px-2.5 py-1 bg-muted hover:bg-amber-400 hover:text-black font-bold text-xs rounded-lg cursor-pointer transition-colors flex items-center gap-1"
+                      className="px-3 py-1.5 bg-muted hover:bg-amber-400 hover:text-neutral-950 text-foreground font-bold text-xs rounded-lg cursor-pointer transition-colors flex items-center gap-1.5 border border-border shadow-xs"
                     >
-                      <Plus className="size-3" /> Adicionar
+                      <Plus className="size-3.5" /> Adicionar
                     </button>
                   </div>
                 </div>
               ))}
 
               {itensExibidos.length === 0 && (
-                <div className="col-span-full py-8 text-center text-xs text-muted-foreground italic border border-dashed border-border rounded-xl">
+                <div className="col-span-full py-8 text-center text-sm text-foreground/60 italic border-2 border-dashed border-border rounded-xl">
                   Nenhum item encontrado no catálogo com esses filtros.
                 </div>
               )}
@@ -575,21 +575,21 @@ export function EtapaItensEquipamentos({
 
             {/* Controles de Paginação */}
             {totalPaginas > 1 && (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2 border-t border-border/60 text-xs">
-                <span className="text-[11px] text-muted-foreground font-medium">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2.5 border-t border-border text-xs sm:text-sm">
+                <span className="text-xs text-foreground/80 font-medium">
                   Página <span className="font-bold text-foreground">{paginaValida}</span> de{" "}
                   <span className="font-bold text-foreground">{totalPaginas}</span>{" "}
                   ({itensFiltrados.length} itens)
                 </span>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   <button
                     type="button"
                     disabled={paginaValida === 1}
                     onClick={() => setPagina((prev) => Math.max(1, prev - 1))}
-                    className="flex items-center gap-1 px-2.5 py-1 rounded bg-muted hover:bg-border disabled:opacity-30 disabled:pointer-events-none font-bold text-xs cursor-pointer transition-colors"
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-muted hover:bg-muted/80 disabled:opacity-30 disabled:pointer-events-none font-bold text-xs text-foreground cursor-pointer transition-colors border border-border/60"
                   >
-                    <ChevronLeft className="size-3.5" /> Anterior
+                    <ChevronLeft className="size-4" /> Anterior
                   </button>
 
                   <div className="flex items-center gap-1">
@@ -598,10 +598,10 @@ export function EtapaItensEquipamentos({
                         key={num}
                         type="button"
                         onClick={() => setPagina(num)}
-                        className={`min-w-7 h-7 flex items-center justify-center rounded text-xs font-bold cursor-pointer transition-colors ${
+                        className={`min-w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold cursor-pointer transition-colors border ${
                           num === paginaValida
-                            ? "bg-amber-400 text-black font-black"
-                            : "bg-muted text-muted-foreground hover:text-foreground"
+                            ? "bg-amber-400 text-neutral-950 font-black border-amber-500 shadow-xs"
+                            : "bg-muted text-foreground/75 hover:text-foreground border-border/50"
                         }`}
                       >
                         {num}
@@ -613,9 +613,9 @@ export function EtapaItensEquipamentos({
                     type="button"
                     disabled={paginaValida === totalPaginas}
                     onClick={() => setPagina((prev) => Math.min(totalPaginas, prev + 1))}
-                    className="flex items-center gap-1 px-2.5 py-1 rounded bg-muted hover:bg-border disabled:opacity-30 disabled:pointer-events-none font-bold text-xs cursor-pointer transition-colors"
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-muted hover:bg-muted/80 disabled:opacity-30 disabled:pointer-events-none font-bold text-xs text-foreground cursor-pointer transition-colors border border-border/60"
                   >
-                    Próxima <ChevronRight className="size-3.5" />
+                    Próxima <ChevronRight className="size-4" />
                   </button>
                 </div>
               </div>
@@ -625,27 +625,27 @@ export function EtapaItensEquipamentos({
       </div>
 
       {/* Lista de Itens no Inventário */}
-      <div className="space-y-2 text-xs">
-        <span className="font-bold text-foreground block">
+      <div className="space-y-2">
+        <span className="font-bold text-foreground text-sm block">
           Itens no Inventário ({ficha.inventario.length}):
         </span>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           {ficha.inventario.map((item) => (
             <div
               key={item.id}
-              className="p-2.5 rounded-lg border border-border bg-card flex items-start justify-between gap-2"
+              className="p-3 rounded-xl border-2 border-border bg-card flex items-start justify-between gap-2.5 shadow-xs"
             >
               <div>
-                <span className="font-bold text-foreground block">
+                <span className="font-bold text-foreground block text-sm">
                   {item.nome}
                 </span>
-                <span className="text-[10px] text-muted-foreground uppercase font-semibold">
+                <span className="text-xs px-2 py-0.5 rounded bg-muted text-foreground/80 uppercase font-bold mt-1 inline-block border border-border/60">
                   {item.categoria.replace("_", " ")}
                   {item.dano ? ` · Dano ${item.dano}` : ""}
                   {item.alcance ? ` · ${item.alcance}` : ""}
                 </span>
                 {item.descricao && (
-                  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">
+                  <p className="text-xs text-foreground/80 mt-1 line-clamp-1 leading-relaxed">
                     {item.descricao}
                   </p>
                 )}
@@ -653,15 +653,15 @@ export function EtapaItensEquipamentos({
               <button
                 type="button"
                 onClick={() => onRemoverItem(item.id)}
-                className="p-1 text-muted-foreground hover:text-red-400 cursor-pointer"
+                className="p-2 text-foreground/60 hover:text-red-600 dark:hover:text-red-400 hover:bg-muted rounded-lg cursor-pointer transition-colors"
                 title="Remover"
               >
-                <Trash2 className="size-3.5" />
+                <Trash2 className="size-4" />
               </button>
             </div>
           ))}
           {ficha.inventario.length === 0 && (
-            <p className="text-xs text-muted-foreground italic col-span-full py-4 text-center">
+            <p className="text-sm text-foreground/60 italic col-span-full py-6 text-center border-2 border-dashed border-border rounded-xl">
               Nenhum item adicionado ao inventário ainda.
             </p>
           )}
