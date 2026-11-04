@@ -1,11 +1,14 @@
 import type {
   AlocacaoSlotMatriz,
+  AlvoAtributoCalafrio,
   CustomizacaoDeEco,
   EfeitoCustomizadoNaFicha,
   FichaCalafrio,
   HabilidadeUnicaCalafrio,
   ItemNaFichaCalafrio,
   PalavraChaveNaFicha,
+  RegraEspecialId,
+  VitaisPersistidosCalafrio,
 } from "@calafrio/core";
 
 export type AcaoFichaCalafrio =
@@ -44,7 +47,23 @@ export type AcaoFichaCalafrio =
       dado: number;
     }
   | { tipo: "definirAnotacoes"; anotacoes: string }
+  | { tipo: "definirVitais"; vitais: Partial<VitaisPersistidosCalafrio> }
+  | { tipo: "definirAjusteManual"; alvo: AlvoAtributoCalafrio; valor: number }
+  | {
+      tipo: "definirRegraManual";
+      regra: RegraEspecialId;
+      ativa: boolean;
+      descricao: string;
+    }
   | { tipo: "carregarFicha"; ficha: FichaCalafrio };
+
+/** O livro fala em APT 1–6, mas o MdJ pode ir além: mantemos só um teto técnico. */
+export const LIMITE_APT_LIVRE = 20;
+
+export const idAjusteManual = (alvo: AlvoAtributoCalafrio) =>
+  `ajuste-manual-${alvo}`;
+export const idRegraManual = (regra: RegraEspecialId) =>
+  `regra-manual-${regra}`;
 
 export function fichaCalafrioReducer(
   state: FichaCalafrio,
@@ -58,7 +77,13 @@ export function fichaCalafrioReducer(
     case "definirRetrato":
       return { ...state, retratoUrl: action.url };
     case "definirApt":
-      return { ...state, aptBase: Math.max(1, Math.min(6, action.apt)) };
+      return {
+        ...state,
+        aptBase: Math.max(
+          1,
+          Math.min(LIMITE_APT_LIVRE, Math.round(action.apt) || 1),
+        ),
+      };
     case "definirCarteira":
       return {
         ...state,
@@ -181,6 +206,64 @@ export function fichaCalafrioReducer(
         return { ...state, lacaioEscolhidoDado: action.dado };
       }
       return state;
+    case "definirVitais": {
+      const atual = state.vitais ?? {
+        danoSofrido: 0,
+        paGasto: 0,
+        pvTemporario: 0,
+        paTemporario: 0,
+      };
+      const novo = { ...atual, ...action.vitais };
+      return {
+        ...state,
+        vitais: {
+          danoSofrido: Math.max(0, novo.danoSofrido),
+          paGasto: Math.max(0, novo.paGasto),
+          pvTemporario: Math.max(0, novo.pvTemporario),
+          paTemporario: Math.max(0, novo.paTemporario),
+        },
+      };
+    }
+    case "definirAjusteManual": {
+      const id = idAjusteManual(action.alvo);
+      const semAjuste = state.efeitosCustomizados.filter((e) => e.id !== id);
+      if (!action.valor) return { ...state, efeitosCustomizados: semAjuste };
+      return {
+        ...state,
+        efeitosCustomizados: [
+          ...semAjuste,
+          {
+            id,
+            rotulo: "Ajuste manual",
+            efeito: {
+              tipo: "modificadorAtributo",
+              alvo: action.alvo,
+              valor: action.valor,
+            },
+          },
+        ],
+      };
+    }
+    case "definirRegraManual": {
+      const id = idRegraManual(action.regra);
+      const semRegra = state.efeitosCustomizados.filter((e) => e.id !== id);
+      if (!action.ativa) return { ...state, efeitosCustomizados: semRegra };
+      return {
+        ...state,
+        efeitosCustomizados: [
+          ...semRegra,
+          {
+            id,
+            rotulo: "Regra do Mestre",
+            efeito: {
+              tipo: "regraEspecial",
+              regra: action.regra,
+              descricao: action.descricao,
+            },
+          },
+        ],
+      };
+    }
     case "definirAnotacoes":
       return { ...state, anotacoes: action.anotacoes };
     case "carregarFicha":

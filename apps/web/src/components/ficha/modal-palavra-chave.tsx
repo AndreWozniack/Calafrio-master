@@ -12,6 +12,7 @@ import { EditorEfeitos } from "./editor-efeitos";
 
 interface Props {
   aberto: boolean;
+  inicial?: PalavraChaveNaFicha;
   onSalvar: (palavra: PalavraChaveNaFicha) => void;
   onFechar: () => void;
 }
@@ -23,13 +24,24 @@ const CATEGORIAS: { id: CategoriaPalavraChave; rotulo: string }[] = [
   { id: "extra", rotulo: "Extra" },
 ];
 
-export function ModalPalavraChave({ aberto, onSalvar, onFechar }: Props) {
+export function ModalPalavraChave({
+  aberto,
+  inicial,
+  onSalvar,
+  onFechar,
+}: Props) {
   const catalogo = useMemo(() => carregarCatalogoCalafrio(), []);
-  const [categoria, setCategoria] = useState<CategoriaPalavraChave>("ocupacao");
-  const [nome, setNome] = useState("");
-  const [notas, setNotas] = useState("");
-  const [semConsumirLimite, setSemConsumirLimite] = useState(false);
-  const [efeitos, setEfeitos] = useState<EfeitoCalafrio[]>([]);
+  const [categoria, setCategoria] = useState<CategoriaPalavraChave>(
+    inicial?.categoria ?? "ocupacao",
+  );
+  const [nome, setNome] = useState(inicial?.nome ?? "");
+  const [notas, setNotas] = useState(inicial?.notas ?? "");
+  const [semConsumirLimite, setSemConsumirLimite] = useState(
+    inicial?.semConsumirLimite ?? false,
+  );
+  const [efeitos, setEfeitos] = useState<EfeitoCalafrio[]>(
+    inicial?.efeitos ?? [],
+  );
   const [busca, setBusca] = useState("");
 
   if (!aberto) return null;
@@ -60,7 +72,9 @@ export function ModalPalavraChave({ aberto, onSalvar, onFechar }: Props) {
     e.preventDefault();
     if (!nome.trim()) return;
     onSalvar({
-      id: `pc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      id:
+        inicial?.id ??
+        `pc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       nome: nome.trim(),
       categoria,
       semConsumirLimite,
@@ -77,7 +91,9 @@ export function ModalPalavraChave({ aberto, onSalvar, onFechar }: Props) {
         className="calafrio-card p-5 max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4 shadow-2xl"
       >
         <div className="flex items-center justify-between border-b border-border pb-2">
-          <span className="calafrio-tag">NOVA PALAVRA-CHAVE</span>
+          <span className="calafrio-tag">
+            {inicial ? "EDITAR PALAVRA-CHAVE" : "NOVA PALAVRA-CHAVE"}
+          </span>
           <button type="button" onClick={fechar} aria-label="Fechar">
             <X className="size-4 cursor-pointer" />
           </button>
@@ -176,7 +192,7 @@ export function ModalPalavraChave({ aberto, onSalvar, onFechar }: Props) {
             disabled={!nome.trim()}
             className="px-4 py-2 text-xs font-black rounded bg-amber-400 text-black hover:bg-amber-300 disabled:opacity-40 cursor-pointer"
           >
-            Adicionar palavra-chave
+            {inicial ? "Salvar alterações" : "Adicionar palavra-chave"}
           </button>
         </div>
       </form>

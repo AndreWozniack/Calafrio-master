@@ -25,7 +25,11 @@ interface AssistenteCriacaoCalafrioProps {
   onDefinirApt: (apt: number) => void;
   onAdicionarPalavraChave: (palavra: PalavraChaveNaFicha) => void;
   onRemoverPalavraChave: (id: string) => void;
-  onAlocarSlot: (slot: number, tipo: "paranormal" | "unica", id: string) => void;
+  onAlocarSlot: (
+    slot: number,
+    tipo: "paranormal" | "unica",
+    id: string,
+  ) => void;
   onLimparSlot: (slot: number) => void;
   onAtualizarCarteira: (fundos: number, espirions: number) => void;
   onAdicionarItem: (item: ItemNaFichaCalafrio) => void;
@@ -174,7 +178,9 @@ export function AssistenteCriacaoCalafrio({
               {etapa < 4 ? (
                 <button
                   type="button"
-                  onClick={() => setEtapa((prev) => Math.min(4, prev + 1) as any)}
+                  onClick={() =>
+                    setEtapa((prev) => Math.min(4, prev + 1) as any)
+                  }
                   className="flex items-center gap-1.5 px-5 py-2 bg-amber-400 hover:bg-amber-300 text-black font-black text-xs rounded-lg cursor-pointer transition-colors shadow-sm"
                 >
                   Próximo <ChevronRight className="size-4" />

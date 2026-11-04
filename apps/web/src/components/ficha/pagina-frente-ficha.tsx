@@ -6,15 +6,35 @@ import type {
   ItemNaFichaCalafrio,
   PalavraChaveNaFicha,
 } from "@calafrio/core";
-import { Dices } from "lucide-react";
-import { PainelInventario } from "./painel-inventario";
-import { PainelPalavrasChave } from "./painel-palavras-chave";
+import { Minus, Plus } from "lucide-react";
+import {
+  LinhaVital,
+  NumeroEditavel,
+  NumeroFixo,
+  VitalAtualMaximo,
+} from "./papel/campo-vital";
+import { FolhaPapel } from "./papel/folha-papel";
+import { InventarioPapel } from "./papel/inventario-papel";
+import { PalavrasChavePapel } from "./papel/palavras-chave-papel";
+import {
+  CampoPapel,
+  EtiquetaPapel,
+  Losango,
+  PontilhadoVertical,
+  Posicionado,
+  RodapePapel,
+} from "./papel/primitivos-papel";
+import { RetratoPapel } from "./papel/retrato-papel";
+import { u } from "./papel/unidades";
 
 interface PaginaFrenteFichaProps {
   ficha: FichaCalafrio;
   derivada: FichaDerivadaCalafrio;
   onDefinirNome: (nome: string) => void;
   onDefinirApt: (apt: number) => void;
+  onDefinirRetrato: (url: string) => void;
+  onDefinirPvAtual: (valor: number) => void;
+  onDefinirPaAtual: (valor: number) => void;
   onAdicionarPalavraChave: (palavra: PalavraChaveNaFicha) => void;
   onRemoverPalavraChave: (id: string) => void;
   onAdicionarItem: (item: ItemNaFichaCalafrio) => void;
@@ -22,8 +42,39 @@ interface PaginaFrenteFichaProps {
   onRemoverItem: (id: string) => void;
   onAtualizarCarteira: (fundos: number, espirions: number) => void;
   onAbrirRolagem: (nome?: string) => void;
-  onCurarPv: (qtd: number) => void;
-  onCurarPa: (qtd: number) => void;
+}
+
+const botaoApt =
+  "flex cursor-pointer items-center justify-center rounded-full bg-black text-white hover:opacity-70";
+
+function CampoCarteira({
+  y,
+  rotulo,
+  valor,
+  onChange,
+}: {
+  y: number;
+  rotulo: string;
+  valor: number;
+  onChange: (n: number) => void;
+}) {
+  return (
+    <>
+      <CampoPapel area={{ x: 40, y, w: 112, h: 32 }}>
+        <input
+          type="number"
+          min={0}
+          value={valor}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="w-full bg-transparent outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+          style={{ fontSize: u(15), paddingLeft: u(60) }}
+        />
+      </CampoPapel>
+      <EtiquetaPapel area={{ x: 26, y, w: 68, h: 32 }} tamanho={14}>
+        <strong className="font-semibold">{rotulo}</strong>
+      </EtiquetaPapel>
+    </>
+  );
 }
 
 export function PaginaFrenteFicha({
@@ -31,6 +82,9 @@ export function PaginaFrenteFicha({
   derivada,
   onDefinirNome,
   onDefinirApt,
+  onDefinirRetrato,
+  onDefinirPvAtual,
+  onDefinirPaAtual,
   onAdicionarPalavraChave,
   onRemoverPalavraChave,
   onAdicionarItem,
@@ -38,164 +92,192 @@ export function PaginaFrenteFicha({
   onRemoverItem,
   onAtualizarCarteira,
   onAbrirRolagem,
-  onCurarPv,
-  onCurarPa,
 }: PaginaFrenteFichaProps) {
   return (
-    <div className="space-y-6">
-      {/* Bloco Superior: Nome + Atributos Centrais Derivados de APT */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-        {/* Retrato / Identidade */}
-        <div className="md:col-span-4 calafrio-card p-4 flex flex-col justify-between space-y-3">
-          <div>
-            <span className="calafrio-tag mb-2">IDENTIDADE DO NEURAL</span>
-            <input
-              type="text"
-              value={ficha.nome}
-              onChange={(e) => onDefinirNome(e.target.value)}
-              placeholder="Nome do Personagem"
-              className="w-full text-lg font-black bg-muted/40 px-3 py-2 rounded border border-border mt-1"
-            />
-          </div>
+    <FolhaPapel>
+      {/* Logo vertical */}
+      <Posicionado area={{ x: 16, y: 30, w: 28, h: 130 }}>
+        {/* biome-ignore lint/performance/noImgElement: logo estático */}
+        <img
+          src="/assets/Calafrio.svg"
+          alt="Calafrio TTRPG"
+          className="absolute left-0 max-w-none"
+          style={{
+            top: "100%",
+            width: u(130),
+            height: u(23.5),
+            transformOrigin: "top left",
+            transform: "rotate(-90deg)",
+          }}
+        />
+      </Posicionado>
 
-          <div className="p-3 bg-muted/20 border border-dashed border-border rounded flex flex-col items-center justify-center text-center py-6">
-            <span className="text-3xl mb-1">👤</span>
-            <span className="text-xs text-muted-foreground font-semibold">
-              Ilustração do Neural
-            </span>
-          </div>
+      <RetratoPapel
+        retratoUrl={ficha.retratoUrl}
+        onDefinir={onDefinirRetrato}
+      />
 
+      {/* Nome */}
+      <Posicionado
+        area={{ x: 158, y: 28, w: 272, h: 35 }}
+        className="bg-white"
+        style={{ boxShadow: "0 0 3px rgba(0,0,0,0.3)" }}
+      >
+        <input
+          value={ficha.nome}
+          onChange={(e) => onDefinirNome(e.target.value)}
+          placeholder="Nome do investigador"
+          className="size-full bg-transparent font-semibold outline-none placeholder:font-normal placeholder:text-black/20"
+          style={{ fontSize: u(19), paddingLeft: u(10), paddingBottom: u(8) }}
+        />
+      </Posicionado>
+      <Posicionado
+        area={{ x: 157, y: 61, w: 274, h: 3 }}
+        className="bg-black"
+      />
+      <Posicionado
+        area={{ x: 330, y: 47, w: 96, h: 12 }}
+        className="text-right uppercase italic"
+        style={{ fontSize: u(7.5) }}
+      >
+        Nome
+      </Posicionado>
+      <Losango cx={433} cy={62} lado={11} />
+      <PontilhadoVertical x={434} y={72} altura={245} />
+
+      {/* Vitais */}
+      <LinhaVital
+        indice={0}
+        rotulo={
+          <>
+            Aptidão{" "}
+            <strong className="ml-[0.5cqw] font-extrabold">(APT)</strong>:
+          </>
+        }
+        legenda="= Concedido pelo MdJ"
+      >
+        <div className="flex size-full items-center">
           <button
             type="button"
-            onClick={() => onAbrirRolagem()}
-            className="w-full flex items-center justify-center gap-2 py-2.5 bg-amber-400 hover:bg-amber-300 text-black font-extrabold text-sm rounded cursor-pointer transition-colors"
+            className={botaoApt}
+            style={{ width: u(16), height: u(16), marginLeft: u(10) }}
+            title="Diminuir APT"
+            onClick={() => onDefinirApt(ficha.aptBase - 1)}
           >
-            <Dices className="size-4" /> Rolar Ação / Contestação
+            <Minus style={{ width: u(10), height: u(10) }} />
+          </button>
+          <div className="flex-1">
+            <NumeroEditavel
+              valor={ficha.aptBase}
+              min={1}
+              onChange={onDefinirApt}
+              titulo="Aptidão"
+            />
+          </div>
+          <button
+            type="button"
+            className={botaoApt}
+            style={{ width: u(16), height: u(16), marginRight: u(34) }}
+            title="Aumentar APT"
+            onClick={() => onDefinirApt(ficha.aptBase + 1)}
+          >
+            <Plus style={{ width: u(10), height: u(10) }} />
           </button>
         </div>
-
-        {/* Pilha de Atributos Oficiais Calafrio 2e */}
-        <div className="md:col-span-8 calafrio-card p-4 space-y-3">
-          {/* Aptidão */}
-          <div className="flex flex-wrap items-center justify-between p-3 bg-muted/40 rounded border border-border">
-            <div className="flex items-center gap-2">
-              <span className="calafrio-tag">APTIDÃO (APT):</span>
-              <span className="text-xs text-muted-foreground">
-                = Concedido pelo MdJ (1 a 6)
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => onDefinirApt(Math.max(1, ficha.aptBase - 1))}
-                className="size-7 bg-muted text-foreground font-bold rounded hover:bg-border cursor-pointer"
-              >
-                -
-              </button>
-              <span className="text-2xl font-black text-accent-ink min-w-8 text-center">
-                {derivada.apt}
-              </span>
-              <button
-                type="button"
-                onClick={() => onDefinirApt(Math.min(6, ficha.aptBase + 1))}
-                className="size-7 bg-muted text-foreground font-bold rounded hover:bg-border cursor-pointer"
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          {/* Grid de Vitais */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            {/* Defesa */}
-            <div className="p-3 bg-card border border-border rounded text-center">
-              <span className="calafrio-tag-sm mb-1">DEFESA (PD)</span>
-              <div className="text-2xl font-black text-foreground mt-1">
-                {derivada.pd}
-              </div>
-              <span className="text-[10px] text-muted-foreground">
-                = 3 × APT
-              </span>
-            </div>
-
-            {/* Vida */}
-            <div className="p-3 bg-card border border-red-900/40 rounded text-center">
-              <span className="calafrio-tag-sm mb-1 bg-red-950 text-red-200">
-                VIDA (PV)
-              </span>
-              <div className="text-2xl font-black text-red-400 mt-1">
-                {derivada.pvAtual}{" "}
-                <span className="text-xs text-muted-foreground">
-                  / {derivada.pvMax}
-                </span>
-              </div>
-              <span className="text-[10px] text-muted-foreground">
-                = 3 + 3 × APT
-              </span>
-            </div>
-
-            {/* Ânimum */}
-            <div className="p-3 bg-card border border-info/40 rounded text-center">
-              <span className="calafrio-tag-sm mb-1 bg-info/10 text-info">
-                ÂNIMUM (PA)
-              </span>
-              <div className="text-2xl font-black text-info mt-1">
-                {derivada.paAtual}{" "}
-                <span className="text-xs text-muted-foreground">
-                  / {derivada.paMax}
-                </span>
-              </div>
-              <span className="text-[10px] text-muted-foreground">
-                = 3 + 3 × APT
-              </span>
-            </div>
-
-            {/* Velocidade */}
-            <div className="p-3 bg-card border border-border rounded text-center">
-              <span className="calafrio-tag-sm mb-1">VELOCIDADE</span>
-              <div className="text-2xl font-black text-foreground mt-1">
-                {derivada.velocidade}m
-              </div>
-              <span className="text-[10px] text-muted-foreground">
-                = 6 + Bônus
-              </span>
-            </div>
-          </div>
-
-          {/* Ecos & Alertas */}
-          <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-amber-500/10 border border-amber-500/30 rounded text-xs">
-            <span className="font-bold text-accent-ink">
-              Ecos Totais: {derivada.ecosDisponiveis} disponíveis (de{" "}
-              {derivada.ecosMax} base)
-            </span>
-            {derivada.inconsciente && (
-              <span className="font-black text-red-400 animate-pulse uppercase">
-                ⚠️ INCONSCIENTE! Morre em {derivada.segundosAteMorrer}s sem
-                socorro
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Bloco Inferior: Palavras-chave + Inventário */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <PainelPalavrasChave
-          ficha={ficha}
-          derivada={derivada}
-          onAdicionar={onAdicionarPalavraChave}
-          onRemover={onRemoverPalavraChave}
-          onRolarTeste={(palavra) => onAbrirRolagem(palavra)}
+      </LinhaVital>
+      <LinhaVital
+        indice={1}
+        rotulo={
+          <>
+            Defesa <strong className="ml-[0.5cqw] font-extrabold">(PD)</strong>:
+          </>
+        }
+        legenda="= 3*APT"
+      >
+        <NumeroFixo>{derivada.pd}</NumeroFixo>
+      </LinhaVital>
+      <LinhaVital
+        indice={2}
+        rotulo={
+          <>
+            Vida <strong className="ml-[0.5cqw] font-extrabold">(PV)</strong>:
+          </>
+        }
+        legenda="= 3 + 3*APT"
+      >
+        <VitalAtualMaximo
+          atual={derivada.pvAtual}
+          maximo={derivada.pvMax}
+          onAtual={onDefinirPvAtual}
+          titulo="PV atual"
         />
-
-        <PainelInventario
-          ficha={ficha}
-          onAdicionarItem={onAdicionarItem}
-          onAlternarEquipado={onAlternarEquipado}
-          onRemoverItem={onRemoverItem}
-          onAtualizarCarteira={onAtualizarCarteira}
+      </LinhaVital>
+      <LinhaVital
+        indice={3}
+        rotulo={
+          <>
+            Ânimum <strong className="ml-[0.5cqw] font-extrabold">(PA)</strong>:
+          </>
+        }
+        legenda="= 3 + 3*APT"
+      >
+        <VitalAtualMaximo
+          atual={derivada.paAtual}
+          maximo={derivada.paMax}
+          onAtual={onDefinirPaAtual}
+          titulo="PA atual"
         />
-      </div>
-    </div>
+      </LinhaVital>
+      <LinhaVital
+        indice={4}
+        rotulo="Velocidade:"
+        legenda="= 6 + Bônus diversos"
+      >
+        <NumeroFixo>{derivada.velocidade}</NumeroFixo>
+      </LinhaVital>
+      <LinhaVital indice={5} rotulo="Ecos:" legenda="= APT">
+        <NumeroFixo>
+          {derivada.ecosDisponiveis}
+          <span className="text-black/50" style={{ fontSize: u(12) }}>
+            {" "}
+            / {derivada.ecosMax}
+          </span>
+        </NumeroFixo>
+      </LinhaVital>
+
+      {/* Carteira */}
+      <EtiquetaPapel area={{ x: 8, y: 187, w: 118, h: 28 }} tamanho={13.5}>
+        Carteira
+      </EtiquetaPapel>
+      <PontilhadoVertical x={16} y={225} altura={88} />
+      <CampoCarteira
+        y={229}
+        rotulo="F$:"
+        valor={ficha.carteira.fundos}
+        onChange={(n) => onAtualizarCarteira(n, ficha.carteira.espirions)}
+      />
+      <CampoCarteira
+        y={272}
+        rotulo="E$P:"
+        valor={ficha.carteira.espirions}
+        onChange={(n) => onAtualizarCarteira(ficha.carteira.fundos, n)}
+      />
+
+      <PalavrasChavePapel
+        derivada={derivada}
+        onAdicionar={onAdicionarPalavraChave}
+        onRemover={onRemoverPalavraChave}
+        onRolar={onAbrirRolagem}
+      />
+
+      <InventarioPapel
+        inventario={ficha.inventario}
+        onAdicionar={onAdicionarItem}
+        onAlternarEquipado={onAlternarEquipado}
+        onRemover={onRemoverItem}
+      />
+
+      <RodapePapel />
+    </FolhaPapel>
   );
 }

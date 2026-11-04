@@ -24,7 +24,10 @@ export function PreviewFichaCriacao({
           {ficha.nome.trim() ? ficha.nome : "Nome do Investigador"}
         </h3>
         <p className="text-xs text-muted-foreground truncate">
-          {ocupacao} · {ficha.jogador ? `Jogador: ${ficha.jogador}` : "Jogador não informado"}
+          {ocupacao} ·{" "}
+          {ficha.jogador
+            ? `Jogador: ${ficha.jogador}`
+            : "Jogador não informado"}
         </p>
       </div>
 
@@ -68,7 +71,9 @@ export function PreviewFichaCriacao({
       <div className="space-y-1.5 text-xs">
         <div className="flex items-center justify-between text-muted-foreground font-bold">
           <span>Palavras-chave:</span>
-          <span>{ficha.palavrasChave.length} / {derivada.limitePalavrasChave}</span>
+          <span>
+            {ficha.palavrasChave.length} / {derivada.limitePalavrasChave}
+          </span>
         </div>
         <div className="flex flex-wrap gap-1">
           {ficha.palavrasChave.map((pc) => (

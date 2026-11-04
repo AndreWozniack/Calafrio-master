@@ -5,7 +5,10 @@ import type {
   FichaCalafrio,
   FichaDerivadaCalafrio,
 } from "@calafrio/core";
-import { TOKENS_PERSONALIDADE, type PersonalidadeCalafrio } from "@calafrio/tema";
+import {
+  type PersonalidadeCalafrio,
+  TOKENS_PERSONALIDADE,
+} from "@calafrio/tema";
 import { Check, Sparkles, Trash2, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -13,7 +16,11 @@ interface EtapaMatrizHabilidadesProps {
   ficha: FichaCalafrio;
   derivada: FichaDerivadaCalafrio;
   catalogo: CatalogoCalafrio;
-  onAlocarSlot: (slot: number, tipo: "paranormal" | "unica", id: string) => void;
+  onAlocarSlot: (
+    slot: number,
+    tipo: "paranormal" | "unica",
+    id: string,
+  ) => void;
   onLimparSlot: (slot: number) => void;
 }
 
@@ -25,13 +32,17 @@ export function EtapaMatrizHabilidades({
   onLimparSlot,
 }: EtapaMatrizHabilidadesProps) {
   const [slotSelecionado, setSlotSelecionado] = useState<number>(0);
-  const [filtroPersonalidade, setFiltroPersonalidade] = useState<string>("todas");
+  const [filtroPersonalidade, setFiltroPersonalidade] =
+    useState<string>("todas");
   const [filtroDominio, setFiltroDominio] = useState<string>("todos");
   const [busca, setBusca] = useState<string>("");
 
   const habilidadesFiltradas = useMemo(() => {
     return catalogo.habilidadesParanormais.filter((h) => {
-      if (filtroPersonalidade !== "todas" && h.personalidade !== filtroPersonalidade) {
+      if (
+        filtroPersonalidade !== "todas" &&
+        h.personalidade !== filtroPersonalidade
+      ) {
         return false;
       }
       if (filtroDominio !== "todos" && h.dominio !== filtroDominio) {
@@ -46,7 +57,12 @@ export function EtapaMatrizHabilidades({
       }
       return true;
     });
-  }, [catalogo.habilidadesParanormais, filtroPersonalidade, filtroDominio, busca]);
+  }, [
+    catalogo.habilidadesParanormais,
+    filtroPersonalidade,
+    filtroDominio,
+    busca,
+  ]);
 
   const alocacaoAtualSlot = ficha.matrizHabilidades.find(
     (m) => m.slot === slotSelecionado,
@@ -63,10 +79,12 @@ export function EtapaMatrizHabilidades({
     <div className="space-y-6">
       <div>
         <h4 className="text-base font-black text-foreground uppercase tracking-wide">
-          3. Matriz 3x3 de Habilidades ({ficha.matrizHabilidades.length} / {ficha.aptBase} alocadas)
+          3. Matriz 3x3 de Habilidades ({ficha.matrizHabilidades.length} /{" "}
+          {ficha.aptBase} alocadas)
         </h4>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Selecione um slot na matriz e escolha a habilidade paranormal que deseja alocar.
+          Selecione um slot na matriz e escolha a habilidade paranormal que
+          deseja alocar.
         </p>
       </div>
 
@@ -76,7 +94,9 @@ export function EtapaMatrizHabilidades({
           <span className="calafrio-tag-sm">ESCOLHA O SLOT DA MATRIZ</span>
           <div className="grid grid-cols-3 gap-2 p-3 bg-muted/40 rounded-xl border border-border">
             {Array.from({ length: 9 }).map((_, slotIdx) => {
-              const aloc = ficha.matrizHabilidades.find((m) => m.slot === slotIdx);
+              const aloc = ficha.matrizHabilidades.find(
+                (m) => m.slot === slotIdx,
+              );
               const hab = aloc
                 ? catalogo.habilidadesParanormais.find((h) => h.id === aloc.id)
                 : null;
@@ -135,14 +155,17 @@ export function EtapaMatrizHabilidades({
             </div>
             {habilidadeNoSlot ? (
               <div className="text-[11px] space-y-1">
-                <div className="font-black text-amber-400">{habilidadeNoSlot.nome}</div>
+                <div className="font-black text-amber-400">
+                  {habilidadeNoSlot.nome}
+                </div>
                 <div className="text-muted-foreground line-clamp-2">
                   {habilidadeNoSlot.descricao}
                 </div>
               </div>
             ) : (
               <p className="text-[11px] text-muted-foreground italic">
-                Nenhuma habilidade alocada neste slot. Escolha uma na lista ao lado.
+                Nenhuma habilidade alocada neste slot. Escolha uma na lista ao
+                lado.
               </p>
             )}
           </div>
@@ -150,7 +173,9 @@ export function EtapaMatrizHabilidades({
 
         {/* Lado Direito: Catálogo de Habilidades */}
         <div className="md:col-span-7 space-y-3">
-          <span className="calafrio-tag-sm">CATÁLOGO DE HABILIDADES PARANORMAIS</span>
+          <span className="calafrio-tag-sm">
+            CATÁLOGO DE HABILIDADES PARANORMAIS
+          </span>
 
           {/* Filtros */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">

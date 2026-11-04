@@ -6,7 +6,7 @@ import type {
   HabilidadeUnicaCalafrio,
 } from "@calafrio/core";
 import { TOKENS_PERSONALIDADE } from "@calafrio/tema";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, RefreshCw, Trash2 } from "lucide-react";
 import { CadeadoFocoIcon } from "../svg/calafrio-ornamentos";
 
 interface CardSlotMatrizProps {
@@ -75,8 +75,17 @@ export function CardSlotMatriz({
               </span>
             )}
             <button
+              type="button"
+              onClick={() => onSelecionar(numeroSlot)}
+              className="text-muted-foreground hover:text-accent-ink p-1 rounded cursor-pointer"
+              title="Trocar habilidade deste slot"
+            >
+              <RefreshCw className="size-3.5" />
+            </button>
+            <button
+              type="button"
               onClick={() => onLimpar(numeroSlot)}
-              className="text-muted-foreground hover:text-red-400 p-0.5 rounded cursor-pointer"
+              className="text-muted-foreground hover:text-red-400 p-1 rounded cursor-pointer"
               title="Remover do slot"
             >
               <Trash2 className="size-3.5" />
@@ -84,8 +93,12 @@ export function CardSlotMatriz({
           </div>
         </div>
 
-        <div>
-          <div className="font-black text-sm text-accent-ink leading-tight">
+        <div
+          onClick={() => onSelecionar(numeroSlot)}
+          className="cursor-pointer flex-1"
+          title="Clique para trocar esta habilidade"
+        >
+          <div className="font-black text-sm text-accent-ink leading-tight hover:underline">
             {unica?.nome ?? "Habilidade Única"}
           </div>
           <div className="text-[10px] text-muted-foreground flex items-center gap-2 mt-0.5">
@@ -94,6 +107,11 @@ export function CardSlotMatriz({
             <span className="font-bold text-accent-ink">
               {unica?.custo ?? 3} {unica?.recurso?.toUpperCase() ?? "PA"}
             </span>
+            {unica?.ecosInvestidos && unica.ecosInvestidos > 1 && (
+              <span className="text-[10px] text-amber-500 font-bold">
+                ({unica.ecosInvestidos} Ecos)
+              </span>
+            )}
           </div>
           <p className="text-[11px] text-foreground/80 line-clamp-3 mt-1.5 leading-snug">
             {unica?.descricao}
@@ -102,6 +120,13 @@ export function CardSlotMatriz({
 
         <div className="flex items-center justify-between mt-2 pt-1 border-t border-border/50 text-[10px] text-muted-foreground">
           <span className="text-accent-ink font-semibold">★ Eco Único</span>
+          <button
+            type="button"
+            onClick={() => onSelecionar(numeroSlot)}
+            className="text-[10px] text-muted-foreground hover:text-foreground font-semibold flex items-center gap-0.5 cursor-pointer"
+          >
+            <RefreshCw className="size-3" /> Trocar
+          </button>
         </div>
       </div>
     );
@@ -133,8 +158,17 @@ export function CardSlotMatriz({
           )}
           <CadeadoFocoIcon foco={hab?.requerFoco ?? "nao"} />
           <button
+            type="button"
+            onClick={() => onSelecionar(numeroSlot)}
+            className="text-muted-foreground hover:text-accent-ink p-1 rounded cursor-pointer"
+            title="Trocar habilidade deste slot"
+          >
+            <RefreshCw className="size-3.5" />
+          </button>
+          <button
+            type="button"
             onClick={() => onLimpar(numeroSlot)}
-            className="text-muted-foreground hover:text-red-400 p-0.5 rounded cursor-pointer"
+            className="text-muted-foreground hover:text-red-400 p-1 rounded cursor-pointer"
             title="Remover do slot"
           >
             <Trash2 className="size-3.5" />
@@ -142,8 +176,12 @@ export function CardSlotMatriz({
         </div>
       </div>
 
-      <div>
-        <div className="font-black text-sm text-foreground leading-tight">
+      <div
+        onClick={() => onSelecionar(numeroSlot)}
+        className="cursor-pointer flex-1"
+        title="Clique para trocar esta habilidade"
+      >
+        <div className="font-black text-sm text-foreground leading-tight hover:underline">
           {hab?.nome}
         </div>
         <div className="text-[10px] text-muted-foreground flex items-center gap-2 mt-0.5">
@@ -168,18 +206,28 @@ export function CardSlotMatriz({
 
       <div className="flex items-center justify-between mt-2 pt-1 border-t border-border/50 text-[10px] text-muted-foreground">
         <span>{hab?.duracao ?? hab?.alcance ?? "Instantâneo"}</span>
-        {hab?.requerFoco !== "nao" && onAlternarFoco && hab && (
+        <div className="flex items-center gap-2">
+          {hab?.requerFoco !== "nao" && onAlternarFoco && hab && (
+            <button
+              type="button"
+              onClick={() => onAlternarFoco(hab.id)}
+              className={`px-1.5 py-0.5 rounded text-[9px] font-bold cursor-pointer ${
+                focoAtivo
+                  ? "bg-amber-400 text-black animate-pulse"
+                  : "bg-muted text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {focoAtivo ? "Foco Ativo" : "Ativar Foco"}
+            </button>
+          )}
           <button
-            onClick={() => onAlternarFoco(hab.id)}
-            className={`px-1.5 py-0.5 rounded text-[9px] font-bold cursor-pointer ${
-              focoAtivo
-                ? "bg-amber-400 text-black animate-pulse"
-                : "bg-muted text-muted-foreground hover:text-foreground"
-            }`}
+            type="button"
+            onClick={() => onSelecionar(numeroSlot)}
+            className="text-[10px] text-muted-foreground hover:text-foreground font-semibold flex items-center gap-0.5 cursor-pointer"
           >
-            {focoAtivo ? "Foco Ativo" : "Ativar Foco"}
+            <RefreshCw className="size-3" /> Trocar
           </button>
-        )}
+        </div>
       </div>
     </div>
   );

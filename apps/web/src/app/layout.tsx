@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
-import { Merriweather, Merriweather_Sans } from "next/font/google";
+import { Alegreya, Merriweather, Merriweather_Sans } from "next/font/google";
 import { BarraTopo } from "@/components/navegacao/barra-topo";
 import "./globals.css";
+
+const alegreya = Alegreya({
+  variable: "--font-alegreya",
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "800"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
 
 const merriweather = Merriweather({
   variable: "--font-merriweather",
@@ -32,7 +40,7 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       suppressHydrationWarning
-      className={`${merriweather.variable} ${merriweatherSans.variable}`}
+      className={`${merriweather.variable} ${merriweatherSans.variable} ${alegreya.variable}`}
     >
       <head>
         <script

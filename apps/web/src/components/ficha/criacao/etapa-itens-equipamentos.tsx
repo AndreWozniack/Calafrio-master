@@ -7,7 +7,14 @@ import type {
   ItemNaFichaCalafrio,
 } from "@calafrio/core";
 import type { EspectroDeDano } from "@calafrio/tema";
-import { Coins, Dices, PackagePlus, Plus, Sparkles, Trash2 } from "lucide-react";
+import {
+  Coins,
+  Dices,
+  PackagePlus,
+  Plus,
+  Sparkles,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
 
 interface EtapaItensEquipamentosProps {
@@ -69,7 +76,9 @@ export function EtapaItensEquipamentos({
     });
   };
 
-  const adicionarArmaCatalogo = (arma: (typeof catalogo.armasMundanas)[number]) => {
+  const adicionarArmaCatalogo = (
+    arma: (typeof catalogo.armasMundanas)[number],
+  ) => {
     onAdicionarItem({
       id: `item-arma-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       nome: arma.categoria,
@@ -85,7 +94,9 @@ export function EtapaItensEquipamentos({
       espectroDano: arma.espectroDano,
       alcance: arma.tipoAlcance,
       propriedades: [...arma.propriedades],
-      descricao: arma.exemplos ? `Exemplos do tipo: ${arma.exemplos}` : undefined,
+      descricao: arma.exemplos
+        ? `Exemplos do tipo: ${arma.exemplos}`
+        : undefined,
       efeitos: [],
     });
   };
@@ -122,7 +133,8 @@ export function EtapaItensEquipamentos({
           4. Carteira & Inventário ({ficha.inventario.length} itens adicionados)
         </h4>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Defina o dinheiro inicial e equipe itens criados livremente ou do catálogo.
+          Defina o dinheiro inicial e equipe itens criados livremente ou do
+          catálogo.
         </p>
       </div>
 
@@ -256,7 +268,9 @@ export function EtapaItensEquipamentos({
                   min={0}
                   value={danoLivre ?? ""}
                   onChange={(e) =>
-                    setDanoLivre(e.target.value ? Number(e.target.value) : undefined)
+                    setDanoLivre(
+                      e.target.value ? Number(e.target.value) : undefined,
+                    )
                   }
                   placeholder="Pontos de dano numérico"
                   className="w-full bg-muted/60 p-2 rounded-lg border border-border font-bold outline-none focus:border-amber-400"
@@ -301,13 +315,16 @@ export function EtapaItensEquipamentos({
           /* Catálogo de Armas e Bugigangas */
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="calafrio-tag-sm">ARMAS MUNDANAS DO CATÁLOGO</span>
+              <span className="calafrio-tag-sm">
+                ARMAS MUNDANAS DO CATÁLOGO
+              </span>
               <button
                 type="button"
                 onClick={sortearBugiganga}
                 className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border text-foreground font-bold text-xs rounded-lg cursor-pointer transition-colors"
               >
-                <Dices className="size-3.5 text-amber-400" /> Sortear Bugiganga (d100)
+                <Dices className="size-3.5 text-amber-400" /> Sortear Bugiganga
+                (d100)
               </button>
             </div>
 
@@ -322,7 +339,8 @@ export function EtapaItensEquipamentos({
                       {arma.categoria}
                     </span>
                     <span className="text-[11px] text-muted-foreground">
-                      Dano: {arma.dano} ({arma.espectroDano}) · {arma.tipoAlcance} · {arma.precoFundos} F$
+                      Dano: {arma.dano} ({arma.espectroDano}) ·{" "}
+                      {arma.tipoAlcance} · {arma.precoFundos} F$
                     </span>
                   </div>
                   <button
@@ -351,7 +369,9 @@ export function EtapaItensEquipamentos({
               className="p-2.5 rounded-lg border border-border bg-card flex items-start justify-between gap-2"
             >
               <div>
-                <span className="font-bold text-foreground block">{item.nome}</span>
+                <span className="font-bold text-foreground block">
+                  {item.nome}
+                </span>
                 <span className="text-[10px] text-muted-foreground uppercase font-semibold">
                   {item.categoria.replace("_", " ")}
                   {item.dano ? ` · Dano ${item.dano}` : ""}

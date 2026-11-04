@@ -13,6 +13,7 @@ import { EditorEfeitos } from "./editor-efeitos";
 
 interface Props {
   aberto: boolean;
+  inicial?: ItemNaFichaCalafrio;
   onSalvar: (item: ItemNaFichaCalafrio) => void;
   onFechar: () => void;
 }
@@ -44,22 +45,33 @@ function numOuUndef(v: string): number | undefined {
   return v === "" ? undefined : Number(v);
 }
 
-export function ModalItem({ aberto, onSalvar, onFechar }: Props) {
+export function ModalItem({ aberto, inicial, onSalvar, onFechar }: Props) {
   const catalogo = useMemo(() => carregarCatalogoCalafrio(), []);
-  const [nome, setNome] = useState("");
-  const [categoria, setCategoria] =
-    useState<CategoriaItemCalafrio>("arma_curto");
-  const [paranormal, setParanormal] = useState(false);
-  const [equipado, setEquipado] = useState(true);
-  const [dano, setDano] = useState<number | undefined>();
-  const [espectro, setEspectro] = useState<EspectroDeDano>("fisico");
-  const [alcance, setAlcance] = useState("");
-  const [usosMax, setUsosMax] = useState<number | undefined>();
-  const [precoFundos, setPrecoFundos] = useState<number | undefined>();
-  const [precoEspirions, setPrecoEspirions] = useState<number | undefined>();
-  const [propriedades, setPropriedades] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [efeitos, setEfeitos] = useState<EfeitoCalafrio[]>([]);
+  const [nome, setNome] = useState(inicial?.nome ?? "");
+  const [categoria, setCategoria] = useState<CategoriaItemCalafrio>(
+    inicial?.categoria ?? "arma_curto",
+  );
+  const [paranormal, setParanormal] = useState(inicial?.paranormal ?? false);
+  const [equipado, setEquipado] = useState(inicial?.equipado ?? true);
+  const [dano, setDano] = useState<number | undefined>(inicial?.dano);
+  const [espectro, setEspectro] = useState<EspectroDeDano>(
+    inicial?.espectroDano ?? "fisico",
+  );
+  const [alcance, setAlcance] = useState(inicial?.alcance ?? "");
+  const [usosMax, setUsosMax] = useState<number | undefined>(inicial?.usosMax);
+  const [precoFundos, setPrecoFundos] = useState<number | undefined>(
+    inicial?.precoFundos,
+  );
+  const [precoEspirions, setPrecoEspirions] = useState<number | undefined>(
+    inicial?.precoEspirions,
+  );
+  const [propriedades, setPropriedades] = useState(
+    inicial?.propriedades?.join("\n") ?? "",
+  );
+  const [descricao, setDescricao] = useState(inicial?.descricao ?? "");
+  const [efeitos, setEfeitos] = useState<EfeitoCalafrio[]>(
+    inicial?.efeitos ?? [],
+  );
 
   if (!aberto) return null;
 
@@ -122,7 +134,9 @@ export function ModalItem({ aberto, onSalvar, onFechar }: Props) {
       .map((p) => p.trim())
       .filter(Boolean);
     onSalvar({
-      id: `item-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      id:
+        inicial?.id ??
+        `item-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       nome: nome.trim(),
       categoria,
       paranormal,
@@ -132,7 +146,10 @@ export function ModalItem({ aberto, onSalvar, onFechar }: Props) {
       dano: ehArma ? dano : undefined,
       espectroDano: ehArma ? espectro : undefined,
       alcance: alcance.trim() || undefined,
-      usosAtuais: usosMax,
+      usosAtuais:
+        usosMax === undefined
+          ? undefined
+          : Math.min(inicial?.usosAtuais ?? usosMax, usosMax),
       usosMax,
       propriedades: props.length ? props : undefined,
       descricao: descricao.trim() || undefined,
@@ -148,7 +165,9 @@ export function ModalItem({ aberto, onSalvar, onFechar }: Props) {
         className="calafrio-card p-5 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-4 shadow-2xl"
       >
         <div className="flex items-center justify-between border-b border-border pb-2">
-          <span className="calafrio-tag">NOVO ITEM</span>
+          <span className="calafrio-tag">
+            {inicial ? "EDITAR ITEM" : "NOVO ITEM"}
+          </span>
           <button type="button" onClick={fechar} aria-label="Fechar">
             <X className="size-4 cursor-pointer" />
           </button>
@@ -334,7 +353,7 @@ export function ModalItem({ aberto, onSalvar, onFechar }: Props) {
             disabled={!nome.trim()}
             className="px-4 py-2 text-xs font-black rounded bg-amber-400 text-black hover:bg-amber-300 disabled:opacity-40 cursor-pointer"
           >
-            Adicionar item
+            {inicial ? "Salvar alterações" : "Adicionar item"}
           </button>
         </div>
       </form>

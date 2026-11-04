@@ -72,10 +72,12 @@ export function EtapaPalavrasChave({
     <div className="space-y-6">
       <div>
         <h4 className="text-base font-black text-foreground uppercase tracking-wide">
-          2. Palavras-Chave ({ficha.palavrasChave.length} / {derivada.limitePalavrasChave})
+          2. Palavras-Chave ({ficha.palavrasChave.length} /{" "}
+          {derivada.limitePalavrasChave})
         </h4>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Adicione termos livres que definem as perícias, ocupação e falhas do seu personagem.
+          Adicione termos livres que definem as perícias, ocupação e falhas do
+          seu personagem.
         </p>
       </div>
 
@@ -97,7 +99,9 @@ export function EtapaPalavrasChave({
           <select
             value={categoriaLivre}
             onChange={(e) =>
-              setCategoriaLivre(e.target.value as PalavraChaveNaFicha["categoria"])
+              setCategoriaLivre(
+                e.target.value as PalavraChaveNaFicha["categoria"],
+              )
             }
             className="sm:col-span-3 bg-card p-2.5 rounded-lg border border-border text-xs font-bold outline-none cursor-pointer"
           >
@@ -156,7 +160,9 @@ export function EtapaPalavrasChave({
               className="flex items-center justify-between p-2.5 rounded-lg border border-border bg-card text-xs"
             >
               <div>
-                <span className="font-bold text-foreground block">{pc.nome}</span>
+                <span className="font-bold text-foreground block">
+                  {pc.nome}
+                </span>
                 <span className="text-[10px] text-muted-foreground font-semibold uppercase">
                   {pc.categoria}
                 </span>

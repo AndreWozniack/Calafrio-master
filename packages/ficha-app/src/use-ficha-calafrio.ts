@@ -14,8 +14,15 @@ import {
   type FichaDerivadaCalafrio,
   montarFichaCalafrio,
 } from "@calafrio/core";
-import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
-import { fichaCalafrioReducer } from "./ficha-reducer";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
+import { type AcaoFichaCalafrio, fichaCalafrioReducer } from "./ficha-reducer";
 
 export function useFichaCalafrio(
   fichaParam?: FichaCalafrio,
@@ -32,15 +39,55 @@ export function useFichaCalafrio(
     (inicial) => inicial ?? criarFichaCalafrioVazia("sem-ficha", ""),
   );
 
-  const [estado, setEstado] = useState<EstadoDeJogoCalafrio>(() =>
+  // Parte efêmera do estado (ações do turno, foco...). Vida/ânimum vivem na ficha.
+  const [efemero, setEfemero] = useState<EstadoDeJogoCalafrio>(() =>
     criarEstadoDeJogoInicial(),
+  );
+
+  const estado: EstadoDeJogoCalafrio = useMemo(
+    () => ({
+      ...efemero,
+      danoSofrido: ficha.vitais?.danoSofrido ?? 0,
+      paGasto: ficha.vitais?.paGasto ?? 0,
+      pvTemporario: ficha.vitais?.pvTemporario ?? 0,
+      paTemporario: ficha.vitais?.paTemporario ?? 0,
+    }),
+    [efemero, ficha.vitais],
+  );
+  const estadoRef = useRef(estado);
+  estadoRef.current = estado;
+
+  /** Aplica uma transição de estado: vitais vão para a ficha (persistem), o resto fica efêmero. */
+  const setEstado = useCallback(
+    (
+      atualizar:
+        | EstadoDeJogoCalafrio
+        | ((prev: EstadoDeJogoCalafrio) => EstadoDeJogoCalafrio),
+    ) => {
+      const proximo =
+        typeof atualizar === "function"
+          ? atualizar(estadoRef.current)
+          : atualizar;
+      estadoRef.current = proximo;
+      setEfemero(proximo);
+      dispatch({
+        tipo: "definirVitais",
+        vitais: {
+          danoSofrido: proximo.danoSofrido,
+          paGasto: proximo.paGasto,
+          pvTemporario: proximo.pvTemporario,
+          paTemporario: proximo.paTemporario,
+        },
+      });
+    },
+    [],
   );
 
   // Sincronizar se a fichaParam mudar externamente
   useEffect(() => {
     if (fichaParam && fichaParam.id !== ficha.id) {
       dispatch({ tipo: "carregarFicha", ficha: fichaParam });
-      setEstado(criarEstadoDeJogoInicial());
+      setEfemero(criarEstadoDeJogoInicial());
     }
   }, [fichaParam, ficha.id]);
 
@@ -113,6 +160,43 @@ export function useFichaCalafrio(
     }));
   }, []);
 
+  // Edição livre dos vitais (o jogador/MdJ manda; nada trava)
+  const definirPvAtual = useCallback(
+    (valor: number) => {
+      const topo = derivada.pvMax + estadoRef.current.pvTemporario;
+      const alvo = Math.max(0, Math.min(topo, Math.round(valor) || 0));
+      dispatch({ tipo: "definirVitais", vitais: { danoSofrido: topo - alvo } });
+    },
+    [derivada.pvMax],
+  );
+  const definirPaAtual = useCallback(
+    (valor: number) => {
+      const topo = derivada.paMax + estadoRef.current.paTemporario;
+      const alvo = Math.max(0, Math.min(topo, Math.round(valor) || 0));
+      dispatch({ tipo: "definirVitais", vitais: { paGasto: topo - alvo } });
+    },
+    [derivada.paMax],
+  );
+  const definirPvTemporario = useCallback((valor: number) => {
+    dispatch({
+      tipo: "definirVitais",
+      vitais: { pvTemporario: Math.round(valor) || 0 },
+    });
+  }, []);
+  const definirPaTemporario = useCallback((valor: number) => {
+    dispatch({
+      tipo: "definirVitais",
+      vitais: { paTemporario: Math.round(valor) || 0 },
+    });
+  }, []);
+  const definirAjusteManual = useCallback(
+    (
+      alvo: Extract<AcaoFichaCalafrio, { tipo: "definirAjusteManual" }>["alvo"],
+      valor: number,
+    ) => dispatch({ tipo: "definirAjusteManual", alvo, valor }),
+    [],
+  );
+
   const alternarFoco = useCallback((focoId: string) => {
     setEstado((prev) => ({
       ...prev,
@@ -122,7 +206,7 @@ export function useFichaCalafrio(
 
   const carregarFicha = useCallback((novaFicha: FichaCalafrio) => {
     dispatch({ tipo: "carregarFicha", ficha: novaFicha });
-    setEstado(criarEstadoDeJogoInicial());
+    setEfemero(criarEstadoDeJogoInicial());
   }, []);
 
   return {
@@ -135,6 +219,11 @@ export function useFichaCalafrio(
     curarPv,
     curarPa,
     alternarFoco,
+    definirPvAtual,
+    definirPaAtual,
+    definirPvTemporario,
+    definirPaTemporario,
+    definirAjusteManual,
     // Atalhos
     definirNome: (nome: string) => dispatch({ tipo: "definirNome", nome }),
     definirJogador: (jogador: string) =>

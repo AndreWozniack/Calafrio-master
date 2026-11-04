@@ -1,7 +1,7 @@
 "use client";
 
 import type { FichaCalafrio, ItemNaFichaCalafrio } from "@calafrio/core";
-import { Plus, Shield, Sparkles, Trash2 } from "lucide-react";
+import { Pencil, Plus, Shield, Sparkles, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { ModalItem } from "./modal-item";
 
@@ -10,6 +10,7 @@ interface PainelInventarioProps {
   onAdicionarItem: (item: ItemNaFichaCalafrio) => void;
   onAlternarEquipado: (id: string) => void;
   onRemoverItem: (id: string) => void;
+  onAtualizarItem?: (id: string, dados: Partial<ItemNaFichaCalafrio>) => void;
   onAtualizarCarteira: (fundos: number, espirions: number) => void;
 }
 
@@ -18,9 +19,33 @@ export function PainelInventario({
   onAdicionarItem,
   onAlternarEquipado,
   onRemoverItem,
+  onAtualizarItem,
   onAtualizarCarteira,
 }: PainelInventarioProps) {
   const [modalAberto, setModalAberto] = useState(false);
+  const [itemEmEdicao, setItemEmEdicao] = useState<ItemNaFichaCalafrio | null>(
+    null,
+  );
+
+  const abrirNovo = () => {
+    setItemEmEdicao(null);
+    setModalAberto(true);
+  };
+
+  const abrirEdicao = (item: ItemNaFichaCalafrio) => {
+    setItemEmEdicao(item);
+    setModalAberto(true);
+  };
+
+  const lidarSalvar = (item: ItemNaFichaCalafrio) => {
+    if (itemEmEdicao && onAtualizarItem) {
+      onAtualizarItem(itemEmEdicao.id, item);
+    } else {
+      onAdicionarItem(item);
+    }
+    setModalAberto(false);
+    setItemEmEdicao(null);
+  };
 
   return (
     <div className="calafrio-card p-4 space-y-4">
@@ -101,15 +126,24 @@ export function PainelInventario({
                 )}
               </button>
 
-              <div className="min-w-0">
+              <div
+                className="min-w-0 flex-1 cursor-pointer"
+                onClick={() => abrirEdicao(item)}
+                title="Clique para editar este item"
+              >
                 <div className="flex items-center gap-1.5 font-bold text-foreground">
                   {item.paranormal && (
                     <Sparkles className="size-3.5 text-accent-ink shrink-0" />
                   )}
-                  <span className="truncate">{item.nome}</span>
+                  <span className="truncate hover:underline">{item.nome}</span>
                   {item.dano && (
                     <span className="text-[10px] text-accent-ink font-semibold shrink-0">
                       [{item.dano} dano {item.espectroDano}]
+                    </span>
+                  )}
+                  {item.usosMax !== undefined && (
+                    <span className="text-[10px] text-muted-foreground shrink-0">
+                      ({item.usosAtuais ?? item.usosMax}/{item.usosMax} usos)
                     </span>
                   )}
                 </div>
@@ -121,13 +155,24 @@ export function PainelInventario({
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => onRemoverItem(item.id)}
-              className="p-1 text-muted-foreground hover:text-red-400 cursor-pointer"
-            >
-              <Trash2 className="size-3.5" />
-            </button>
+            <div className="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                onClick={() => abrirEdicao(item)}
+                className="p-1 text-muted-foreground hover:text-foreground cursor-pointer"
+                title="Editar item"
+              >
+                <Pencil className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => onRemoverItem(item.id)}
+                className="p-1 text-muted-foreground hover:text-red-400 cursor-pointer"
+                title="Remover item"
+              >
+                <Trash2 className="size-3.5" />
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -135,7 +180,7 @@ export function PainelInventario({
       <div className="pt-2 border-t border-border">
         <button
           type="button"
-          onClick={() => setModalAberto(true)}
+          onClick={abrirNovo}
           className="flex items-center gap-1 bg-foreground text-background font-bold text-xs px-3 py-1.5 rounded hover:opacity-90 cursor-pointer"
         >
           <Plus className="size-3.5" /> Novo item
@@ -143,8 +188,12 @@ export function PainelInventario({
       </div>
       <ModalItem
         aberto={modalAberto}
-        onSalvar={onAdicionarItem}
-        onFechar={() => setModalAberto(false)}
+        inicial={itemEmEdicao ?? undefined}
+        onSalvar={lidarSalvar}
+        onFechar={() => {
+          setModalAberto(false);
+          setItemEmEdicao(null);
+        }}
       />
     </div>
   );

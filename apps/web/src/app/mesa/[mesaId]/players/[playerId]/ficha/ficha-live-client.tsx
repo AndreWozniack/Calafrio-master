@@ -122,6 +122,9 @@ export function FichaLiveClient({
           derivada={f.derivada}
           onDefinirNome={f.definirNome}
           onDefinirApt={f.definirApt}
+          onDefinirRetrato={(url) => f.dispatch({ tipo: "definirRetrato", url })}
+          onDefinirPvAtual={f.definirPvAtual}
+          onDefinirPaAtual={f.definirPaAtual}
           onAdicionarPalavraChave={f.adicionarPalavraChave}
           onRemoverPalavraChave={f.removerPalavraChave}
           onAdicionarItem={f.adicionarItem}
@@ -134,8 +137,6 @@ export function FichaLiveClient({
             setPalavraChaveRolagem(palavra);
             setMostrarRolagem(true);
           }}
-          onCurarPv={(qtd) => f.descansar("longo", qtd, "fixo")}
-          onCurarPa={(qtd) => f.descansar("curto", qtd, "fixo")}
         />
       ) : (
         <PaginaVersoMatriz
@@ -152,6 +153,8 @@ export function FichaLiveClient({
           onRemoverHabilidadeUnica={(id) =>
             f.dispatch({ tipo: "removerHabilidadeUnica", id })
           }
+          focoAtivoId={f.estado.focoAtivoId}
+          onAlternarFoco={f.alternarFoco}
           onDefinirAnotacoes={f.definirAnotacoes}
         />
       )}

@@ -99,6 +99,14 @@ export interface CarteiraCalafrio {
   espirions: number; // E$P
 }
 
+/** Estado atual de vida/ânimum — persistido junto da ficha (os máximos continuam derivados). */
+export interface VitaisPersistidosCalafrio {
+  danoSofrido: number;
+  paGasto: number;
+  pvTemporario: number;
+  paTemporario: number;
+}
+
 export interface FichaCalafrio {
   id: string;
   nome: string;
@@ -116,6 +124,7 @@ export interface FichaCalafrio {
   familiarEscolhidoDado?: number;
   lacaioEscolhidoDado?: number;
   anotacoes?: string;
+  vitais?: VitaisPersistidosCalafrio;
 }
 
 export interface EstadoDeJogoCalafrio {
