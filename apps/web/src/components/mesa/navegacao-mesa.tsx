@@ -35,10 +35,10 @@ export function NavegacaoMesa({ mesaId }: { mesaId: string }) {
           <Link
             key={label}
             href={href}
-            className={`flex items-center gap-1.5 rounded-md px-3.5 py-1.5 text-xs font-bold transition-all whitespace-nowrap ${
+            className={`flex items-center gap-1.5 rounded-md px-3.5 py-1.5 text-xs font-bold transition-all whitespace-nowrap border ${
               ativa
-                ? "bg-foreground text-background shadow-xs font-black"
-                : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
+                ? "bg-black text-white border-black shadow-[1px_1px_0px_#000] font-black"
+                : "bg-card border-border text-foreground hover:bg-muted shadow-xs"
             }`}
           >
             <Icon className="size-3.5" /> {label}

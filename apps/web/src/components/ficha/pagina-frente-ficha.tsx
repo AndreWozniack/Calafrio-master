@@ -6,6 +6,7 @@ import type {
   ItemNaFichaCalafrio,
   PalavraChaveNaFicha,
 } from "@calafrio/core";
+import type { NivelZoomFicha } from "./fichas-tipos";
 import {
   LinhaVital,
   NumeroEditavel,
@@ -42,6 +43,7 @@ interface PaginaFrenteFichaProps {
   onRemoverItem: (id: string) => void;
   onAtualizarCarteira: (fundos: number, espirions: number) => void;
   onAbrirRolagem: (nome?: string) => void;
+  zoom?: NivelZoomFicha;
 }
 
 function CampoCarteira({
@@ -89,9 +91,10 @@ export function PaginaFrenteFicha({
   onRemoverItem,
   onAtualizarCarteira,
   onAbrirRolagem,
+  zoom,
 }: PaginaFrenteFichaProps) {
   return (
-    <FolhaPapel>
+    <FolhaPapel zoom={zoom}>
       {/* Logo vertical */}
       <Posicionado area={{ x: 16, y: 30, w: 28, h: 130 }}>
         {/* biome-ignore lint/performance/noImgElement: logo estático */}

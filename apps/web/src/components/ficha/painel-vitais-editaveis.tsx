@@ -14,7 +14,7 @@ interface Props {
 }
 
 const botao =
-  "px-1.5 h-7 min-w-7 text-[11px] font-bold rounded border border-border hover:bg-muted cursor-pointer";
+  "px-2 h-7 min-w-7 text-xs font-bold rounded border border-border hover:bg-muted cursor-pointer";
 
 interface GrupoProps {
   titulo: string;
@@ -77,7 +77,7 @@ function GrupoVital({
           +5
         </button>
       </div>
-      <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+      <div className="flex items-center justify-between text-xs text-muted-foreground font-semibold">
         <span>máx {max}</span>
         <button
           type="button"

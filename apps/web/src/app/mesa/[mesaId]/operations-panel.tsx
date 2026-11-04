@@ -9,11 +9,11 @@ export function OperationsPanel({ mesaId }: OperationsPanelProps) {
   return (
     <aside className="entrada-lista space-y-4">
       {/* Card de Combate em Tempo Real (Estilo T20 Master) */}
-      <div className="calafrio-card p-4 space-y-3 border-amber-400/40 bg-gradient-to-br from-amber-950/20 via-card to-card">
+      <div className="calafrio-card p-4 space-y-3 border-amber-400/40 bg-card">
         <span className="calafrio-tag">COMBATE & ENCONTROS</span>
         <div className="space-y-1">
           <h3 className="font-black text-sm text-foreground flex items-center gap-1.5">
-            <Swords className="size-4 text-amber-400" /> Mesa de Combate
+            <Swords className="size-4 text-accent-ink" /> Mesa de Combate
           </h3>
           <p className="text-xs text-muted-foreground leading-relaxed">
             Rastreador de iniciativas em sentido horário, mitigação com PA e
@@ -35,23 +35,23 @@ export function OperationsPanel({ mesaId }: OperationsPanelProps) {
         <div className="space-y-1.5 text-xs font-bold">
           <Link
             href={`/mesa/${mesaId}/players`}
-            className="flex items-center gap-2 p-2 rounded-lg bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 p-2 rounded-lg bg-muted/60 hover:bg-muted text-foreground transition-colors"
           >
-            <Users className="size-4 text-amber-400" />
+            <Users className="size-4 text-accent-ink" />
             <span>Gerenciar Todos os Players</span>
           </Link>
           <Link
             href="/bestiario"
-            className="flex items-center gap-2 p-2 rounded-lg bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 p-2 rounded-lg bg-muted/60 hover:bg-muted text-foreground transition-colors"
           >
-            <Skull className="size-4 text-amber-400" />
+            <Skull className="size-4 text-accent-ink" />
             <span>Bestiário & Ameaças</span>
           </Link>
           <Link
             href="/biblioteca"
-            className="flex items-center gap-2 p-2 rounded-lg bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 p-2 rounded-lg bg-muted/60 hover:bg-muted text-foreground transition-colors"
           >
-            <BookOpen className="size-4 text-amber-400" />
+            <BookOpen className="size-4 text-accent-ink" />
             <span>Biblioteca & PDFs Oficiais</span>
           </Link>
         </div>

@@ -54,11 +54,11 @@ export function CardRolagemFeed({ rolagem }: { rolagem: RolagemMesa }) {
           {rolagem.autor} · {rolagem.acao}
         </div>
         <div className="text-muted-foreground">{rolagem.detalhe}</div>
-        <div className={`uppercase tracking-wide text-[11px] ${estilo.veredito}`}>
+        <div className={`uppercase tracking-wide text-xs font-bold ${estilo.veredito}`}>
           {rolagem.veredito}
         </div>
       </div>
-      <time className="text-[10px] text-muted-foreground">
+      <time className="text-xs text-muted-foreground font-semibold">
         {horaCurta(rolagem.criadaEm)}
       </time>
     </li>

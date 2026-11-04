@@ -71,7 +71,7 @@ export function PainelEcosERegras({
           <span className="calafrio-tag">
             ECOS: {derivada.ecosDisponiveis} / {derivada.ecosMax}
           </span>
-          <p className="text-[11px] text-muted-foreground mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Cada Eco permite criar uma Habilidade Única, aprimorar uma existente
             ou reescrever uma regra (acordado com o MdJ).
           </p>
@@ -123,11 +123,11 @@ export function PainelEcosERegras({
                   <span className="font-bold text-accent-ink text-sm hover:underline">
                     {u.nome}
                   </span>
-                  <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                  <span className="text-xs uppercase font-bold px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
                     {u.tipoAcao} · {u.custo} {u.recurso.toUpperCase()}
                   </span>
                   {u.ecosInvestidos && u.ecosInvestidos > 1 && (
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-500">
+                    <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-500">
                       {u.ecosInvestidos} Ecos
                     </span>
                   )}
@@ -138,7 +138,7 @@ export function PainelEcosERegras({
                           TOKENS_PERSONALIDADE[u.personalidadeAlinhamento]
                             .corPositiva,
                       }}
-                      className="text-black font-extrabold text-[9px] px-1.5 py-0.5 rounded-xs"
+                      className="text-black font-extrabold text-xs px-2 py-0.5 rounded-xs"
                     >
                       Alinha:{" "}
                       {TOKENS_PERSONALIDADE[u.personalidadeAlinhamento].nome}
@@ -190,12 +190,12 @@ export function PainelEcosERegras({
                     <div className="font-bold flex items-center gap-1.5 text-foreground">
                       <Sparkles className="size-3 text-accent-ink" />
                       <span>{c.titulo}</span>
-                      <span className="text-[10px] text-muted-foreground">
+                      <span className="text-xs text-muted-foreground font-semibold">
                         (Alvo: {habOriginal?.nome ?? c.habilidadeAlvoId})
                       </span>
                     </div>
                     {c.descricaoMudanca && (
-                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                      <p className="text-xs text-muted-foreground mt-0.5">
                         {c.descricaoMudanca}
                       </p>
                     )}

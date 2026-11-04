@@ -40,14 +40,14 @@ export function CardSlotMatriz({
       >
         <div className="flex items-center justify-between">
           <span className="calafrio-tag-sm">{rotuloSlot}</span>
-          <span className="text-[11px] text-muted-foreground group-hover:text-accent-ink flex items-center gap-1 font-medium">
+          <span className="text-xs text-muted-foreground group-hover:text-accent-ink flex items-center gap-1 font-semibold">
             <Plus className="size-3.5" /> Alocar
           </span>
         </div>
-        <div className="text-center py-4 text-xs text-muted-foreground/60 italic">
+        <div className="text-center py-4 text-xs text-muted-foreground/70 italic">
           Espaço livre da matriz
         </div>
-        <div className="text-[10px] text-muted-foreground/40 text-right">
+        <div className="text-xs text-muted-foreground/50 text-right">
           3×3
         </div>
       </div>
@@ -68,7 +68,7 @@ export function CardSlotMatriz({
             {tokenPers && (
               <span
                 style={{ backgroundColor: tokenPers.corPositiva }}
-                className="text-black font-extrabold text-[9px] px-1.5 py-0.5 rounded-xs"
+                className="text-black font-extrabold text-xs px-2 py-0.5 rounded-xs"
                 title={`Conta como ${tokenPers.nome}`}
               >
                 {tokenPers.emoji} {tokenPers.nome}
@@ -98,32 +98,32 @@ export function CardSlotMatriz({
           className="cursor-pointer flex-1"
           title="Clique para trocar esta habilidade"
         >
-          <div className="font-black text-sm text-accent-ink leading-tight hover:underline">
+          <div className="font-black text-base text-accent-ink leading-tight hover:underline">
             {unica?.nome ?? "Habilidade Única"}
           </div>
-          <div className="text-[10px] text-muted-foreground flex items-center gap-2 mt-0.5">
+          <div className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
             <span className="capitalize">{unica?.tipoAcao ?? "Padrão"}</span>
             <span>·</span>
             <span className="font-bold text-accent-ink">
               {unica?.custo ?? 3} {unica?.recurso?.toUpperCase() ?? "PA"}
             </span>
             {unica?.ecosInvestidos && unica.ecosInvestidos > 1 && (
-              <span className="text-[10px] text-amber-500 font-bold">
+              <span className="text-xs text-amber-500 font-bold">
                 ({unica.ecosInvestidos} Ecos)
               </span>
             )}
           </div>
-          <p className="text-[11px] text-foreground/80 line-clamp-3 mt-1.5 leading-snug">
+          <p className="text-xs text-foreground/85 line-clamp-3 mt-1.5 leading-snug">
             {unica?.descricao}
           </p>
         </div>
 
-        <div className="flex items-center justify-between mt-2 pt-1 border-t border-border/50 text-[10px] text-muted-foreground">
+        <div className="flex items-center justify-between mt-2 pt-1 border-t border-border/50 text-xs text-muted-foreground">
           <span className="text-accent-ink font-semibold">★ Eco Único</span>
           <button
             type="button"
             onClick={() => onSelecionar(numeroSlot)}
-            className="text-[10px] text-muted-foreground hover:text-foreground font-semibold flex items-center gap-0.5 cursor-pointer"
+            className="text-xs text-muted-foreground hover:text-foreground font-semibold flex items-center gap-0.5 cursor-pointer"
           >
             <RefreshCw className="size-3" /> Trocar
           </button>
@@ -150,7 +150,7 @@ export function CardSlotMatriz({
           {tokenPers && (
             <span
               style={{ backgroundColor: corCard }}
-              className="text-white font-extrabold text-[9px] px-1.5 py-0.5 rounded-xs"
+              className="text-white font-extrabold text-xs px-2 py-0.5 rounded-xs"
             >
               {tokenPers.emoji} {tokenPers.nome} (
               {hab?.dominio === "positivo" ? "+" : "-"})
@@ -181,10 +181,10 @@ export function CardSlotMatriz({
         className="cursor-pointer flex-1"
         title="Clique para trocar esta habilidade"
       >
-        <div className="font-black text-sm text-foreground leading-tight hover:underline">
+        <div className="font-black text-base text-foreground leading-tight hover:underline">
           {hab?.nome}
         </div>
-        <div className="text-[10px] text-muted-foreground flex items-center gap-2 mt-0.5">
+        <div className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
           <span className="capitalize">{hab?.tipoAcao}</span>
           <span>·</span>
           <span className="font-bold text-accent-ink">
@@ -199,19 +199,19 @@ export function CardSlotMatriz({
             </span>
           )}
         </div>
-        <p className="text-[11px] text-foreground/80 line-clamp-3 mt-1.5 leading-snug">
+        <p className="text-xs text-foreground/85 line-clamp-3 mt-1.5 leading-snug">
           {hab?.descricao}
         </p>
       </div>
 
-      <div className="flex items-center justify-between mt-2 pt-1 border-t border-border/50 text-[10px] text-muted-foreground">
+      <div className="flex items-center justify-between mt-2 pt-1 border-t border-border/50 text-xs text-muted-foreground">
         <span>{hab?.duracao ?? hab?.alcance ?? "Instantâneo"}</span>
         <div className="flex items-center gap-2">
           {hab?.requerFoco !== "nao" && onAlternarFoco && hab && (
             <button
               type="button"
               onClick={() => onAlternarFoco(hab.id)}
-              className={`px-1.5 py-0.5 rounded text-[9px] font-bold cursor-pointer ${
+              className={`px-2 py-0.5 rounded text-xs font-bold cursor-pointer ${
                 focoAtivo
                   ? "bg-amber-400 text-black animate-pulse"
                   : "bg-muted text-muted-foreground hover:text-foreground"
@@ -223,7 +223,7 @@ export function CardSlotMatriz({
           <button
             type="button"
             onClick={() => onSelecionar(numeroSlot)}
-            className="text-[10px] text-muted-foreground hover:text-foreground font-semibold flex items-center gap-0.5 cursor-pointer"
+            className="text-xs text-muted-foreground hover:text-foreground font-semibold flex items-center gap-0.5 cursor-pointer"
           >
             <RefreshCw className="size-3" /> Trocar
           </button>

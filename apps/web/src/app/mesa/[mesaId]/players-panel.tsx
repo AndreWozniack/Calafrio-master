@@ -15,7 +15,7 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
         <div>
           <span className="calafrio-tag-sm">PLAYERS DA MESA</span>
           <h2 className="text-lg font-black text-foreground flex items-center gap-2 mt-1">
-            <Users className="size-5 text-amber-400" /> Players (
+            <Users className="size-5 text-accent-ink" /> Players (
             {players.length})
           </h2>
         </div>
@@ -40,11 +40,11 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
             <Link
               key={p.id}
               href={`/mesa/${mesaId}/players/${p.id}/ficha`}
-              className="elevar p-4 rounded-xl border border-border bg-card/60 hover:bg-card hover:border-amber-400/40 transition-all flex flex-col justify-between space-y-3 group cursor-pointer shadow-sm"
+              className="elevar p-4 rounded-xl border border-border bg-card hover:border-amber-400/60 transition-all flex flex-col justify-between space-y-3 group cursor-pointer shadow-sm"
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <div className="font-black text-base text-foreground group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
+                  <div className="font-black text-base text-foreground group-hover:text-accent-ink transition-colors">
                     {p.nome}
                   </div>
                   <div className="text-xs text-muted-foreground mt-0.5">
@@ -65,7 +65,7 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
                 <span className="h-6 px-2.5 rounded text-xs font-black bg-muted text-muted-foreground border border-border">
                   PD {p.pd}
                 </span>
-                <span className="text-[11px] text-muted-foreground ml-auto font-medium">
+                <span className="text-xs text-muted-foreground ml-auto font-semibold">
                   {p.ficha.matrizHabilidades.length} hab.
                 </span>
               </div>
@@ -76,10 +76,10 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
         {players.length === 0 && (
           <div className="col-span-full py-10 px-4 text-center border-2 border-dashed border-border rounded-xl bg-card/20 space-y-2">
             <Users className="size-8 mx-auto text-muted-foreground/60" />
-            <p className="text-sm font-bold text-foreground">
+            <p className="text-base font-bold text-foreground">
               Nenhum player cadastrado nesta mesa.
             </p>
-            <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
               Clique no botão acima para abrir o Assistente e criar o primeiro
               personagem.
             </p>

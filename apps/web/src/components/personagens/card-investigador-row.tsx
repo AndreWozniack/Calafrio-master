@@ -33,7 +33,7 @@ export function CardInvestigadorRow({
           <span className="font-black text-base text-foreground flex items-center gap-1.5">
             <User className="size-4 text-accent-ink" /> {p.nome}
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md bg-amber-500/15 text-accent-ink border border-amber-500/30">
+          <span className="text-xs font-bold uppercase tracking-wide px-2 py-0.5 rounded-md bg-amber-500/15 text-accent-ink border border-amber-500/30">
             {ocupacao}
           </span>
           {p.jogador && (

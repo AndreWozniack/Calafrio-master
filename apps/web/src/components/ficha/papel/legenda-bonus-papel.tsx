@@ -64,8 +64,8 @@ export function LegendaBonusPapel({
               {icone}
             </svg>
             <span
-              className={`italic ${ativo ? "font-extrabold" : ""}`}
-              style={{ fontSize: u(6.2) }}
+              className={`italic font-bold ${ativo ? "font-black" : ""}`}
+              style={{ fontSize: u(7.8) }}
             >
               {texto}
             </span>

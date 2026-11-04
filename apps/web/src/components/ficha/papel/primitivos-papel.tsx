@@ -29,7 +29,7 @@ export function Posicionado({
 export function EtiquetaPapel({
   area,
   children,
-  tamanho = 12.5,
+  tamanho = 13.5,
 }: {
   area: Retangulo;
   children: ReactNode;
@@ -68,8 +68,8 @@ export function CampoPapel({
         <div className="absolute inset-0 flex items-center">{children}</div>
         {legenda && (
           <span
-            className="absolute uppercase italic text-black/80"
-            style={{ right: u(PONTA + 4), bottom: u(3), fontSize: u(6) }}
+            className="absolute uppercase italic text-black/80 font-bold"
+            style={{ right: u(PONTA + 4), bottom: u(3), fontSize: u(7.8) }}
           >
             {legenda}
           </span>

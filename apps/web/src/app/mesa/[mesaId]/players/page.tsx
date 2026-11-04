@@ -21,7 +21,7 @@ export default async function PlayersPage({
       <div className="mb-2">
         <Link
           href={`/mesa/${mesaId}`}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-amber-400 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-accent-ink transition-colors"
         >
           <ArrowLeft className="size-4" /> Voltar ao Painel da Mesa
         </Link>
@@ -30,7 +30,7 @@ export default async function PlayersPage({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-4">
         <div>
           <h1 className="text-2xl font-black font-heading tracking-wide text-foreground uppercase flex items-center gap-2">
-            <Users className="size-6 text-amber-400" /> Players (
+            <Users className="size-6 text-accent-ink" /> Players (
             {players.length})
           </h1>
           <p className="text-xs text-muted-foreground font-semibold mt-1">

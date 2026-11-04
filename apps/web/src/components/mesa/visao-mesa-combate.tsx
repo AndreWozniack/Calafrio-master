@@ -272,7 +272,7 @@ export function VisaoMesaCombate() {
             <button
               type="button"
               onClick={reiniciarCombate}
-              className="text-[11px] font-bold text-muted-foreground hover:text-foreground cursor-pointer"
+              className="text-xs font-bold text-muted-foreground hover:text-foreground cursor-pointer"
             >
               Encerrar combate
             </button>
@@ -280,7 +280,7 @@ export function VisaoMesaCombate() {
         </div>
         <div className="grid md:grid-cols-2 gap-4 text-xs">
           <div className="space-y-1.5">
-            <div className="font-bold uppercase text-[10px] text-muted-foreground">
+            <div className="font-bold uppercase text-xs text-muted-foreground">
               Players ({personagens.length})
             </div>
             {personagens.length === 0 && (
@@ -303,7 +303,7 @@ export function VisaoMesaCombate() {
             </div>
           </div>
           <div className="space-y-1.5">
-            <div className="font-bold uppercase text-[10px] text-muted-foreground">
+            <div className="font-bold uppercase text-xs text-muted-foreground">
               Bestiário ({criaturas.length})
             </div>
             {criaturas.length === 0 && (
@@ -330,7 +330,7 @@ export function VisaoMesaCombate() {
             {combatentes.map((c) => (
               <span
                 key={c.id}
-                className="inline-flex items-center gap-1 px-2 py-0.5 bg-muted rounded text-[11px] font-bold"
+                className="inline-flex items-center gap-1 px-2 py-0.5 bg-muted rounded text-xs font-bold"
               >
                 {c.nome}
                 <button

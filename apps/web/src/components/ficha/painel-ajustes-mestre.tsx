@@ -92,7 +92,7 @@ export function PainelAjustesMestre({
     <details className="calafrio-card p-4 group">
       <summary className="cursor-pointer flex items-center gap-2 list-none">
         <span className="calafrio-tag">AJUSTES LIVRES DO MESTRE</span>
-        <span className="text-[11px] text-muted-foreground">
+        <span className="text-xs text-muted-foreground">
           somam ou subtraem do valor calculado — nada fica travado
         </span>
       </summary>
@@ -107,7 +107,7 @@ export function PainelAjustesMestre({
             >
               <div>
                 <div className="font-bold">{a.rotulo}</div>
-                <div className="text-[10px] text-muted-foreground">
+                <div className="text-xs text-muted-foreground font-medium">
                   total {a.total(derivada)} · ajuste {aj > 0 ? `+${aj}` : aj}
                 </div>
               </div>

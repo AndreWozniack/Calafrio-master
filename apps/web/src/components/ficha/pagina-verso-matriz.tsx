@@ -8,6 +8,7 @@ import type {
   FichaDerivadaCalafrio,
   HabilidadeUnicaCalafrio,
 } from "@calafrio/core";
+import type { NivelZoomFicha } from "./fichas-tipos";
 import { AlertTriangle, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { FolhaPapel } from "./papel/folha-papel";
@@ -41,6 +42,7 @@ interface PaginaVersoMatrizProps {
   onAlternarFoco?: (id: string) => void;
   onDefinirAnotacoes: (anotacoes: string) => void;
   onNavegarParaEcos?: () => void;
+  zoom?: NivelZoomFicha;
 }
 
 export function PaginaVersoMatriz({
@@ -57,6 +59,7 @@ export function PaginaVersoMatriz({
   focoAtivoId,
   onAlternarFoco,
   onDefinirAnotacoes,
+  zoom,
 }: PaginaVersoMatrizProps) {
   const [slotSelecionado, setSlotSelecionado] = useState<number | null>(null);
   const slotsEmAlinhamento = new Set(
@@ -65,7 +68,7 @@ export function PaginaVersoMatriz({
 
   return (
     <div className="space-y-6">
-      <FolhaPapel>
+      <FolhaPapel zoom={zoom}>
         <EtiquetaPapel area={{ x: 6, y: 28, w: 166, h: 28 }} tamanho={13}>
           Habilidades Paranormais
         </EtiquetaPapel>

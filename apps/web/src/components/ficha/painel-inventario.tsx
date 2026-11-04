@@ -137,18 +137,18 @@ export function PainelInventario({
                   )}
                   <span className="truncate hover:underline">{item.nome}</span>
                   {item.dano && (
-                    <span className="text-[10px] text-accent-ink font-semibold shrink-0">
+                    <span className="text-xs text-accent-ink font-semibold shrink-0">
                       [{item.dano} dano {item.espectroDano}]
                     </span>
                   )}
                   {item.usosMax !== undefined && (
-                    <span className="text-[10px] text-muted-foreground shrink-0">
+                    <span className="text-xs text-muted-foreground shrink-0 font-medium">
                       ({item.usosAtuais ?? item.usosMax}/{item.usosMax} usos)
                     </span>
                   )}
                 </div>
                 {item.descricao && (
-                  <p className="text-[11px] text-muted-foreground line-clamp-1">
+                  <p className="text-xs text-muted-foreground line-clamp-1">
                     {item.descricao}
                   </p>
                 )}

@@ -2,7 +2,13 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { FichaViva, ModoVisualizacao, PaginaFicha } from "./fichas-tipos";
+import {
+  type FichaViva,
+  type ModoVisualizacao,
+  type NivelZoomFicha,
+  type PaginaFicha,
+  obterConfigZoomFicha,
+} from "./fichas-tipos";
 import { PaginaEcosAprimoramentos } from "./pagina-ecos-aprimoramentos";
 import { PaginaFrenteFicha } from "./pagina-frente-ficha";
 import { PaginaVersoMatriz } from "./pagina-verso-matriz";
@@ -13,6 +19,7 @@ interface VisualizadorPapelProps {
   pagina: PaginaFicha;
   onMudarPagina: (pagina: PaginaFicha) => void;
   onAbrirRolagem: (nome?: string) => void;
+  zoom?: NivelZoomFicha;
 }
 
 const LIMITE_SWIPE_PX = 60;
@@ -85,6 +92,7 @@ export function VisualizadorPapel({
   pagina,
   onMudarPagina,
   onAbrirRolagem,
+  zoom = "100",
 }: VisualizadorPapelProps) {
   const [transicao, setTransicao] = useState<TransicaoPilha>(null);
   const inicioToque = useRef<number | null>(null);
@@ -134,6 +142,7 @@ export function VisualizadorPapel({
 
   const duas = modo === "duas";
   const controlesVisiveis = duas ? "lg:hidden" : "";
+  const configZoom = obterConfigZoomFicha(zoom);
 
   const renderPagina = (alvo: PaginaFicha) => {
     switch (alvo) {
@@ -142,6 +151,7 @@ export function VisualizadorPapel({
           <PaginaFrenteFicha
             ficha={f.ficha}
             derivada={f.derivada}
+            zoom={zoom}
             onDefinirNome={f.definirNome}
             onDefinirApt={f.definirApt}
             onDefinirRetrato={(url) =>
@@ -166,6 +176,7 @@ export function VisualizadorPapel({
             ficha={f.ficha}
             derivada={f.derivada}
             catalogo={f.catalogo}
+            zoom={zoom}
             onAlocarSlot={(slot, alocacao) =>
               f.alocarSlotMatriz(slot, alocacao.tipo, alocacao.id)
             }
@@ -196,6 +207,7 @@ export function VisualizadorPapel({
             ficha={f.ficha}
             derivada={f.derivada}
             catalogo={f.catalogo}
+            zoom={zoom}
             onAdicionarHabilidadeUnica={(unica) =>
               f.dispatch({ tipo: "adicionarHabilidadeUnica", unica })
             }
@@ -219,7 +231,8 @@ export function VisualizadorPapel({
 
   return (
     <div
-      className={`relative ${duas ? "w-full" : "mx-auto max-w-[880px]"}`}
+      className={`relative ${duas ? "w-full" : "mx-auto w-full transition-[max-width] duration-200 ease-out"}`}
+      style={duas ? undefined : { maxWidth: `${configZoom.larguraMaximaFolhaPx}px` }}
       onTouchStart={(e) => {
         inicioToque.current = e.touches[0].clientX;
       }}
@@ -327,49 +340,61 @@ export function VisualizadorPapel({
 
       {/* Visualização de Páginas com Sobreposição Física */}
       {!duas ? (
-        <div className="relative w-full overflow-x-clip rounded-sm">
-          {transicao ? (
-            transicao.tipo === "avancar" ? (
-              <>
-                {/* Folha de baixo (fica parada no lugar) */}
-                <div
-                  key={`baixo-${transicao.baixo}`}
-                  className="relative z-10 w-full pointer-events-none"
-                >
-                  {renderPagina(transicao.baixo)}
-                </div>
-                {/* Folha de cima (entra deslizando da direita por cima) */}
-                <div
-                  key={`cima-${transicao.cima}`}
-                  className="absolute inset-0 z-20 w-full folha-sobrepor-entrar pointer-events-none"
-                >
-                  {renderPagina(transicao.cima)}
-                </div>
-              </>
+        <div className="relative w-full">
+          {/* Bordas decorativas da pilha de folhas embaixo (Stack Paper Effect) */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 translate-x-1 translate-y-1 rounded-sm border border-black/25 bg-[#eaeae5] shadow-xs pointer-events-none -z-10"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 translate-x-2 translate-y-2 rounded-sm border border-black/15 bg-[#dfdfd8] shadow-xs pointer-events-none -z-20"
+          />
+
+          <div className="relative w-full overflow-x-clip rounded-sm shadow-xl">
+            {transicao ? (
+              transicao.tipo === "avancar" ? (
+                <>
+                  {/* Folha de baixo (fica no lugar e recebe leve sombra de profundidade) */}
+                  <div
+                    key={`baixo-${transicao.baixo}`}
+                    className="relative z-10 w-full pointer-events-none folha-camada-baixo-avancar"
+                  >
+                    {renderPagina(transicao.baixo)}
+                  </div>
+                  {/* Folha de cima (entra deslizando por cima com borda e sombra) */}
+                  <div
+                    key={`cima-${transicao.cima}`}
+                    className="absolute inset-0 z-20 w-full folha-camada-cima-entrar pointer-events-none"
+                  >
+                    {renderPagina(transicao.cima)}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Folha de baixo (já está no lugar, sendo revelada) */}
+                  <div
+                    key={`baixo-${transicao.baixo}`}
+                    className="relative z-10 w-full pointer-events-none folha-camada-baixo-voltar"
+                  >
+                    {renderPagina(transicao.baixo)}
+                  </div>
+                  {/* Folha de cima (desliza para a direita saindo de cima) */}
+                  <div
+                    key={`cima-${transicao.cima}`}
+                    className="absolute inset-0 z-20 w-full folha-camada-cima-sair pointer-events-none"
+                  >
+                    {renderPagina(transicao.cima)}
+                  </div>
+                </>
+              )
             ) : (
-              <>
-                {/* Folha de baixo (já está no lugar esperando, sendo revelada) */}
-                <div
-                  key={`baixo-${transicao.baixo}`}
-                  className="relative z-10 w-full pointer-events-none"
-                >
-                  {renderPagina(transicao.baixo)}
-                </div>
-                {/* Folha de cima (desliza para a direita saindo de cima) */}
-                <div
-                  key={`cima-${transicao.cima}`}
-                  className="absolute inset-0 z-20 w-full folha-sobrepor-sair pointer-events-none"
-                >
-                  {renderPagina(transicao.cima)}
-                </div>
-              </>
-            )
-          ) : (
-            /* Em repouso (interativa) */
-            <div key={`atual-${pagina}`} className="relative z-10 w-full">
-              {renderPagina(pagina)}
-            </div>
-          )}
+              /* Em repouso (interativa) */
+              <div key={`atual-${pagina}`} className="relative z-10 w-full">
+                {renderPagina(pagina)}
+              </div>
+            )}
+          </div>
         </div>
       ) : (
         /* Modo 2 páginas lado a lado */
