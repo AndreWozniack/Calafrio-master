@@ -55,11 +55,13 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased min-h-dvh flex flex-col bg-background text-foreground font-serif">
-        <BarraTopo user={session?.user} />
-        <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 flex flex-col">
-          {children}
-        </main>
+      <body className="antialiased min-h-dvh flex flex-col bg-background text-foreground font-serif relative">
+        <div className="relative z-1 flex flex-col flex-1">
+          <BarraTopo user={session?.user} />
+          <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 flex flex-col">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );
