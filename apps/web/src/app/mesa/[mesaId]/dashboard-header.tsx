@@ -1,4 +1,4 @@
-import { ArrowLeft, Copy, Shield, Users } from "lucide-react";
+import { ArrowLeft, Shield, User } from "lucide-react";
 import Link from "next/link";
 import { BannerEscudo } from "@/components/navegacao/banner-escudo";
 
@@ -7,12 +7,14 @@ interface DashboardHeaderProps {
   nome: string;
   codigoConvite: string;
   totalPlayers: number;
+  mestre: boolean;
 }
 
 export function DashboardHeader({
   nome,
   codigoConvite,
   totalPlayers,
+  mestre,
 }: DashboardHeaderProps) {
   return (
     <BannerEscudo>
@@ -27,16 +29,27 @@ export function DashboardHeader({
           <h1 className="text-2xl sm:text-3xl font-black font-heading text-white uppercase tracking-wide">
             {nome}
           </h1>
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs font-extrabold uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40">
-            <Shield className="size-3.5" /> Mestre
-          </span>
+          {mestre ? (
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs font-extrabold uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40">
+              <Shield className="size-3.5" /> Mestre
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs font-extrabold uppercase bg-sky-400/20 text-sky-300 border border-sky-400/40">
+              <User className="size-3.5" /> Jogador
+            </span>
+          )}
         </div>
         <p className="text-sm text-white/80">
-          Código de acesso:{" "}
-          <span className="font-mono font-bold text-white">
-            {codigoConvite}
-          </span>{" "}
-          · {totalPlayers} Player(s) na equipe
+          {mestre && (
+            <>
+              Código de acesso:{" "}
+              <span className="font-mono font-bold text-white">
+                {codigoConvite}
+              </span>{" "}
+              ·{" "}
+            </>
+          )}
+          {totalPlayers} Player(s) na equipe
         </p>
       </div>
     </BannerEscudo>
