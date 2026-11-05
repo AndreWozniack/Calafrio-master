@@ -3,9 +3,9 @@ import type {
   PersonalidadeCalafrio,
 } from "@calafrio/tema";
 import type { ArmaMundanaCatalogo, CatalogoCalafrio } from "../catalogo/tipos";
+import type { CategoriaPalavraChave } from "./efeitos";
 import type {
   CategoriaItemCalafrio,
-  CategoriaPalavraChave,
   FichaCalafrio,
   ItemNaFichaCalafrio,
   PalavraChaveNaFicha,
@@ -161,8 +161,8 @@ export function gerarFichaAleatoria(
 
   const categoriasRotativas: CategoriaPalavraChave[] = [
     "talento",
-    "aspecto",
     "falha",
+    "extra",
   ];
   let catIdx = 0;
 
