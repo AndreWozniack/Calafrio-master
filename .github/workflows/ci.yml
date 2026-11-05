@@ -1,11 +1,12 @@
 name: CI - Calafrio Monorepo
 
 on:
+  # push só em main/master: evita rodar 2x (push + PR) em branches com PR aberto.
+  # dev e demais branches são validadas pelo evento pull_request.
   push:
     branches:
       - main
       - master
-      - dev
   pull_request:
     branches:
       - main
