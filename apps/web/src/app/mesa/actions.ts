@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { criarMesa, excluirMesa } from "@/services/armazenamento-calafrio";
+import { normalizarCodigoConvite } from "@/services/convite-regras";
 
 export async function criarMesaAction(formData: FormData) {
   const session = await auth();
@@ -24,4 +25,13 @@ export async function excluirMesaAction(mesaId: string) {
 
   await excluirMesa(mesaId);
   revalidatePath("/mesa");
+}
+
+export async function entrarPorCodigoAction(formData: FormData) {
+  const session = await auth();
+  if (!session?.user) redirect("/login");
+
+  const codigo = normalizarCodigoConvite(String(formData.get("codigo") ?? ""));
+  if (!codigo) return;
+  redirect(`/entrar/${codigo}`);
 }

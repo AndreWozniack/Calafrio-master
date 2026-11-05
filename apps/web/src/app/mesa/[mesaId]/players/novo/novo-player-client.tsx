@@ -4,9 +4,15 @@ import { useFichaCalafrio } from "@calafrio/ficha-app";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AssistenteCriacaoCalafrio } from "@/components/ficha/assistente-criacao-calafrio";
-import { criarPlayerAction } from "../actions";
+import { criarPlayerAction, salvarFichaPlayerAction } from "../actions";
 
-export function NovoPlayerClient({ mesaId }: { mesaId: string }) {
+export function NovoPlayerClient({
+  mesaId,
+  rascunhoId,
+}: {
+  mesaId: string;
+  rascunhoId?: string;
+}) {
   const router = useRouter();
   const f = useFichaCalafrio();
   const [salvando, setSalvando] = useState(false);
@@ -15,7 +21,12 @@ export function NovoPlayerClient({ mesaId }: { mesaId: string }) {
     if (salvando) return;
     setSalvando(true);
     try {
-      const novo = await criarPlayerAction(mesaId, f.ficha);
+      const novo = rascunhoId
+        ? await salvarFichaPlayerAction(rascunhoId, {
+            ...f.ficha,
+            id: rascunhoId,
+          })
+        : await criarPlayerAction(mesaId, f.ficha);
       if (novo?.id) {
         router.push(`/mesa/${mesaId}/players/${novo.id}/ficha`);
       } else {
