@@ -5,9 +5,9 @@ import type {
 } from "@calafrio/core";
 import { PDFDocument, type PDFForm, type PDFPage, rgb } from "pdf-lib";
 import {
-  type CoordenadaRetanguloPdf,
   COORDENADAS_FICHA_PAGINA_1,
   COORDENADAS_FICHA_PAGINA_2,
+  type CoordenadaRetanguloPdf,
 } from "./coordenadas-ficha-pdf";
 
 export interface OpcoesExportacaoPdf {
@@ -348,7 +348,7 @@ export async function gerarPdfFichaEditavel(
   if (ficha.customizacoesEco && ficha.customizacoesEco.length > 0) {
     partesAnotacoes.push("\n--- ECOS E APERFEIÇOAMENTOS ---");
     for (const eco of ficha.customizacoesEco) {
-      partesAnotacoes.push(`• ${eco.titulo}: ${eco.descricao}`);
+      partesAnotacoes.push(`• ${eco.titulo}: ${eco.descricaoMudanca}`);
     }
   }
 

@@ -21,24 +21,52 @@ describe("Exportador de Ficha para PDF Editável (AcroForm)", () => {
     const ficha = criarFichaCalafrioVazia("ficha-1", "Dante Valente");
     ficha.aptBase = 3;
     ficha.palavrasChave = [
-      { id: "pc-1", nome: "Detetive Particular", categoria: "ocupacao", efeitos: [] },
-      { id: "pc-2", nome: "Olhar Clínico", categoria: "talento", efeitos: [] },
-      { id: "pc-3", nome: "Insônia Crônica", categoria: "falha", efeitos: [] },
-      { id: "pc-4", nome: "Gazuas e Trincos", categoria: "livre", efeitos: [] },
+      {
+        id: "pc-1",
+        nome: "Detetive Particular",
+        categoria: "ocupacao",
+        semConsumirLimite: false,
+        efeitos: [],
+      },
+      {
+        id: "pc-2",
+        nome: "Olhar Clínico",
+        categoria: "talento",
+        semConsumirLimite: false,
+        efeitos: [],
+      },
+      {
+        id: "pc-3",
+        nome: "Insônia Crônica",
+        categoria: "falha",
+        semConsumirLimite: false,
+        efeitos: [],
+      },
+      {
+        id: "pc-4",
+        nome: "Gazuas e Trincos",
+        categoria: "extra",
+        semConsumirLimite: false,
+        efeitos: [],
+      },
     ];
     ficha.inventario = [
       {
         id: "item-1",
         nome: "Revólver .38",
+        categoria: "arma_curto",
+        paranormal: false,
         equipado: true,
         dano: 4,
-        espectroDano: "perfuracao",
+        espectroDano: "fisico",
         descricao: "Tambor de 6 tiros.",
         efeitos: [],
       },
       {
         id: "item-2",
         nome: "Lanterna Tática",
+        categoria: "ferramenta",
+        paranormal: false,
         equipado: false,
         descricao: "Feixe de luz concentrado.",
         efeitos: [],
@@ -74,9 +102,13 @@ describe("Exportador de Ficha para PDF Editável (AcroForm)", () => {
     // Identidade e Vitais
     expect(form.getTextField("nome").getText()).toBe("Dante Valente");
     expect(form.getTextField("apt").getText()).toBe("3");
-    expect(form.getTextField("pv_atual").getText()).toBe(String(derivada.pvAtual));
+    expect(form.getTextField("pv_atual").getText()).toBe(
+      String(derivada.pvAtual),
+    );
     expect(form.getTextField("pv_max").getText()).toBe(String(derivada.pvMax));
-    expect(form.getTextField("pa_atual").getText()).toBe(String(derivada.paAtual));
+    expect(form.getTextField("pa_atual").getText()).toBe(
+      String(derivada.paAtual),
+    );
     expect(form.getTextField("pa_max").getText()).toBe(String(derivada.paMax));
     expect(form.getTextField("pd").getText()).toBe(String(derivada.pd));
     expect(form.getTextField("ecos").getText()).toBe(String(derivada.ecosMax));
@@ -86,10 +118,18 @@ describe("Exportador de Ficha para PDF Editável (AcroForm)", () => {
     expect(form.getTextField("espirions").getText()).toBe("3");
 
     // Palavras-chave nas linhas corretas
-    expect(form.getTextField("palavra_chave_1").getText()).toBe("Detetive Particular");
-    expect(form.getTextField("palavra_chave_2").getText()).toBe("Olhar Clínico");
-    expect(form.getTextField("palavra_chave_3").getText()).toBe("Insônia Crônica");
-    expect(form.getTextField("palavra_chave_4").getText()).toBe("Gazuas e Trincos");
+    expect(form.getTextField("palavra_chave_1").getText()).toBe(
+      "Detetive Particular",
+    );
+    expect(form.getTextField("palavra_chave_2").getText()).toBe(
+      "Olhar Clínico",
+    );
+    expect(form.getTextField("palavra_chave_3").getText()).toBe(
+      "Insônia Crônica",
+    );
+    expect(form.getTextField("palavra_chave_4").getText()).toBe(
+      "Gazuas e Trincos",
+    );
 
     // Inventário
     const textoInventario = form.getTextField("inventario").getText() ?? "";
@@ -99,7 +139,9 @@ describe("Exportador de Ficha para PDF Editável (AcroForm)", () => {
 
     // Slots da Matriz na Página 2
     expect(form.getTextField("slot_matriz_0_titulo").getText()).toBe("Frenesi");
-    expect(form.getTextField("slot_matriz_4_titulo").getText()).toBe("Configuração Pétrea");
+    expect(form.getTextField("slot_matriz_4_titulo").getText()).toBe(
+      "Configuração Pétrea",
+    );
 
     // Anotações
     const textoAnotacoes = form.getTextField("anotacoes").getText() ?? "";
@@ -112,7 +154,10 @@ describe("Exportador de Ficha para PDF Editável (AcroForm)", () => {
   });
 
   it("lida corretamente com carteira zerada, slots vazios e caracteres especiais", async () => {
-    const ficha = criarFichaCalafrioVazia("ficha-2", "João das Mercês & Espíritos");
+    const ficha = criarFichaCalafrioVazia(
+      "ficha-2",
+      "João das Mercês & Espíritos",
+    );
     ficha.carteira = { fundos: 0, espirions: 0 };
     ficha.matrizHabilidades = []; // nenhum slot preenchido
     ficha.anotacoes = "";
@@ -126,7 +171,9 @@ describe("Exportador de Ficha para PDF Editável (AcroForm)", () => {
     const pdfDoc = await PDFDocument.load(pdfBytes);
     const form = pdfDoc.getForm();
 
-    expect(form.getTextField("nome").getText()).toBe("João das Mercês & Espíritos");
+    expect(form.getTextField("nome").getText()).toBe(
+      "João das Mercês & Espíritos",
+    );
     expect(form.getTextField("fundos").getText()).toBe("0");
     expect(form.getTextField("espirions").getText()).toBe("0");
 
