@@ -1,8 +1,8 @@
 import {
   type CatalogoCalafrio,
+  carregarCatalogoCalafrio,
   type FichaCalafrio,
   type FichaDerivadaCalafrio,
-  carregarCatalogoCalafrio,
 } from "@calafrio/core";
 import { PDFDocument, type PDFForm, type PDFPage, rgb } from "pdf-lib";
 import {
@@ -10,6 +10,7 @@ import {
   COORDENADAS_FICHA_PAGINA_2,
   type CoordenadaRetanguloPdf,
 } from "./coordenadas-ficha-pdf";
+import { sanitizarTextoWinAnsi } from "./sanitizar-texto-winansi";
 
 export interface OpcoesExportacaoPdf {
   bufferTemplate?: ArrayBuffer | Uint8Array;
@@ -21,16 +22,7 @@ const CATEGORIAS_FIXAS = [
   { categoria: "falha", rotulo: "Falha" },
 ] as const;
 
-/**
- * Remove caracteres incompatíveis com a tabela WinAnsi (padrão Helvetica do PDF)
- * como emojis ou símbolos fora da faixa Windows-1252, preservando acentos em português.
- */
-export function sanitizarTextoWinAnsi(texto: string): string {
-  return texto.replace(
-    /[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF\u2013\u2014\u2018\u2019\u201C\u201D\u2022\u2026\u20AC]/g,
-    "",
-  );
-}
+export { sanitizarTextoWinAnsi } from "./sanitizar-texto-winansi";
 
 function distribuirLinhasPalavrasChave(
   palavras: FichaDerivadaCalafrio["palavrasChaveAtivas"],
@@ -338,10 +330,13 @@ export async function gerarPdfFichaEditavel(
 
     if (alocacao) {
       if (alocacao.tipo === "unica") {
-        const unica = ficha.habilidadesUnicas?.find((u) => u.id === alocacao.id);
+        const unica = ficha.habilidadesUnicas?.find(
+          (u) => u.id === alocacao.id,
+        );
         if (unica) {
           titulo = unica.nome;
-          const custo = `${unica.custo} ${unica.recurso?.toUpperCase() ?? ""}`.trim();
+          const custo =
+            `${unica.custo} ${unica.recurso?.toUpperCase() ?? ""}`.trim();
           descricao = `[${unica.tipoAcao} | ${custo}]\n${unica.descricao}`;
         }
       } else if (alocacao.tipo === "paranormal") {

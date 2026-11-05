@@ -342,7 +342,6 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
             >
               <X className="size-3.5" /> Cancelar
             </button>
-
             <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto justify-end">
               <button
                 type="button"

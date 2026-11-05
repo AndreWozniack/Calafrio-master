@@ -198,7 +198,9 @@ describe("Exportador de Ficha para PDF Editável (AcroForm)", () => {
     const form = pdfDoc.getForm();
 
     expect(form.getTextField("nome").getText()).toBe("Detetive Flamejante ");
-    expect(form.getTextField("anotacoes").getText()).toContain("Investigando com dados  e pistas .");
+    expect(form.getTextField("anotacoes").getText()).toContain(
+      "Investigando com dados  e pistas .",
+    );
   });
 
   it("resolve catálogo automaticamente quando omitido nos parâmetros", async () => {
