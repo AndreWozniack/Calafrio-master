@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { carregarCatalogoCalafrio } from "../../catalogo";
-import { montarFichaCalafrio } from "../montar-ficha";
 import { gerarFichaAleatoria } from "../gerador-aleatorio";
+import { montarFichaCalafrio } from "../montar-ficha";
 
 describe("gerarFichaAleatoria", () => {
   const catalogo = carregarCatalogoCalafrio();
@@ -25,7 +25,10 @@ describe("gerarFichaAleatoria", () => {
   });
 
   it("deve respeitar opções personalizadas de APT e domínio", () => {
-    const ficha = gerarFichaAleatoria(catalogo, { apt: 2, dominio: "positivo" });
+    const ficha = gerarFichaAleatoria(catalogo, {
+      apt: 2,
+      dominio: "positivo",
+    });
     expect(ficha.aptBase).toBe(2);
     expect(ficha.palavrasChave.length).toBe(4); // 2 + APT = 4
     expect(ficha.matrizHabilidades.length).toBe(2); // APT = 2
@@ -62,6 +65,37 @@ describe("gerarFichaAleatoria", () => {
     expect(ficha1.inventario.map((i) => i.nome)).toEqual(
       ficha2.inventario.map((i) => i.nome),
     );
+  });
+
+  it("deve gerar fichas válidas para APT 1 a 6 em ambos os domínios", () => {
+    for (let apt = 1; apt <= 6; apt++) {
+      for (const dominio of ["positivo", "negativo"] as const) {
+        for (const personalidadeFoco of [undefined, "maneiro"] as const) {
+          const ficha = gerarFichaAleatoria(catalogo, {
+            apt,
+            dominio,
+            personalidadeFoco,
+          });
+          expect(ficha.matrizHabilidades.length).toBe(apt);
+          expect(new Set(ficha.matrizHabilidades.map((m) => m.slot)).size).toBe(
+            apt,
+          );
+          expect(ficha.palavrasChave.length).toBe(2 + apt);
+          expect(montarFichaCalafrio(ficha, catalogo).avisosDeRegra).toEqual(
+            [],
+          );
+        }
+      }
+    }
+  });
+
+  it("não deve equipar consumíveis como arma inicial", () => {
+    for (let i = 0; i < 200; i++) {
+      const ficha = gerarFichaAleatoria(catalogo, { randomFn: () => 0.5 });
+      expect(ficha.inventario.some((it) => it.categoria === "consumivel")).toBe(
+        false,
+      );
+    }
   });
 
   it("deve gerar 50 fichas consecutivas sem qualquer aviso de regra", () => {

@@ -1,7 +1,4 @@
-import type {
-  DominioEmocional,
-  PersonalidadeCalafrio,
-} from "@calafrio/tema";
+import type { DominioEmocional, PersonalidadeCalafrio } from "@calafrio/tema";
 import type { ArmaMundanaCatalogo, CatalogoCalafrio } from "../catalogo/tipos";
 import type { CategoriaPalavraChave } from "./efeitos";
 import type {
@@ -125,15 +122,17 @@ export function gerarFichaAleatoria(
   const prenomeIdx = Math.floor(rnd() * PRENOMES_INVESTIGADORES.length);
   const sobrenomeIdx = Math.floor(rnd() * SOBRENOMES_INVESTIGADORES.length);
   const nomeCompleto = `${PRENOMES_INVESTIGADORES[prenomeIdx]} ${SOBRENOMES_INVESTIGADORES[sobrenomeIdx]}`;
-  const idUnico = `investigador-${Date.now().toString(36)}-${Math.floor(rnd() * 10000).toString(36)}`;
+  const sufixoId = Math.floor(rnd() * 36 ** 6)
+    .toString(36)
+    .padStart(6, "0");
+  const idUnico = `investigador-${Date.now().toString(36)}-${sufixoId}`;
 
   // 2. Sorteio de Ocupação (tabela d100)
   const ocupacoes = catalogo.ocupacoes;
-  const ocupacaoSorteada =
-    ocupacoes[Math.floor(rnd() * ocupacoes.length)] ?? {
-      numero: 1,
-      nome: "Detetive Particular",
-    };
+  const ocupacaoSorteada = ocupacoes[Math.floor(rnd() * ocupacoes.length)] ?? {
+    numero: 1,
+    nome: "Detetive Particular",
+  };
 
   const palavrasChave: PalavraChaveNaFicha[] = [
     {
@@ -149,15 +148,22 @@ export function gerarFichaAleatoria(
   // 3. Sorteio de Palavras-Chave genéricas (limite total é 2 + APT)
   // Portanto, sorteamos (1 + APT) palavras genéricas para somar (2 + APT) com a ocupação.
   const qtdGenericas = 1 + apt;
-  const indicesGenericas = new Set<number>();
   const totalGenericas = catalogo.palavrasChaveGenericas.length;
 
-  while (
-    indicesGenericas.size < qtdGenericas &&
-    indicesGenericas.size < totalGenericas
-  ) {
-    indicesGenericas.add(Math.floor(rnd() * totalGenericas));
+  // Fisher-Yates parcial: termina sempre, mesmo com PRNG constante.
+  const indicesDisponiveis = Array.from(
+    { length: totalGenericas },
+    (_, i) => i,
+  );
+  const qtdSorteio = Math.min(qtdGenericas, totalGenericas);
+  for (let i = 0; i < qtdSorteio; i++) {
+    const j = i + Math.floor(rnd() * (totalGenericas - i));
+    [indicesDisponiveis[i], indicesDisponiveis[j]] = [
+      indicesDisponiveis[j],
+      indicesDisponiveis[i],
+    ];
   }
+  const indicesGenericas = indicesDisponiveis.slice(0, qtdSorteio);
 
   const categoriasRotativas: CategoriaPalavraChave[] = [
     "talento",
@@ -200,8 +206,17 @@ export function gerarFichaAleatoria(
     }
   }
 
-  // Embaralha candidatas usando Fisher-Yates com o PRNG
-  const habilidadesEmbaralhadas = [...habilidadesCandidatas];
+  // Embaralha candidatas usando Fisher-Yates com o PRNG.
+  // Se o filtro de personalidade ficar curto, completa com o restante do domínio.
+  const idsCandidatas = new Set(habilidadesCandidatas.map((h) => h.id));
+  const habilidadesEmbaralhadas = [
+    ...habilidadesCandidatas,
+    ...(habilidadesCandidatas.length < apt
+      ? catalogo.habilidadesParanormais.filter(
+          (h) => h.dominio === dominioEscolhido && !idsCandidatas.has(h.id),
+        )
+      : []),
+  ];
   for (let i = habilidadesEmbaralhadas.length - 1; i > 0; i--) {
     const j = Math.floor(rnd() * (i + 1));
     const temp = habilidadesEmbaralhadas[i];
@@ -220,9 +235,10 @@ export function gerarFichaAleatoria(
   }));
 
   // 5. Equipamentos & Bugigangas
-  // Sorteia 1 arma mundana acessível (até 6 F$ para personagens iniciais)
+  // Sorteia 1 arma mundana acessível (até 6 F$ para personagens iniciais).
+  // Consumíveis ficam de fora: não são armas equipáveis de partida.
   const armasIniciais = catalogo.armasMundanas.filter(
-    (a) => a.precoFundos <= 6,
+    (a) => a.precoFundos <= 6 && a.tipoAlcance !== "Consumível",
   );
   const armaEscolhida =
     armasIniciais.length > 0
@@ -249,11 +265,12 @@ export function gerarFichaAleatoria(
 
   // Sorteia 1 bugiganga da tabela d100
   const bugigangas = catalogo.bugigangas;
-  const bugigangaSorteada =
-    bugigangas[Math.floor(rnd() * bugigangas.length)] ?? {
-      numero: 1,
-      nome: "Isqueiro velho",
-    };
+  const bugigangaSorteada = bugigangas[
+    Math.floor(rnd() * bugigangas.length)
+  ] ?? {
+    numero: 1,
+    nome: "Isqueiro velho",
+  };
 
   inventario.push({
     id: `item-bugiganga-${bugigangaSorteada.numero}`,
