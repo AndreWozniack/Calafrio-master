@@ -12,7 +12,6 @@ import {
   Coins,
   Dices,
   ExternalLink,
-  Flame,
   Heart,
   Loader2,
   Package,
@@ -66,6 +65,7 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
       if (redirecionarParaFicha && novo?.id) {
         router.push(`/mesa/${mesaId}/players/${novo.id}/ficha`);
       } else {
+        router.refresh();
         setTimeout(() => {
           setFichaSorteada(null);
           setDerivada(null);
@@ -218,7 +218,7 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
             <div className="bg-card p-3 rounded-xl border border-border space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-black text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="size-3.5 text-accent-ink" /> Habilidade Memorizada (Matriz #4)
+                  <Sparkles className="size-3.5 text-accent-ink" /> Habilidade Memorizada (Matriz #{fichaSorteada.matrizHabilidades[0]?.slot ?? 4})
                 </span>
                 {habilidadeInfo && (
                   <span
@@ -309,12 +309,12 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
               <X className="size-3.5" /> Cancelar
             </button>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto justify-end">
               <button
                 type="button"
                 onClick={executarSorteio}
                 disabled={salvando || sorteando}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs bg-muted hover:bg-muted/80 text-foreground border border-border cursor-pointer transition-colors"
+                className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs bg-muted hover:bg-muted/80 text-foreground border border-border cursor-pointer transition-colors"
               >
                 <RefreshCw
                   className={`size-3.5 ${sorteando ? "animate-spin" : ""}`}
@@ -326,7 +326,7 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
                 type="button"
                 onClick={() => handleSalvar(false)}
                 disabled={salvando}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-black text-xs uppercase tracking-wider bg-card hover:bg-muted text-foreground border-2 border-border shadow-xs cursor-pointer transition-colors"
+                className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg font-black text-xs uppercase tracking-wider bg-card hover:bg-muted text-foreground border-2 border-border shadow-xs cursor-pointer transition-colors"
               >
                 {sucesso ? (
                   <>
@@ -348,7 +348,7 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
                 type="button"
                 onClick={() => handleSalvar(true)}
                 disabled={salvando}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-black text-xs uppercase tracking-wider bg-amber-400 hover:bg-amber-300 text-black shadow-xs cursor-pointer transition-colors"
+                className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg font-black text-xs uppercase tracking-wider bg-amber-400 hover:bg-amber-300 text-black shadow-xs cursor-pointer transition-colors"
               >
                 {salvando ? (
                   <Loader2 className="size-4 animate-spin" />

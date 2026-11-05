@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, Plus, Users } from "lucide-react";
+import { ArrowLeft, BookOpen, Users } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { listarPlayers, obterMesa } from "@/services/armazenamento-calafrio";

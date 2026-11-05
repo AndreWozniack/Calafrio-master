@@ -200,10 +200,14 @@ export function gerarFichaAleatoria(
     }
   }
 
-  // Embaralha candidatas com o PRNG
-  const habilidadesEmbaralhadas = [...habilidadesCandidatas].sort(
-    () => rnd() - 0.5,
-  );
+  // Embaralha candidatas usando Fisher-Yates com o PRNG
+  const habilidadesEmbaralhadas = [...habilidadesCandidatas];
+  for (let i = habilidadesEmbaralhadas.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    const temp = habilidadesEmbaralhadas[i];
+    habilidadesEmbaralhadas[i] = habilidadesEmbaralhadas[j];
+    habilidadesEmbaralhadas[j] = temp;
+  }
   const habilidadesSelecionadas = habilidadesEmbaralhadas.slice(0, apt);
 
   // Slots da Matriz 3x3 (0 a 8). Slot 4 é o centro.
