@@ -226,7 +226,7 @@ export async function gerarPdfFichaEditavel(
   );
 
   // Retrato do Investigador (se houver e for data URL válida)
-  if (ficha.retratoUrl && ficha.retratoUrl.startsWith("data:image/")) {
+  if (ficha.retratoUrl?.startsWith("data:image/")) {
     try {
       const virgulaIndex = ficha.retratoUrl.indexOf(",");
       if (virgulaIndex !== -1) {
