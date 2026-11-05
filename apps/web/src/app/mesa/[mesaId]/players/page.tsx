@@ -1,9 +1,10 @@
-import { ArrowLeft, BookOpen, Plus, Users } from "lucide-react";
+import { ArrowLeft, BookOpen, Users } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { listarPlayers, obterMesa } from "@/services/armazenamento-calafrio";
 import { excluirPlayerAction } from "./actions";
 import { PlayerRow } from "./player-row";
+import { ZonaGeradorAleatorio } from "./zona-gerador-aleatorio";
 
 export default async function PlayersPage({
   params,
@@ -48,6 +49,9 @@ export default async function PlayersPage({
           </Link>
         </div>
       </div>
+
+      {/* Zona Especial de Geração Aleatória de Fichas */}
+      <ZonaGeradorAleatorio mesaId={mesaId} />
 
       <div className="entrada-lista space-y-3">
         {players.map((p) => (
