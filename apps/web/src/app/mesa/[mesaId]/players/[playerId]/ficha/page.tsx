@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
+import { obterAcessoMesa } from "@/lib/auth/acesso-mesa";
 import { obterMesa, obterPlayer } from "@/services/armazenamento-calafrio";
+import { podeEditarPlayer } from "@/services/convite-regras";
 import { FichaLiveClient } from "./ficha-live-client";
 
 export default async function FichaPage({
@@ -16,6 +18,11 @@ export default async function FichaPage({
   const player = await obterPlayer(playerId);
   if (!player || player.mesaId !== mesaId) {
     redirect(`/mesa/${mesaId}`);
+  }
+
+  const { acesso } = await obterAcessoMesa(mesaId);
+  if (!acesso || !podeEditarPlayer(mesa, player, acesso.userId)) {
+    redirect(`/mesa/${mesaId}/players`);
   }
 
   return (

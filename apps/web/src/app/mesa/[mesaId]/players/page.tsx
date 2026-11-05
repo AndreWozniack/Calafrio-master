@@ -1,9 +1,9 @@
 import { ArrowLeft, BookOpen, Users } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { auth } from "@/auth";
+import { obterAcessoMesa } from "@/lib/auth/acesso-mesa";
 import { listarPlayers, obterMesa } from "@/services/armazenamento-calafrio";
-import { ehMestreDaMesa } from "@/services/convite-regras";
+import { podeEditarPlayer } from "@/services/convite-regras";
 import { excluirPlayerAction } from "./actions";
 import { ConviteMesaPopover } from "./convite-mesa-popover";
 import { PlayerRow } from "./player-row";
@@ -19,9 +19,9 @@ export default async function PlayersPage({
   if (!mesa) notFound();
 
   const players = await listarPlayers(mesaId);
-  const session = await auth();
-  const userId = (session?.user as { id?: string } | undefined)?.id;
-  const mestre = ehMestreDaMesa(mesa, userId);
+  const { acesso } = await obterAcessoMesa(mesaId);
+  const userId = acesso?.userId;
+  const mestre = acesso?.mestre ?? false;
 
   return (
     <main className="mx-auto max-w-4xl p-4 sm:p-6 md:p-8 space-y-6">
@@ -71,6 +71,7 @@ export default async function PlayersPage({
             key={p.id}
             player={p}
             mesaId={mesaId}
+            podeGerenciar={podeEditarPlayer(mesa, p, userId)}
             onExcluir={excluirPlayerAction}
           />
         ))}

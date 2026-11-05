@@ -6,9 +6,16 @@ import type { PlayerCalafrio } from "@/services/armazenamento-calafrio";
 interface PlayersPanelProps {
   mesaId: string;
   players: PlayerCalafrio[];
+  mestre: boolean;
+  userId?: string;
 }
 
-export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
+export function PlayersPanel({
+  mesaId,
+  players,
+  mestre,
+  userId,
+}: PlayersPanelProps) {
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between gap-3">
@@ -36,12 +43,8 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
             p.ficha.palavrasChave.find((pc) => pc.categoria === "ocupacao")
               ?.nome ?? "Player";
 
-          return (
-            <Link
-              key={p.id}
-              href={`/mesa/${mesaId}/players/${p.id}/ficha`}
-              className="elevar p-4 rounded-xl border border-border bg-card hover:border-amber-400/60 transition-all flex flex-col justify-between space-y-3 group cursor-pointer shadow-sm"
-            >
+          const corpo = (
+            <>
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <div className="font-black text-base text-foreground group-hover:text-accent-ink transition-colors">
@@ -69,7 +72,24 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
                   {p.ficha.matrizHabilidades.length} hab.
                 </span>
               </div>
+            </>
+          );
+
+          return mestre || p.userId === userId ? (
+            <Link
+              key={p.id}
+              href={`/mesa/${mesaId}/players/${p.id}/ficha`}
+              className="elevar p-4 rounded-xl border border-border bg-card hover:border-amber-400/60 transition-all flex flex-col justify-between space-y-3 group cursor-pointer shadow-sm"
+            >
+              {corpo}
             </Link>
+          ) : (
+            <div
+              key={p.id}
+              className="p-4 rounded-xl border border-border bg-card flex flex-col justify-between space-y-3 shadow-sm"
+            >
+              {corpo}
+            </div>
           );
         })}
 

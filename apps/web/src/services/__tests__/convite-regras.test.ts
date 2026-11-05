@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  ehMembroDaMesa,
   ehMestreDaMesa,
   filtrarMesasDoUsuario,
   normalizarCodigoConvite,
+  podeEditarPlayer,
 } from "../convite-regras";
 
 describe("normalizarCodigoConvite", () => {
@@ -50,5 +52,33 @@ describe("filtrarMesasDoUsuario", () => {
     expect(
       filtrarMesasDoUsuario({ mesas: [m1, m2, m3], players }, "u7"),
     ).toEqual([]);
+  });
+});
+
+describe("permissões de acesso à mesa", () => {
+  const mesa = { userId: "mestre" };
+  const meu = { userId: "u2" };
+  const alheio = { userId: "u3" };
+  const semDono = { userId: null };
+
+  it("ehMembroDaMesa: mestre e jogador com player são membros", () => {
+    expect(ehMembroDaMesa(mesa, [meu], "mestre")).toBe(true);
+    expect(ehMembroDaMesa(mesa, [meu], "u2")).toBe(true);
+  });
+  it("ehMembroDaMesa: estranho e sem usuário não são membros", () => {
+    expect(ehMembroDaMesa(mesa, [meu], "u9")).toBe(false);
+    expect(ehMembroDaMesa(mesa, [meu], undefined)).toBe(false);
+  });
+  it("podeEditarPlayer: mestre edita qualquer player", () => {
+    expect(podeEditarPlayer(mesa, alheio, "mestre")).toBe(true);
+    expect(podeEditarPlayer(mesa, semDono, "mestre")).toBe(true);
+  });
+  it("podeEditarPlayer: jogador edita só o próprio player", () => {
+    expect(podeEditarPlayer(mesa, meu, "u2")).toBe(true);
+    expect(podeEditarPlayer(mesa, alheio, "u2")).toBe(false);
+    expect(podeEditarPlayer(mesa, semDono, "u2")).toBe(false);
+  });
+  it("podeEditarPlayer: sem usuário nunca edita", () => {
+    expect(podeEditarPlayer(mesa, meu, undefined)).toBe(false);
   });
 });

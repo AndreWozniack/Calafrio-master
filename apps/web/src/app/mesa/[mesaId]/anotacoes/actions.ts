@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { exigirMestreDaMesa } from "@/lib/auth/acesso-mesa";
 import {
   atualizarAnotacao,
   criarAnotacao,
@@ -16,6 +17,7 @@ export async function criarAnotacaoAction(
   titulo: string,
   texto: string,
 ) {
+  await exigirMestreDaMesa(mesaId);
   const nota = await criarAnotacao(mesaId, titulo, texto);
   atualizarTela(mesaId);
   return nota;
@@ -26,12 +28,14 @@ export async function atualizarAnotacaoAction(
   id: string,
   mudancas: { titulo?: string; texto?: string; fixada?: boolean },
 ) {
+  await exigirMestreDaMesa(mesaId);
   const nota = await atualizarAnotacao(id, mudancas);
   atualizarTela(mesaId);
   return nota;
 }
 
 export async function excluirAnotacaoAction(mesaId: string, id: string) {
+  await exigirMestreDaMesa(mesaId);
   await excluirAnotacao(id);
   atualizarTela(mesaId);
 }
