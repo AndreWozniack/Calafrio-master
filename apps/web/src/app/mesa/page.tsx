@@ -1,11 +1,14 @@
-import { ArrowRight, Plus, Shield, Swords, Trash2 } from "lucide-react";
+import { ArrowRight, Plus, Shield, Swords, Trash2, User } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { BannerEscudo } from "@/components/navegacao/banner-escudo";
 import { listarMesas } from "@/services/armazenamento-calafrio";
+import { ehMestreDaMesa } from "@/services/convite-regras";
+import { FormEntrarComCodigo } from "../entrar/form-entrar-com-codigo";
 import { criarMesaAction, excluirMesaAction } from "./actions";
+import { BotaoSairDaMesa } from "./botao-sair-da-mesa";
 
 export const metadata: Metadata = {
   title: "Suas Mesas | Calafrio RPG",
@@ -56,61 +59,78 @@ export default async function MesaPage() {
         </button>
       </form>
 
+      <FormEntrarComCodigo />
+
       {/* Lista de Mesas (Cards estilo T20 Master) */}
       <div className="entrada-lista space-y-3">
-        {mesas.map((mesa) => (
-          <div
-            key={mesa.id}
-            className="calafrio-card p-0 hover:border-amber-400/30 transition-all overflow-hidden flex flex-col justify-between"
-          >
-            <div className="p-4 flex items-center justify-between gap-3">
-              <Link
-                href={`/mesa/${mesa.id}`}
-                className="flex-1 min-w-0 group cursor-pointer"
-              >
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  <span className="font-black text-base text-foreground group-hover:text-amber-300 transition-colors">
-                    {mesa.nome}
-                  </span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-extrabold uppercase bg-amber-400/15 text-amber-300 border border-amber-400/30">
-                    <Shield className="size-3" /> Mestre
-                  </span>
-                  <span className="text-xs font-mono text-muted-foreground">
-                    Código:{" "}
-                    <strong className="text-foreground">
-                      {mesa.codigoConvite}
-                    </strong>
-                  </span>
-                </div>
-              </Link>
-
-              <div className="flex items-center gap-2">
-                <form
-                  action={async () => {
-                    "use server";
-                    await excluirMesaAction(mesa.id);
-                  }}
-                >
-                  <button
-                    type="submit"
-                    className="p-2 text-muted-foreground hover:text-red-400 hover:bg-red-950/30 rounded-lg cursor-pointer transition-colors"
-                    title="Excluir Mesa"
-                  >
-                    <Trash2 className="size-4" />
-                  </button>
-                </form>
-
+        {mesas.map((mesa) => {
+          const mestre = ehMestreDaMesa(mesa, userId);
+          return (
+            <div
+              key={mesa.id}
+              className="calafrio-card p-0 hover:border-amber-400/30 transition-all overflow-hidden flex flex-col justify-between"
+            >
+              <div className="p-4 flex items-center justify-between gap-3">
                 <Link
                   href={`/mesa/${mesa.id}`}
-                  className="flex items-center gap-1.5 px-3.5 py-2 bg-amber-400 hover:bg-amber-300 text-black font-black text-sm rounded-lg cursor-pointer shadow-sm transition-colors"
+                  className="flex-1 min-w-0 group cursor-pointer"
                 >
-                  <span>Entrar</span>
-                  <ArrowRight className="size-3.5" />
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="font-black text-base text-foreground group-hover:text-amber-300 transition-colors">
+                      {mesa.nome}
+                    </span>
+                    {mestre ? (
+                      <>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-extrabold uppercase bg-amber-400/15 text-amber-300 border border-amber-400/30">
+                          <Shield className="size-3" /> Mestre
+                        </span>
+                        <span className="text-xs font-mono text-muted-foreground">
+                          Código:{" "}
+                          <strong className="text-foreground">
+                            {mesa.codigoConvite}
+                          </strong>
+                        </span>
+                      </>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-extrabold uppercase bg-sky-400/15 text-sky-300 border border-sky-400/30">
+                        <User className="size-3" /> Jogador
+                      </span>
+                    )}
+                  </div>
                 </Link>
+
+                <div className="flex items-center gap-2">
+                  {mestre ? (
+                    <form
+                      action={async () => {
+                        "use server";
+                        await excluirMesaAction(mesa.id);
+                      }}
+                    >
+                      <button
+                        type="submit"
+                        className="p-2 text-muted-foreground hover:text-red-400 hover:bg-red-950/30 rounded-lg cursor-pointer transition-colors"
+                        title="Excluir Mesa"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                    </form>
+                  ) : (
+                    <BotaoSairDaMesa mesaId={mesa.id} />
+                  )}
+
+                  <Link
+                    href={`/mesa/${mesa.id}`}
+                    className="flex items-center gap-1.5 px-3.5 py-2 bg-amber-400 hover:bg-amber-300 text-black font-black text-sm rounded-lg cursor-pointer shadow-sm transition-colors"
+                  >
+                    <span>Entrar</span>
+                    <ArrowRight className="size-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {mesas.length === 0 && (
           <div className="py-12 text-center border-2 border-dashed border-border rounded-xl bg-card/30 space-y-2">
