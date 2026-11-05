@@ -11,6 +11,7 @@ import {
   type RolagemMesa,
   salvarStore,
 } from "./armazenamento-store";
+import { filtrarMesasDoUsuario } from "./convite-regras";
 
 export type {
   AnotacaoMesa,
@@ -78,7 +79,7 @@ export async function listarMesas(userId?: string): Promise<MesaCalafrio[]> {
     }
   }
   const s = await carregarStore();
-  return s.mesas;
+  return userId ? filtrarMesasDoUsuario(s, userId) : s.mesas;
 }
 
 export async function obterMesa(id: string): Promise<MesaCalafrio | null> {
@@ -170,6 +171,7 @@ export async function listarPlayers(mesaId: string): Promise<PlayerCalafrio[]> {
       return res.map((p) => ({
         id: p.id,
         mesaId: p.mesaId,
+        userId: p.userId,
         nome: p.nome,
         jogador: p.jogador ?? undefined,
         aptBase: p.aptBase,
@@ -204,6 +206,7 @@ export async function obterPlayer(
         return {
           id: p.id,
           mesaId: p.mesaId,
+          userId: p.userId,
           nome: p.nome,
           jogador: p.jogador ?? undefined,
           aptBase: p.aptBase,
@@ -228,6 +231,7 @@ export async function obterPlayer(
 export async function criarPlayer(
   mesaId: string,
   ficha: FichaCalafrio,
+  userId?: string,
 ): Promise<PlayerCalafrio> {
   const apt = ficha.aptBase || 1;
   const novoId =
@@ -238,6 +242,7 @@ export async function criarPlayer(
   const novo: PlayerCalafrio = {
     id: novoId,
     mesaId,
+    userId: userId ?? null,
     nome: ficha.nome?.trim() || "Novo Investigador",
     jogador: ficha.jogador,
     aptBase: apt,
@@ -255,6 +260,7 @@ export async function criarPlayer(
       await db.insert(schema.players).values({
         id: novo.id,
         mesaId: novo.mesaId,
+        userId: novo.userId,
         nome: novo.nome,
         jogador: novo.jogador,
         aptBase: novo.aptBase,
