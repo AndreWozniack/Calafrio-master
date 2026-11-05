@@ -1,10 +1,7 @@
 import type { EspectroDeDano } from "@calafrio/tema";
 import type { CatalogoCalafrio } from "../catalogo/tipos";
 import { coletarFilaEfeitos } from "./coletor-efeitos";
-import type {
-  AlvoAtributoCalafrio,
-  ModificadorResolvido,
-} from "./efeitos";
+import type { AlvoAtributoCalafrio, ModificadorResolvido } from "./efeitos";
 import { calcularAlinhamentosMatriz } from "./matriz-alinhamento";
 import type {
   EstadoDeJogoCalafrio,

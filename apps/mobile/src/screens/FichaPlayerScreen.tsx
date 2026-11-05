@@ -1,13 +1,3 @@
-import React, { useState } from "react";
-import {
-  Image,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
 import type { FichaCalafrio } from "@calafrio/core";
 import { useFichaCalafrio } from "@calafrio/ficha-app";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -21,11 +11,17 @@ import {
   Skull,
   User,
 } from "lucide-react-native";
+import React, { useState } from "react";
 import {
-  AbaFichaPrincipal,
-  AbaMatriz,
-  AbaMochila,
-} from "../components/ficha";
+  Image,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { AbaFichaPrincipal, AbaMatriz, AbaMochila } from "../components/ficha";
 import {
   ModalDanoCuraMobile,
   ModalItemMobile,
@@ -80,7 +76,11 @@ export function FichaPlayerScreen({
         const manipulada = await ImageManipulator.manipulateAsync(
           resultado.assets[0].uri,
           [{ resize: { width: 300, height: 300 } }],
-          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true },
+          {
+            compress: 0.7,
+            format: ImageManipulator.SaveFormat.JPEG,
+            base64: true,
+          },
         );
 
         if (manipulada.base64) {
@@ -181,9 +181,7 @@ export function FichaPlayerScreen({
                 >
                   <Icone
                     size={16}
-                    color={
-                      ativa ? "#FFFFFF" : "rgba(17, 17, 19, 0.6)"
-                    }
+                    color={ativa ? "#FFFFFF" : "rgba(17, 17, 19, 0.6)"}
                   />
                   <Text
                     style={[styles.abaTexto, ativa && styles.abaTextoAtiva]}
@@ -211,10 +209,7 @@ export function FichaPlayerScreen({
           <AbaMochila f={f} onAdicionarItem={() => setModalItem(true)} />
         )}
         {abaAtiva === "matriz" && (
-          <AbaMatriz
-            f={f}
-            onSelecionarSlot={(slot) => setSlotSeletor(slot)}
-          />
+          <AbaMatriz f={f} onSelecionarSlot={(slot) => setSlotSeletor(slot)} />
         )}
       </View>
 

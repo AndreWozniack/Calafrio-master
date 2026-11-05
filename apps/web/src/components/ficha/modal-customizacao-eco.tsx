@@ -175,7 +175,10 @@ function ConteudoModal({
             Efeitos extras ({efeitosExtras.length})
           </summary>
           <div className="border-t-2 border-black/20 p-3">
-            <EditorEfeitos efeitos={efeitosExtras} onChange={setEfeitosExtras} />
+            <EditorEfeitos
+              efeitos={efeitosExtras}
+              onChange={setEfeitosExtras}
+            />
           </div>
         </details>
       </div>

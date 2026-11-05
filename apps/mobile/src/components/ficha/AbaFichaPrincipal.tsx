@@ -1,10 +1,10 @@
 import React from "react";
 import { ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 import type { FichaViva } from "../../types/ficha";
 import { CartaoPapel, ChecklistPendencias, TituloSecao } from "../ui";
 import { PainelVitaisMobile } from "./PainelVitaisMobile";
 import { PalavrasChaveMobile } from "./PalavrasChaveMobile";
-import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 
 interface AbaFichaPrincipalProps {
   f: FichaViva;
@@ -26,10 +26,7 @@ export function AbaFichaPrincipal({
       showsVerticalScrollIndicator={false}
     >
       {/* Checklist de Pendências da Ficha */}
-      <ChecklistPendencias
-        ficha={f.ficha}
-        onNavegarAba={onNavegarAba}
-      />
+      <ChecklistPendencias ficha={f.ficha} onNavegarAba={onNavegarAba} />
 
       {/* Grid de Vitais */}
       <PainelVitaisMobile f={f} />

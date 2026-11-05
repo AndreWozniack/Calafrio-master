@@ -1,11 +1,13 @@
 "use client";
 
 import {
-  Backpack,
   ArrowLeft,
+  Backpack,
   Dices,
+  FileDown,
   Grid3x3,
   ImagePlus,
+  Loader2,
   Moon,
   Skull,
   Sparkles,
@@ -133,11 +135,15 @@ export function FichaCelular({
   voltarHref,
   onAbrirRolagem,
   onAbrirDanoCura,
+  onExportarPdf,
+  exportandoPdf = false,
 }: {
   f: FichaViva;
   voltarHref: string;
   onAbrirRolagem: (nome?: string) => void;
   onAbrirDanoCura: () => void;
+  onExportarPdf?: () => void;
+  exportandoPdf?: boolean;
 }) {
   const [aba, setAba] = useState<Aba>("ficha");
 
@@ -161,41 +167,62 @@ export function FichaCelular({
         backgroundSize: "40vw",
       }}
     >
-      <div key={aba} className="transicao-aba space-y-5 min-h-[calc(100dvh-12rem)]">
-      {aba === "ficha" && (
-        <>
-          <div className="flex items-center justify-between gap-3">
-            <Link
-              href={voltarHref}
-              className="flex min-h-11 items-center gap-1.5 text-sm font-extrabold"
-            >
-              <ArrowLeft className="size-4" strokeWidth={3} /> Players
-            </Link>
-            {/* biome-ignore lint/performance/noImgElement: logo estático */}
-            <img
-              src="/assets/Calafrio.svg"
-              alt="Calafrio TTRPG"
-              className="h-7 w-auto"
+      <div
+        key={aba}
+        className="transicao-aba space-y-5 min-h-[calc(100dvh-12rem)]"
+      >
+        {aba === "ficha" && (
+          <>
+            <div className="flex items-center justify-between gap-3">
+              <Link
+                href={voltarHref}
+                className="flex min-h-11 items-center gap-1.5 text-sm font-extrabold"
+              >
+                <ArrowLeft className="size-4" strokeWidth={3} /> Players
+              </Link>
+              <div className="flex items-center gap-2">
+                {onExportarPdf && (
+                  <button
+                    type="button"
+                    onClick={onExportarPdf}
+                    disabled={exportandoPdf}
+                    title="Exportar PDF da Ficha"
+                    className="flex min-h-9 items-center gap-1 rounded border-2 border-black bg-white px-2.5 py-1 text-xs font-bold shadow-[1px_1px_0px_#000]"
+                  >
+                    {exportandoPdf ? (
+                      <Loader2 className="size-3.5 animate-spin text-black" />
+                    ) : (
+                      <FileDown className="size-3.5 text-emerald-700" />
+                    )}
+                    <span>{exportandoPdf ? "PDF..." : "PDF"}</span>
+                  </button>
+                )}
+                {/* biome-ignore lint/performance/noImgElement: logo estático */}
+                <img
+                  src="/assets/Calafrio.svg"
+                  alt="Calafrio TTRPG"
+                  className="h-7 w-auto"
+                />
+              </div>
+            </div>
+            <Cabecalho f={f} />
+            <AcoesRapidas
+              f={f}
+              onRolar={() => onAbrirRolagem()}
+              onDanoCura={onAbrirDanoCura}
             />
-          </div>
-          <Cabecalho f={f} />
-          <AcoesRapidas
-            f={f}
-            onRolar={() => onAbrirRolagem()}
-            onDanoCura={onAbrirDanoCura}
-          />
-          <VitaisCelular f={f} derivada={f.derivada} />
-          <CarteiraCelular f={f} />
-          <PalavrasChaveCelular
-            f={f}
-            derivada={f.derivada}
-            onRolar={onAbrirRolagem}
-          />
-        </>
-      )}
-      {aba === "mochila" && <InventarioCelular f={f} />}
-      {aba === "matriz" && <MatrizCelular f={f} />}
-      {aba === "ecos" && <EcosCelular f={f} />}
+            <VitaisCelular f={f} derivada={f.derivada} />
+            <CarteiraCelular f={f} />
+            <PalavrasChaveCelular
+              f={f}
+              derivada={f.derivada}
+              onRolar={onAbrirRolagem}
+            />
+          </>
+        )}
+        {aba === "mochila" && <InventarioCelular f={f} />}
+        {aba === "matriz" && <MatrizCelular f={f} />}
+        {aba === "ecos" && <EcosCelular f={f} />}
       </div>
 
       <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t-[3px] border-black bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.08)] pb-[max(0.5rem,env(safe-area-inset-bottom))]">

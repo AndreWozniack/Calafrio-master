@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { type EspectroDeDano, TOKENS_ESPECTRO_DANO } from "@calafrio/tema";
 import * as Haptics from "expo-haptics";
 import { Heart, Skull, X, Zap } from "lucide-react-native";
-import { BotaoPasso, CartaoPapel, EtiquetaCalafrio } from "../ui";
+import React, { useState } from "react";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
+import { BotaoPasso, CartaoPapel, EtiquetaCalafrio } from "../ui";
 
 interface ModalDanoCuraMobileProps {
   visivel: boolean;
@@ -74,7 +74,9 @@ export function ModalDanoCuraMobile({
             >
               <Skull
                 size={16}
-                color={modo === "dano" ? "#FFFFFF" : CORES_BASE_CALAFRIO.tintaPreta}
+                color={
+                  modo === "dano" ? "#FFFFFF" : CORES_BASE_CALAFRIO.tintaPreta
+                }
               />
               <Text
                 style={[
@@ -88,20 +90,16 @@ export function ModalDanoCuraMobile({
 
             <Pressable
               onPress={() => setModo("pv")}
-              style={[
-                styles.abaItem,
-                modo === "pv" && styles.abaItemAtivaPv,
-              ]}
+              style={[styles.abaItem, modo === "pv" && styles.abaItemAtivaPv]}
             >
               <Heart
                 size={16}
-                color={modo === "pv" ? "#FFFFFF" : CORES_BASE_CALAFRIO.tintaPreta}
+                color={
+                  modo === "pv" ? "#FFFFFF" : CORES_BASE_CALAFRIO.tintaPreta
+                }
               />
               <Text
-                style={[
-                  styles.abaTexto,
-                  modo === "pv" && styles.abaTextoAtivo,
-                ]}
+                style={[styles.abaTexto, modo === "pv" && styles.abaTextoAtivo]}
               >
                 Curar PV
               </Text>
@@ -109,20 +107,16 @@ export function ModalDanoCuraMobile({
 
             <Pressable
               onPress={() => setModo("pa")}
-              style={[
-                styles.abaItem,
-                modo === "pa" && styles.abaItemAtivaPa,
-              ]}
+              style={[styles.abaItem, modo === "pa" && styles.abaItemAtivaPa]}
             >
               <Zap
                 size={16}
-                color={modo === "pa" ? "#FFFFFF" : CORES_BASE_CALAFRIO.tintaPreta}
+                color={
+                  modo === "pa" ? "#FFFFFF" : CORES_BASE_CALAFRIO.tintaPreta
+                }
               />
               <Text
-                style={[
-                  styles.abaTexto,
-                  modo === "pa" && styles.abaTextoAtivo,
-                ]}
+                style={[styles.abaTexto, modo === "pa" && styles.abaTextoAtivo]}
               >
                 Curar PA
               </Text>
@@ -172,30 +166,30 @@ export function ModalDanoCuraMobile({
             <View style={styles.blocoEspectro}>
               <Text style={styles.secaoRotulo}>Espectro do Dano</Text>
               <View style={styles.espectrosLinha}>
-                {(
-                  Object.keys(TOKENS_ESPECTRO_DANO) as EspectroDeDano[]
-                ).map((k) => (
-                  <Pressable
-                    key={k}
-                    onPress={() => setEspectro(k)}
-                    style={[
-                      styles.espectroBotao,
-                      espectro === k && styles.espectroBotaoAtivo,
-                    ]}
-                  >
-                    <Text style={styles.espectroEmoji}>
-                      {TOKENS_ESPECTRO_DANO[k].emoji}
-                    </Text>
-                    <Text
+                {(Object.keys(TOKENS_ESPECTRO_DANO) as EspectroDeDano[]).map(
+                  (k) => (
+                    <Pressable
+                      key={k}
+                      onPress={() => setEspectro(k)}
                       style={[
-                        styles.espectroTexto,
-                        espectro === k && styles.espectroTextoAtivo,
+                        styles.espectroBotao,
+                        espectro === k && styles.espectroBotaoAtivo,
                       ]}
                     >
-                      {TOKENS_ESPECTRO_DANO[k].rotulo.split(" ")[0]}
-                    </Text>
-                  </Pressable>
-                ))}
+                      <Text style={styles.espectroEmoji}>
+                        {TOKENS_ESPECTRO_DANO[k].emoji}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.espectroTexto,
+                          espectro === k && styles.espectroTextoAtivo,
+                        ]}
+                      >
+                        {TOKENS_ESPECTRO_DANO[k].rotulo.split(" ")[0]}
+                      </Text>
+                    </Pressable>
+                  ),
+                )}
               </View>
             </View>
           ) : null}

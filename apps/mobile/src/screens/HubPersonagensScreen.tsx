@@ -1,8 +1,8 @@
+import type { FichaCalafrio } from "@calafrio/core";
+import { Plus, Search, Users } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Alert,
-  Image,
-  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -10,9 +10,8 @@ import {
   TextInput,
   View,
 } from "react-native";
-import type { FichaCalafrio } from "@calafrio/core";
-import { Copy, Plus, Search, Trash2, User, Users } from "lucide-react-native";
-import { CartaoPapel, EtiquetaCalafrio } from "../components/ui";
+import { CartaoPlayerItem } from "../components/hub/CartaoPlayerItem";
+import { ModalCriarPersonagem } from "../components/hub/ModalCriarPersonagem";
 import { CORES_BASE_CALAFRIO } from "../theme/tokens";
 
 interface HubPersonagensScreenProps {
@@ -32,7 +31,6 @@ export function HubPersonagensScreen({
 }: HubPersonagensScreenProps) {
   const [busca, setBusca] = useState("");
   const [modalCriar, setModalCriar] = useState(false);
-  const [novoNome, setNovoNome] = useState("");
 
   const filtrados = personagens.filter((p) => {
     if (!busca.trim()) return true;
@@ -60,13 +58,6 @@ export function HubPersonagensScreen({
     );
   };
 
-  const handleCriar = () => {
-    const nomeFinal = novoNome.trim() || "Novo Investigador";
-    onCriarNovo(nomeFinal);
-    setNovoNome("");
-    setModalCriar(false);
-  };
-
   return (
     <View style={styles.container}>
       {/* Header Noir */}
@@ -83,7 +74,11 @@ export function HubPersonagensScreen({
             { opacity: pressed ? 0.8 : 1 },
           ]}
         >
-          <Plus size={16} color={CORES_BASE_CALAFRIO.tintaPreta} strokeWidth={3} />
+          <Plus
+            size={16}
+            color={CORES_BASE_CALAFRIO.tintaPreta}
+            strokeWidth={3}
+          />
           <Text style={styles.textoNovo}>Novo Player</Text>
         </Pressable>
       </View>
@@ -113,113 +108,29 @@ export function HubPersonagensScreen({
               Nenhum investigador encontrado.
             </Text>
             <Text style={styles.subtextoVazio}>
-              Toque em "Novo Player" acima para iniciar sua investigação no Calafrio.
+              Toque em "Novo Player" acima para iniciar sua investigação no
+              Calafrio.
             </Text>
           </View>
         ) : (
           filtrados.map((p) => (
-            <CartaoPapel key={p.id} style={styles.cardPlayer}>
-              <Pressable
-                onPress={() => onAbrirFicha(p.id)}
-                style={styles.cardCorpo}
-              >
-                {/* Retrato Thumbnail */}
-                <View style={styles.retratoContainer}>
-                  {p.retratoUrl ? (
-                    <Image
-                      source={{ uri: p.retratoUrl }}
-                      style={styles.retratoImagem}
-                    />
-                  ) : (
-                    <User size={24} color="rgba(17, 17, 19, 0.3)" />
-                  )}
-                </View>
-
-                {/* Dados do Investigador */}
-                <View style={styles.cardInfo}>
-                  <Text style={styles.cardNome} numberOfLines={1}>
-                    {p.nome}
-                  </Text>
-                  <Text style={styles.cardConceito} numberOfLines={1}>
-                    {p.jogador ? `Jogador: ${p.jogador}` : "Investigador"}
-                  </Text>
-                  <View style={styles.tagsLinha}>
-                    <EtiquetaCalafrio style={styles.tagItem}>
-                      APT {p.aptBase}
-                    </EtiquetaCalafrio>
-                    <EtiquetaCalafrio
-                      variante="amarelo"
-                      style={styles.tagItem}
-                    >
-                      {p.palavrasChave.length} palavras
-                    </EtiquetaCalafrio>
-                  </View>
-                </View>
-              </Pressable>
-
-              {/* Ações do Card */}
-              <View style={styles.cardAcoes}>
-                <Pressable
-                  onPress={() => onDuplicar(p.id)}
-                  style={styles.acaoBotao}
-                  hitSlop={8}
-                >
-                  <Copy size={16} color="rgba(17, 17, 19, 0.6)" />
-                </Pressable>
-                <Pressable
-                  onPress={() => confirmarExclusao(p.id, p.nome)}
-                  style={styles.acaoBotao}
-                  hitSlop={8}
-                >
-                  <Trash2 size={16} color="#DC2626" />
-                </Pressable>
-              </View>
-            </CartaoPapel>
+            <CartaoPlayerItem
+              key={p.id}
+              personagem={p}
+              onAbrir={() => onAbrirFicha(p.id)}
+              onDuplicar={() => onDuplicar(p.id)}
+              onExcluir={() => confirmarExclusao(p.id, p.nome)}
+            />
           ))
         )}
       </ScrollView>
 
       {/* Modal de Criação Rápida */}
-      <Modal
-        visible={modalCriar}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setModalCriar(false)}
-      >
-        <View style={styles.modalFundo}>
-          <CartaoPapel style={styles.modalCard}>
-            <Text style={styles.modalTitulo}>Criar Novo Investigador</Text>
-            <Text style={styles.modalSubtitulo}>
-              Digite o nome do seu personagem para começar:
-            </Text>
-
-            <TextInput
-              autoFocus
-              placeholder="Ex: Detetive Souza, Iara Ramos..."
-              placeholderTextColor="rgba(17, 17, 19, 0.4)"
-              value={novoNome}
-              onChangeText={setNovoNome}
-              style={styles.modalInput}
-              onSubmitEditing={handleCriar}
-            />
-
-            <View style={styles.modalBotoes}>
-              <Pressable
-                onPress={() => {
-                  setNovoNome("");
-                  setModalCriar(false);
-                }}
-                style={styles.modalBotaoCancelar}
-              >
-                <Text style={styles.textoCancelar}>Cancelar</Text>
-              </Pressable>
-              <Pressable onPress={handleCriar} style={styles.modalBotaoConfirmar}>
-                <Text style={styles.textoConfirmar}>Criar & Abrir</Text>
-              </Pressable>
-            </View>
-          </CartaoPapel>
-        </View>
-      </Modal>
+      <ModalCriarPersonagem
+        visivel={modalCriar}
+        onFechar={() => setModalCriar(false)}
+        onConfirmar={onCriarNovo}
+      />
     </View>
   );
 }
@@ -268,25 +179,28 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "900",
     color: CORES_BASE_CALAFRIO.tintaPreta,
-    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   buscaContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 10,
     backgroundColor: "#FFFFFF",
     marginHorizontal: 16,
     marginTop: 12,
     marginBottom: 8,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 8,
+    borderRadius: 4,
     borderWidth: 1.5,
-    borderColor: CORES_BASE_CALAFRIO.tintaPreta,
+    borderColor: "rgba(17, 17, 19, 0.25)",
   },
   buscaInput: {
     flex: 1,
     fontSize: 13,
+    fontWeight: "600",
     color: CORES_BASE_CALAFRIO.tintaPreta,
+    padding: 0,
   },
   lista: {
     flex: 1,
@@ -294,143 +208,25 @@ const styles = StyleSheet.create({
   listaContent: {
     padding: 16,
     gap: 10,
-    paddingBottom: 40,
   },
   vazio: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 60,
-    gap: 8,
+    paddingVertical: 48,
+    paddingHorizontal: 24,
+    gap: 10,
   },
   textoVazio: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "800",
-    color: CORES_BASE_CALAFRIO.tintaPreta,
+    color: "rgba(17, 17, 19, 0.6)",
+    textAlign: "center",
   },
   subtextoVazio: {
-    fontSize: 12,
-    color: "rgba(17, 17, 19, 0.5)",
-    textAlign: "center",
-    paddingHorizontal: 30,
-  },
-  cardPlayer: {
-    padding: 0,
-    flexDirection: "row",
-    alignItems: "center",
-    overflow: "hidden",
-  },
-  cardCorpo: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 12,
-    gap: 12,
-  },
-  retratoContainer: {
-    width: 48,
-    height: 48,
-    borderWidth: 2,
-    borderColor: CORES_BASE_CALAFRIO.tintaPreta,
-    backgroundColor: "rgba(17, 17, 19, 0.05)",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-  },
-  retratoImagem: {
-    width: "100%",
-    height: "100%",
-  },
-  cardInfo: {
-    flex: 1,
-  },
-  cardNome: {
-    fontSize: 16,
-    fontWeight: "900",
-    color: CORES_BASE_CALAFRIO.tintaPreta,
-  },
-  cardConceito: {
     fontSize: 11,
-    fontWeight: "600",
-    color: "rgba(17, 17, 19, 0.6)",
-    marginBottom: 4,
-  },
-  tagsLinha: {
-    flexDirection: "row",
-    gap: 6,
-  },
-  tagItem: {
-    paddingHorizontal: 6,
-    paddingVertical: 1,
-  },
-  cardAcoes: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingRight: 8,
-    gap: 4,
-  },
-  acaoBotao: {
-    padding: 8,
-  },
-  modalFundo: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.75)",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  modalCard: {
-    width: "100%",
-    maxWidth: 360,
-    padding: 16,
-  },
-  modalTitulo: {
-    fontSize: 16,
-    fontWeight: "900",
-    color: CORES_BASE_CALAFRIO.tintaPreta,
-    textTransform: "uppercase",
-    marginBottom: 4,
-  },
-  modalSubtitulo: {
-    fontSize: 12,
-    color: "rgba(17, 17, 19, 0.65)",
-    marginBottom: 12,
-  },
-  modalInput: {
-    borderWidth: 1.5,
-    borderColor: CORES_BASE_CALAFRIO.tintaPreta,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 14,
-    color: CORES_BASE_CALAFRIO.tintaPreta,
-    backgroundColor: "#FFFFFF",
-    marginBottom: 16,
-  },
-  modalBotoes: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  modalBotaoCancelar: {
-    flex: 1,
-    borderWidth: 1.5,
-    borderColor: "rgba(17, 17, 19, 0.3)",
-    paddingVertical: 10,
-    alignItems: "center",
-  },
-  textoCancelar: {
-    fontSize: 12,
-    fontWeight: "800",
-    color: CORES_BASE_CALAFRIO.tintaPreta,
-  },
-  modalBotaoConfirmar: {
-    flex: 1,
-    backgroundColor: CORES_BASE_CALAFRIO.tintaPreta,
-    paddingVertical: 10,
-    alignItems: "center",
-  },
-  textoConfirmar: {
-    fontSize: 12,
-    fontWeight: "900",
-    color: "#FFFFFF",
-    textTransform: "uppercase",
+    fontWeight: "500",
+    color: "rgba(17, 17, 19, 0.4)",
+    textAlign: "center",
+    lineHeight: 16,
   },
 });

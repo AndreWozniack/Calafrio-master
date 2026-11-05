@@ -3,13 +3,7 @@ import { extname, join, relative } from "node:path";
 
 const LIMITE_LINHAS = 400;
 
-const EXTENSOES_ALVO = new Set([
-  ".ts",
-  ".tsx",
-  ".js",
-  ".jsx",
-  ".css",
-]);
+const EXTENSOES_ALVO = new Set([".ts", ".tsx", ".js", ".jsx", ".css"]);
 
 const PASTAS_IGNORADAS = new Set([
   "node_modules",
@@ -102,13 +96,19 @@ async function principal() {
     }
   }
 
-  console.log(`\n🔍 Verificação de Limite de Linhas (máx: ${LIMITE_LINHAS} linhas)`);
+  console.log(
+    `\n🔍 Verificação de Limite de Linhas (máx: ${LIMITE_LINHAS} linhas)`,
+  );
   console.log(`   Arquivos de código verificados: ${totalVerificados}`);
 
   if (violacoes.length > 0) {
-    console.error(`\n❌ Encontradas ${violacoes.length} violações do limite de ${LIMITE_LINHAS} linhas:\n`);
+    console.error(
+      `\n❌ Encontradas ${violacoes.length} violações do limite de ${LIMITE_LINHAS} linhas:\n`,
+    );
     for (const v of violacoes) {
-      console.error(`   - ${v.arquivo}: ${v.linhas} linhas (+${v.linhas - LIMITE_LINHAS})`);
+      console.error(
+        `   - ${v.arquivo}: ${v.linhas} linhas (+${v.linhas - LIMITE_LINHAS})`,
+      );
     }
     console.error(
       "\n💡 Regra arquitetural: divida esses arquivos em submódulos coesos e reutilizáveis.\n",
@@ -116,7 +116,9 @@ async function principal() {
     process.exit(1);
   }
 
-  console.log(`✅ Todos os ${totalVerificados} arquivos respeitam o teto de ${LIMITE_LINHAS} linhas!\n`);
+  console.log(
+    `✅ Todos os ${totalVerificados} arquivos respeitam o teto de ${LIMITE_LINHAS} linhas!\n`,
+  );
 }
 
 principal().catch((erro) => {

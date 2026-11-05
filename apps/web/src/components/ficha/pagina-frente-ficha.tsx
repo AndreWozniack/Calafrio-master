@@ -223,11 +223,7 @@ export function PaginaFrenteFicha({
           titulo="PA atual"
         />
       </LinhaVital>
-      <LinhaVital
-        indice={4}
-        rotulo="Velocidade:"
-        legenda=""
-      >
+      <LinhaVital indice={4} rotulo="Velocidade:" legenda="">
         <NumeroFixo>{derivada.velocidade}</NumeroFixo>
       </LinhaVital>
       <LinhaVital indice={5} rotulo="Ecos:" legenda="= APT">

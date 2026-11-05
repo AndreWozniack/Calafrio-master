@@ -10,7 +10,11 @@ import { useState } from "react";
 import type { FichaViva } from "../fichas-tipos";
 import { ModalCustomizacaoEco } from "../modal-customizacao-eco";
 import { ModalHabilidadeUnica } from "../modal-habilidade-unica";
-import { CartaoPapel, EtiquetaCelular, TituloSecaoCelular } from "./blocos-celular";
+import {
+  CartaoPapel,
+  EtiquetaCelular,
+  TituloSecaoCelular,
+} from "./blocos-celular";
 
 export function EcosCelular({ f }: { f: FichaViva }) {
   const [modalUnicaAberto, setModalUnicaAberto] = useState(false);
@@ -30,7 +34,11 @@ export function EcosCelular({ f }: { f: FichaViva }) {
 
   const lidarSalvarUnica = (unica: HabilidadeUnicaCalafrio) => {
     if (unicaEmEdicao) {
-      f.dispatch({ tipo: "atualizarHabilidadeUnica", id: unicaEmEdicao.id, dados: unica });
+      f.dispatch({
+        tipo: "atualizarHabilidadeUnica",
+        id: unicaEmEdicao.id,
+        dados: unica,
+      });
     } else {
       f.dispatch({ tipo: "adicionarHabilidadeUnica", unica });
     }
@@ -54,8 +62,13 @@ export function EcosCelular({ f }: { f: FichaViva }) {
         </div>
 
         <div className="flex items-center justify-between text-xs text-black/80 font-bold uppercase">
-          <span>Total (APT): <strong className="text-black">{f.derivada.ecosMax}</strong></span>
-          <span>Gastos: <strong className="text-black">{ecosGastos}</strong></span>
+          <span>
+            Total (APT):{" "}
+            <strong className="text-black">{f.derivada.ecosMax}</strong>
+          </span>
+          <span>
+            Gastos: <strong className="text-black">{ecosGastos}</strong>
+          </span>
         </div>
 
         <div className="grid grid-cols-2 gap-2 pt-1">
@@ -80,13 +93,16 @@ export function EcosCelular({ f }: { f: FichaViva }) {
 
       {/* Habilidades Únicas */}
       <section className="space-y-2">
-        <TituloSecaoCelular detalhe={`${f.ficha.habilidadesUnicas.length} forjada(s)`}>
+        <TituloSecaoCelular
+          detalhe={`${f.ficha.habilidadesUnicas.length} forjada(s)`}
+        >
           Habilidades Únicas
         </TituloSecaoCelular>
 
         {f.ficha.habilidadesUnicas.length === 0 ? (
           <CartaoPapel className="py-6 text-center text-xs text-black/60 italic">
-            Nenhuma habilidade única criada ainda. Toque em "+ Habilidade Única" para manifestar uma técnica singular.
+            Nenhuma habilidade única criada ainda. Toque em "+ Habilidade Única"
+            para manifestar uma técnica singular.
           </CartaoPapel>
         ) : (
           <div className="space-y-2">
@@ -106,7 +122,8 @@ export function EcosCelular({ f }: { f: FichaViva }) {
                       </h4>
                       <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                         <span className="bg-black text-white text-[10px] font-black uppercase px-1.5 py-0.5">
-                          {uItem.tipoAcao} · {uItem.custo} {uItem.recurso.toUpperCase()}
+                          {uItem.tipoAcao} · {uItem.custo}{" "}
+                          {uItem.recurso.toUpperCase()}
                         </span>
                         {uItem.ecosInvestidos && uItem.ecosInvestidos > 1 && (
                           <span className="border border-black bg-amber-200 text-black text-[10px] font-black uppercase px-1.5 py-0.5">
@@ -135,7 +152,12 @@ export function EcosCelular({ f }: { f: FichaViva }) {
                       </button>
                       <button
                         type="button"
-                        onClick={() => f.dispatch({ tipo: "removerHabilidadeUnica", id: uItem.id })}
+                        onClick={() =>
+                          f.dispatch({
+                            tipo: "removerHabilidadeUnica",
+                            id: uItem.id,
+                          })
+                        }
                         className="p-1.5 text-black/60 hover:text-red-600 transition-colors"
                         title="Excluir"
                       >
@@ -148,11 +170,15 @@ export function EcosCelular({ f }: { f: FichaViva }) {
                     {uItem.descricao}
                   </p>
 
-                  {(uItem.alcance || uItem.duracao || uItem.tempoPreparacao) && (
+                  {(uItem.alcance ||
+                    uItem.duracao ||
+                    uItem.tempoPreparacao) && (
                     <div className="text-[11px] text-black/60 italic pt-1 border-t border-black/10 flex items-center gap-2 flex-wrap">
                       {uItem.alcance && <span>Alcance: {uItem.alcance}</span>}
                       {uItem.duracao && <span>Duração: {uItem.duracao}</span>}
-                      {uItem.tempoPreparacao && <span>Preparo: {uItem.tempoPreparacao}</span>}
+                      {uItem.tempoPreparacao && (
+                        <span>Preparo: {uItem.tempoPreparacao}</span>
+                      )}
                     </div>
                   )}
                 </CartaoPapel>
@@ -164,7 +190,9 @@ export function EcosCelular({ f }: { f: FichaViva }) {
 
       {/* Aprimoramentos da Matriz */}
       <section className="space-y-2">
-        <TituloSecaoCelular detalhe={`${f.ficha.customizacoesEco.length} ativo(s)`}>
+        <TituloSecaoCelular
+          detalhe={`${f.ficha.customizacoesEco.length} ativo(s)`}
+        >
           Aprimoramentos de Eco
         </TituloSecaoCelular>
 
@@ -179,7 +207,10 @@ export function EcosCelular({ f }: { f: FichaViva }) {
                 (h) => h.id === c.habilidadeAlvoId,
               );
               return (
-                <CartaoPapel key={c.id} className="flex items-center justify-between gap-2">
+                <CartaoPapel
+                  key={c.id}
+                  className="flex items-center justify-between gap-2"
+                >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="font-extrabold uppercase text-xs text-black">
@@ -197,7 +228,9 @@ export function EcosCelular({ f }: { f: FichaViva }) {
                   </div>
                   <button
                     type="button"
-                    onClick={() => f.dispatch({ tipo: "removerCustomizacaoEco", id: c.id })}
+                    onClick={() =>
+                      f.dispatch({ tipo: "removerCustomizacaoEco", id: c.id })
+                    }
                     className="p-1.5 text-black/60 hover:text-red-600 transition-colors shrink-0"
                     title="Remover"
                   >

@@ -123,7 +123,8 @@ export function PreviewFichaCriacao({
       <div className="pt-2.5 border-t border-border text-xs space-y-1.5">
         <div className="flex items-center justify-between">
           <span className="text-foreground font-bold flex items-center gap-1.5">
-            <Coins className="size-3.5 text-amber-600 dark:text-amber-400" /> Carteira:
+            <Coins className="size-3.5 text-amber-600 dark:text-amber-400" />{" "}
+            Carteira:
           </span>
           <span className="font-black text-amber-800 dark:text-amber-300 text-sm">
             {ficha.carteira.fundos} F$
@@ -131,7 +132,9 @@ export function PreviewFichaCriacao({
         </div>
         <div className="flex items-center justify-between">
           <span className="text-foreground font-bold">Inventário:</span>
-          <span className="font-bold text-foreground">{ficha.inventario.length} item(ns)</span>
+          <span className="font-bold text-foreground">
+            {ficha.inventario.length} item(ns)
+          </span>
         </div>
       </div>
     </div>

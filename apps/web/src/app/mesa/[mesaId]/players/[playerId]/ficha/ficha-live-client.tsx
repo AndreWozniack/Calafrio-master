@@ -5,6 +5,8 @@ import { useFichaCalafrio } from "@calafrio/ficha-app";
 import {
   ArrowLeft,
   Dices,
+  FileDown,
+  Loader2,
   Moon,
   Skull,
   Sun,
@@ -26,6 +28,11 @@ import {
   formatarContestacao,
   formatarTesteAcao,
 } from "@/components/mesa/formatar-rolagem";
+import {
+  baixarArquivoPdfNoNavegador,
+  formatarNomeArquivoPdf,
+} from "@/services/pdf/disparar-download-pdf";
+import { gerarPdfFichaEditavel } from "@/services/pdf/exportador-pdf-ficha";
 import { registrarRolagemAction } from "../../../dados/actions";
 import { salvarFichaPlayerAction } from "../../actions";
 
@@ -53,6 +60,26 @@ export function FichaLiveClient({
   const [mostrarDanoCura, setMostrarDanoCura] = useState(false);
   const [palavraChaveRolagem, setPalavraChaveRolagem] = useState<string>();
   const [zoom, setZoom] = useState<NivelZoomFicha>("100");
+  const [exportandoPdf, setExportandoPdf] = useState(false);
+
+  const exportarPdf = async () => {
+    if (exportandoPdf) return;
+    setExportandoPdf(true);
+    try {
+      const buffer = await gerarPdfFichaEditavel(
+        f.ficha,
+        f.derivada,
+        f.catalogo,
+      );
+      const nomeArquivo = formatarNomeArquivoPdf(f.ficha.nome);
+      baixarArquivoPdfNoNavegador(buffer, nomeArquivo);
+    } catch (erro) {
+      console.error("Erro ao exportar PDF:", erro);
+      alert("Não foi possível gerar o PDF. Verifique os dados e tente novamente.");
+    } finally {
+      setExportandoPdf(false);
+    }
+  };
 
   useEffect(() => {
     try {
@@ -121,6 +148,20 @@ export function FichaLiveClient({
             </button>
             <button
               type="button"
+              onClick={exportarPdf}
+              disabled={exportandoPdf}
+              title="Exportar ficha preenchida para PDF editável (AcroForm)"
+              className={botaoClaro}
+            >
+              {exportandoPdf ? (
+                <Loader2 className="size-4 animate-spin text-black" />
+              ) : (
+                <FileDown className="size-4 text-emerald-700" />
+              )}
+              {exportandoPdf ? "Exportando..." : "Exportar PDF"}
+            </button>
+            <button
+              type="button"
               onClick={() => abrirRolagem()}
               className={`${botaoBarra} bg-black px-4 font-black text-white shadow-[2px_2px_0px_rgba(0,0,0,0.4)] hover:bg-black/85`}
             >
@@ -144,6 +185,8 @@ export function FichaLiveClient({
           voltarHref={`/mesa/${mesaId}/players`}
           onAbrirRolagem={abrirRolagem}
           onAbrirDanoCura={() => setMostrarDanoCura(true)}
+          onExportarPdf={exportarPdf}
+          exportandoPdf={exportandoPdf}
         />
       </div>
 

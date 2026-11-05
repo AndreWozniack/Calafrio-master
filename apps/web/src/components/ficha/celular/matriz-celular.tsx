@@ -5,16 +5,36 @@ import { Lock, Plus, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import type { FichaViva } from "../fichas-tipos";
 import { SeletorHabilidadeModal } from "../seletor-habilidade-modal";
-import { CartaoPapel, EtiquetaCelular, TituloSecaoCelular } from "./blocos-celular";
+import {
+  CartaoPapel,
+  EtiquetaCelular,
+  TituloSecaoCelular,
+} from "./blocos-celular";
 
 function resumoSlot(f: FichaViva, alocacao?: AlocacaoSlotMatriz) {
   if (!alocacao) return null;
   if (alocacao.tipo === "unica") {
     const u = f.ficha.habilidadesUnicas.find((x) => x.id === alocacao.id);
-    return u && { nome: u.nome, detalhe: `${u.tipoAcao} · ${u.custo} ${u.recurso.toUpperCase()}`, descricao: u.descricao, id: u.id, foco: Boolean(u.requerFoco) };
+    return (
+      u && {
+        nome: u.nome,
+        detalhe: `${u.tipoAcao} · ${u.custo} ${u.recurso.toUpperCase()}`,
+        descricao: u.descricao,
+        id: u.id,
+        foco: Boolean(u.requerFoco),
+      }
+    );
   }
   const h = f.catalogo.habilidadesParanormais.find((x) => x.id === alocacao.id);
-  return h && { nome: h.nome, detalhe: `${h.tipoAcao} · ${h.custoPA === 0 ? "passiva" : `${h.custoPA} PA`}`, descricao: h.descricao, id: h.id, foco: h.requerFoco !== "nao" };
+  return (
+    h && {
+      nome: h.nome,
+      detalhe: `${h.tipoAcao} · ${h.custoPA === 0 ? "passiva" : `${h.custoPA} PA`}`,
+      descricao: h.descricao,
+      id: h.id,
+      foco: h.requerFoco !== "nao",
+    }
+  );
 }
 
 export function MatrizCelular({ f }: { f: FichaViva }) {
@@ -86,30 +106,57 @@ export function MatrizCelular({ f }: { f: FichaViva }) {
           <CartaoPapel className="w-full space-y-3 !p-4">
             <div className="flex items-center justify-between">
               <EtiquetaCelular>#{aberto + 1}</EtiquetaCelular>
-              <button type="button" aria-label="Fechar" onClick={() => setAberto(null)} className="size-11 cursor-pointer">
+              <button
+                type="button"
+                aria-label="Fechar"
+                onClick={() => setAberto(null)}
+                className="size-11 cursor-pointer"
+              >
                 <X className="mx-auto size-6" />
               </button>
             </div>
             <h3 className="text-xl font-extrabold">{detalhe.nome}</h3>
-            <p className="text-xs font-bold uppercase italic">{detalhe.detalhe}</p>
-            <p className="text-sm font-medium leading-snug">{detalhe.descricao}</p>
+            <p className="text-xs font-bold uppercase italic">
+              {detalhe.detalhe}
+            </p>
+            <p className="text-sm font-medium leading-snug">
+              {detalhe.descricao}
+            </p>
             {detalhe.foco && (
               <button
                 type="button"
                 onClick={() => f.alternarFoco(detalhe.id)}
                 className={`flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 font-extrabold ${
-                  f.estado.focoAtivoId === detalhe.id ? "bg-amber-400 text-black" : "bg-black text-white"
+                  f.estado.focoAtivoId === detalhe.id
+                    ? "bg-amber-400 text-black"
+                    : "bg-black text-white"
                 }`}
               >
                 <Lock className="size-4" />
-                {f.estado.focoAtivoId === detalhe.id ? "Foco ativo — soltar" : "Ativar Foco"}
+                {f.estado.focoAtivoId === detalhe.id
+                  ? "Foco ativo — soltar"
+                  : "Ativar Foco"}
               </button>
             )}
             <div className="grid grid-cols-2 gap-2">
-              <button type="button" onClick={() => { setSeletor(aberto); setAberto(null); }} className="min-h-12 cursor-pointer border-2 border-black font-extrabold">
+              <button
+                type="button"
+                onClick={() => {
+                  setSeletor(aberto);
+                  setAberto(null);
+                }}
+                className="min-h-12 cursor-pointer border-2 border-black font-extrabold"
+              >
                 Trocar habilidade
               </button>
-              <button type="button" onClick={() => { f.limparSlotMatriz(aberto); setAberto(null); }} className="flex min-h-12 cursor-pointer items-center justify-center gap-2 border-2 border-red-700 font-extrabold text-red-700">
+              <button
+                type="button"
+                onClick={() => {
+                  f.limparSlotMatriz(aberto);
+                  setAberto(null);
+                }}
+                className="flex min-h-12 cursor-pointer items-center justify-center gap-2 border-2 border-red-700 font-extrabold text-red-700"
+              >
                 <Trash2 className="size-4" /> Limpar slot
               </button>
             </div>

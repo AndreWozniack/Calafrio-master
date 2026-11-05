@@ -9,7 +9,9 @@ async function main() {
 
   const dbUrl = process.env.DATABASE_URL;
   if (!dbUrl) {
-    console.warn("⚠️ DATABASE_URL não informada. Pulando execução de migrações.");
+    console.warn(
+      "⚠️ DATABASE_URL não informada. Pulando execução de migrações.",
+    );
     return;
   }
 

@@ -23,8 +23,7 @@ export function CardInvestigadorRow({
   const pd = 3 * apt;
 
   const ocupacao =
-    p.palavrasChave.find((pc) => pc.categoria === "ocupacao")?.nome ??
-    "Player";
+    p.palavrasChave.find((pc) => pc.categoria === "ocupacao")?.nome ?? "Player";
 
   return (
     <div className="p-4 rounded-xl border border-border/80 bg-card/70 hover:bg-card hover:border-amber-400/40 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">

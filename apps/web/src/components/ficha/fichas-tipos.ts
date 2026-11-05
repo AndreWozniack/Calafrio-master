@@ -45,7 +45,5 @@ export const NIVEIS_ZOOM_FICHA: readonly ConfigZoomFicha[] = [
 export function obterConfigZoomFicha(
   nivel?: NivelZoomFicha | string | null,
 ): ConfigZoomFicha {
-  return (
-    NIVEIS_ZOOM_FICHA.find((n) => n.id === nivel) ?? NIVEIS_ZOOM_FICHA[1]
-  );
+  return NIVEIS_ZOOM_FICHA.find((n) => n.id === nivel) ?? NIVEIS_ZOOM_FICHA[1];
 }

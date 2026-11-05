@@ -3,15 +3,21 @@
 import type { CatalogoCalafrio } from "@calafrio/core";
 import { Dices } from "lucide-react";
 import { useMemo, useState } from "react";
+import type { FormItem } from "./form-item";
 import {
   BuscaBiblioteca,
   CardResultado,
   FiltrosBiblioteca,
   ListaVazia,
 } from "./lista-biblioteca";
-import type { FormItem } from "./form-item";
 
-type Filtro = "todos" | "curto" | "longo" | "misto" | "consumivel" | "bugiganga";
+type Filtro =
+  | "todos"
+  | "curto"
+  | "longo"
+  | "misto"
+  | "consumivel"
+  | "bugiganga";
 
 const FILTROS: { id: Filtro; rotulo: string }[] = [
   { id: "todos", rotulo: "Tudo" },
@@ -98,9 +104,10 @@ export function BibliotecaArsenal({
   );
 
   const sortearBugiganga = () => {
-    const sorteada = catalogo.bugigangas[
-      Math.floor(Math.random() * catalogo.bugigangas.length)
-    ];
+    const sorteada =
+      catalogo.bugigangas[
+        Math.floor(Math.random() * catalogo.bugigangas.length)
+      ];
     if (sorteada) {
       onEscolher({
         nome: sorteada.nome,

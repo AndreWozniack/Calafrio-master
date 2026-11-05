@@ -1,8 +1,8 @@
-import React from "react";
+import type React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 import type { FichaViva } from "../../types/ficha";
 import { BotaoPasso, CartaoPapel, EtiquetaCalafrio } from "../ui";
-import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 
 interface PainelVitaisMobileProps {
   f: FichaViva;
@@ -26,13 +26,7 @@ function CartaoVital({
   );
 }
 
-function ValorGrande({
-  atual,
-  max,
-}: {
-  atual: number | string;
-  max?: number;
-}) {
+function ValorGrande({ atual, max }: { atual: number | string; max?: number }) {
   return (
     <View style={styles.valorLinha}>
       <Text style={styles.valorTexto}>{atual}</Text>
@@ -99,10 +93,7 @@ export function PainelVitaisMobile({ f }: PainelVitaisMobileProps) {
 
       {/* Ecos */}
       <CartaoVital rotulo="Ecos" legenda="= APT total">
-        <ValorGrande
-          atual={derivada.ecosDisponiveis}
-          max={derivada.ecosMax}
-        />
+        <ValorGrande atual={derivada.ecosDisponiveis} max={derivada.ecosMax} />
       </CartaoVital>
     </View>
   );

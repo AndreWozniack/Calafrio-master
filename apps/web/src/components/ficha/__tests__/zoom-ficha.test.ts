@@ -12,7 +12,12 @@ describe("Configuração de Zoom da Ficha", () => {
 
   it("oferece 4 níveis determinísticos (90%, 100%, 115%, 130%) com larguras crescentes", () => {
     expect(NIVEIS_ZOOM_FICHA).toHaveLength(4);
-    expect(NIVEIS_ZOOM_FICHA.map((n) => n.id)).toEqual(["90", "100", "115", "130"]);
+    expect(NIVEIS_ZOOM_FICHA.map((n) => n.id)).toEqual([
+      "90",
+      "100",
+      "115",
+      "130",
+    ]);
 
     for (let i = 1; i < NIVEIS_ZOOM_FICHA.length; i++) {
       expect(NIVEIS_ZOOM_FICHA[i].larguraMaximaFolhaPx).toBeGreaterThan(

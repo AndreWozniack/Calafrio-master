@@ -1,9 +1,9 @@
+import { Dices, Plus, Trash2 } from "lucide-react-native";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Dices, Plus, Trash2 } from "lucide-react-native";
+import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 import type { FichaViva } from "../../types/ficha";
 import { CartaoPapel, TituloSecao } from "../ui";
-import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 
 interface PalavrasChaveMobileProps {
   f: FichaViva;
@@ -69,7 +69,11 @@ export function PalavrasChaveMobile({
             { opacity: pressed ? 0.75 : 1 },
           ]}
         >
-          <Plus size={18} color={CORES_BASE_CALAFRIO.tintaPreta} strokeWidth={2.5} />
+          <Plus
+            size={18}
+            color={CORES_BASE_CALAFRIO.tintaPreta}
+            strokeWidth={2.5}
+          />
           <Text style={styles.textoAdicionar}>Adicionar palavra-chave</Text>
         </Pressable>
       </View>

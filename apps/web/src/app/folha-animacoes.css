@@ -41,14 +41,18 @@
 
 .folha-camada-cima-entrar {
   animation: folha-sobrepor-entrar 0.36s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
-  box-shadow: -22px 0 40px -5px rgba(0, 0, 0, 0.42), -8px 0 16px -2px rgba(0, 0, 0, 0.28);
+  box-shadow:
+    -22px 0 40px -5px rgba(0, 0, 0, 0.42),
+    -8px 0 16px -2px rgba(0, 0, 0, 0.28);
   border-left: 2px solid rgba(0, 0, 0, 0.35);
   will-change: transform;
 }
 
 .folha-camada-cima-sair {
   animation: folha-sobrepor-sair 0.36s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-  box-shadow: -22px 0 40px -5px rgba(0, 0, 0, 0.42), -8px 0 16px -2px rgba(0, 0, 0, 0.28);
+  box-shadow:
+    -22px 0 40px -5px rgba(0, 0, 0, 0.42),
+    -8px 0 16px -2px rgba(0, 0, 0, 0.28);
   border-left: 2px solid rgba(0, 0, 0, 0.35);
   pointer-events: none;
   will-change: transform;

@@ -98,7 +98,9 @@ export function CardHabilidadeUnica({
         >
           {uItem.alcance && <span>Alcance: {uItem.alcance}</span>}
           {uItem.duracao && <span>Duração: {uItem.duracao}</span>}
-          {uItem.tempoPreparacao && <span>Preparo: {uItem.tempoPreparacao}</span>}
+          {uItem.tempoPreparacao && (
+            <span>Preparo: {uItem.tempoPreparacao}</span>
+          )}
         </div>
       )}
     </div>

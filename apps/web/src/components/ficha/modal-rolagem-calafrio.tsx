@@ -199,7 +199,9 @@ function ConteudoModal({
           </div>
         )}
 
-        {resultadoAcao && <ResultadoAcao key={numeroRolagem} r={resultadoAcao} />}
+        {resultadoAcao && (
+          <ResultadoAcao key={numeroRolagem} r={resultadoAcao} />
+        )}
         {resultadoContestacao && (
           <ResultadoDisputa key={numeroRolagem} r={resultadoContestacao} />
         )}

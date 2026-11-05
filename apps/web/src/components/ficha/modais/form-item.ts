@@ -21,15 +21,16 @@ export interface FormItem {
   efeitos: EfeitoCalafrio[];
 }
 
-export const CATEGORIAS_ITEM: { id: CategoriaItemCalafrio; rotulo: string }[] = [
-  { id: "arma_curto", rotulo: "Arma — curto alcance" },
-  { id: "arma_longo", rotulo: "Arma — longo alcance" },
-  { id: "arma_misto", rotulo: "Arma — misto" },
-  { id: "vestimenta", rotulo: "Vestimenta" },
-  { id: "consumivel", rotulo: "Consumível" },
-  { id: "ferramenta", rotulo: "Ferramenta" },
-  { id: "bugiganga", rotulo: "Bugiganga" },
-];
+export const CATEGORIAS_ITEM: { id: CategoriaItemCalafrio; rotulo: string }[] =
+  [
+    { id: "arma_curto", rotulo: "Arma — curto alcance" },
+    { id: "arma_longo", rotulo: "Arma — longo alcance" },
+    { id: "arma_misto", rotulo: "Arma — misto" },
+    { id: "vestimenta", rotulo: "Vestimenta" },
+    { id: "consumivel", rotulo: "Consumível" },
+    { id: "ferramenta", rotulo: "Ferramenta" },
+    { id: "bugiganga", rotulo: "Bugiganga" },
+  ];
 
 export const ESPECTROS_DANO: EspectroDeDano[] = [
   "fisico",

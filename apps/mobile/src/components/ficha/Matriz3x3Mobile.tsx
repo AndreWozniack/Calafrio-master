@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import type { AlocacaoSlotMatriz } from "@calafrio/core";
 import { Lock, Plus, Trash2, X } from "lucide-react-native";
+import React, { useState } from "react";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 import type { FichaViva } from "../../types/ficha";
 import { CartaoPapel, EtiquetaCalafrio, TituloSecao } from "../ui";
-import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 
 interface Matriz3x3MobileProps {
   f: FichaViva;
@@ -86,7 +86,11 @@ export function Matriz3x3Mobile({ f, onSelecionarSlot }: Matriz3x3MobileProps) {
                 </Text>
               ) : (
                 <View style={styles.iconeMais}>
-                  <Plus size={22} color="rgba(17, 17, 19, 0.25)" strokeWidth={3} />
+                  <Plus
+                    size={22}
+                    color="rgba(17, 17, 19, 0.25)"
+                    strokeWidth={3}
+                  />
                 </View>
               )}
             </Pressable>

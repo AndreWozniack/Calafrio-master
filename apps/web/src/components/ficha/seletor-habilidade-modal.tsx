@@ -64,7 +64,11 @@ export function SeletorHabilidadeModal({
           onChange={setBusca}
           placeholder={`Buscar entre ${catalogo.habilidadesParanormais.length} habilidades...`}
         />
-        <FiltrosBiblioteca opcoes={FILTROS} ativo={filtro} onMudar={setFiltro} />
+        <FiltrosBiblioteca
+          opcoes={FILTROS}
+          ativo={filtro}
+          onMudar={setFiltro}
+        />
 
         {habilidadesUnicas.length > 0 && (
           <div className="space-y-2">

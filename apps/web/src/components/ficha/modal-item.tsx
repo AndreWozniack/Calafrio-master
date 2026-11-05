@@ -6,7 +6,7 @@ import {
 } from "@calafrio/core";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
-import { AbasModal, type AbaModal } from "./modais/abas-modal";
+import { type AbaModal, AbasModal } from "./modais/abas-modal";
 import { BibliotecaArsenal } from "./modais/biblioteca-arsenal";
 import {
   BotaoPrincipal,
@@ -29,7 +29,13 @@ interface Props {
 
 export function ModalItem({ aberto, inicial, onSalvar, onFechar }: Props) {
   if (!aberto) return null;
-  return <ConteudoModalItem inicial={inicial} onSalvar={onSalvar} onFechar={onFechar} />;
+  return (
+    <ConteudoModalItem
+      inicial={inicial}
+      onSalvar={onSalvar}
+      onFechar={onFechar}
+    />
+  );
 }
 
 function ConteudoModalItem({

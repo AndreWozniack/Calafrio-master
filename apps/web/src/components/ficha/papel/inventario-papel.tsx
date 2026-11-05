@@ -62,7 +62,10 @@ export function InventarioPapel({
                 )}
               </div>
               {item.descricao && (
-                <p className="font-medium text-black/70" style={{ fontSize: u(12) }}>
+                <p
+                  className="font-medium text-black/70"
+                  style={{ fontSize: u(12) }}
+                >
                   {item.descricao}
                 </p>
               )}
@@ -86,7 +89,8 @@ export function InventarioPapel({
           className="flex size-full cursor-pointer items-center justify-center gap-[0.5cqw] bg-black text-white transition-opacity hover:opacity-80"
           style={{ fontSize: u(12) }}
         >
-          <Plus style={{ width: u(10), height: u(10) }} strokeWidth={3} /> Novo item
+          <Plus style={{ width: u(10), height: u(10) }} strokeWidth={3} /> Novo
+          item
         </button>
       </Posicionado>
 

@@ -7,9 +7,9 @@ import type {
   FichaDerivadaCalafrio,
   HabilidadeUnicaCalafrio,
 } from "@calafrio/core";
-import type { NivelZoomFicha } from "./fichas-tipos";
 import { Plus, Sparkles, Wand2 } from "lucide-react";
 import { useState } from "react";
+import type { NivelZoomFicha } from "./fichas-tipos";
 import { ModalCustomizacaoEco } from "./modal-customizacao-eco";
 import { ModalHabilidadeUnica } from "./modal-habilidade-unica";
 import {
@@ -166,7 +166,7 @@ export function PaginaEcosAprimoramentos({
           className="text-right uppercase italic font-bold text-black/70"
           style={{ fontSize: u(7.5) }}
         >
-          1 Eco por habilidade 
+          1 Eco por habilidade
         </Posicionado>
 
         <CaixaMoldura area={{ x: 12, y: 154, w: 638, h: 366 }} />

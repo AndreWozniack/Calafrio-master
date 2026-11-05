@@ -3,9 +3,9 @@
 import type { FichaDerivadaCalafrio } from "@calafrio/core";
 import { Dices, Plus, Shield, Sparkles, X } from "lucide-react";
 import { useState } from "react";
+import type { FichaViva } from "../fichas-tipos";
 import { ModalItem } from "../modal-item";
 import { ModalPalavraChave } from "../modal-palavra-chave";
-import type { FichaViva } from "../fichas-tipos";
 import { CartaoPapel, TituloSecaoCelular } from "./blocos-celular";
 
 const botaoAdicionar =
@@ -59,7 +59,11 @@ export function PalavrasChaveCelular({
           )}
         </CartaoPapel>
       ))}
-      <button type="button" onClick={() => setModal(true)} className={botaoAdicionar}>
+      <button
+        type="button"
+        onClick={() => setModal(true)}
+        className={botaoAdicionar}
+      >
         <Plus className="size-4" strokeWidth={3} /> Adicionar palavra-chave
       </button>
       <ModalPalavraChave
@@ -73,7 +77,11 @@ export function PalavrasChaveCelular({
 
 export function CarteiraCelular({ f }: { f: FichaViva }) {
   const { fundos, espirions } = f.ficha.carteira;
-  const campo = (rotulo: string, valor: number, aoMudar: (n: number) => void) => (
+  const campo = (
+    rotulo: string,
+    valor: number,
+    aoMudar: (n: number) => void,
+  ) => (
     <label className="flex min-w-0 flex-1 items-center gap-2 bg-white p-2 shadow-[0_0_3px_rgba(0,0,0,0.4)]">
       <span className="calafrio-tag text-sm">{rotulo}</span>
       <input
@@ -107,10 +115,14 @@ export function InventarioCelular({ f }: { f: FichaViva }) {
         <CartaoPapel key={item.id} className="flex items-start gap-2">
           <button
             type="button"
-            onClick={() => f.dispatch({ tipo: "alternarEquipadoItem", id: item.id })}
+            onClick={() =>
+              f.dispatch({ tipo: "alternarEquipadoItem", id: item.id })
+            }
             aria-label={item.equipado ? "Guardar item" : "Equipar item"}
             className={`flex size-11 shrink-0 cursor-pointer flex-col items-center justify-center rounded ${
-              item.equipado ? "bg-black text-white" : "bg-black/10 text-black/50"
+              item.equipado
+                ? "bg-black text-white"
+                : "bg-black/10 text-black/50"
             }`}
           >
             <Shield className="size-4" />
@@ -129,7 +141,9 @@ export function InventarioCelular({ f }: { f: FichaViva }) {
               </div>
             )}
             {item.descricao && (
-              <p className="text-xs font-medium text-black/70">{item.descricao}</p>
+              <p className="text-xs font-medium text-black/70">
+                {item.descricao}
+              </p>
             )}
           </div>
           <button
@@ -142,7 +156,11 @@ export function InventarioCelular({ f }: { f: FichaViva }) {
           </button>
         </CartaoPapel>
       ))}
-      <button type="button" onClick={() => setModal(true)} className={botaoAdicionar}>
+      <button
+        type="button"
+        onClick={() => setModal(true)}
+        className={botaoAdicionar}
+      >
         <Plus className="size-4" strokeWidth={3} /> Novo item
       </button>
       <ModalItem

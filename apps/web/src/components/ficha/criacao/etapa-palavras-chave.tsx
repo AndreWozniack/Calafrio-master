@@ -129,21 +129,24 @@ export function EtapaPalavrasChave({
             onClick={sortearOcupacao}
             className="flex items-center gap-2 px-3.5 py-2.5 bg-muted/60 hover:bg-muted text-foreground font-bold text-sm rounded-lg border-2 border-border cursor-pointer transition-colors shadow-xs"
           >
-            <Dices className="size-4 text-amber-600 dark:text-amber-400" /> Sortear Ocupação
+            <Dices className="size-4 text-amber-600 dark:text-amber-400" />{" "}
+            Sortear Ocupação
           </button>
           <button
             type="button"
             onClick={() => sortearGenerica("talento")}
             className="flex items-center gap-2 px-3.5 py-2.5 bg-muted/60 hover:bg-muted text-foreground font-bold text-sm rounded-lg border-2 border-border cursor-pointer transition-colors shadow-xs"
           >
-            <Dices className="size-4 text-blue-600 dark:text-blue-400" /> Sortear Talento
+            <Dices className="size-4 text-blue-600 dark:text-blue-400" />{" "}
+            Sortear Talento
           </button>
           <button
             type="button"
             onClick={() => sortearGenerica("falha")}
             className="flex items-center gap-2 px-3.5 py-2.5 bg-muted/60 hover:bg-muted text-foreground font-bold text-sm rounded-lg border-2 border-border cursor-pointer transition-colors shadow-xs"
           >
-            <Dices className="size-4 text-red-600 dark:text-red-400" /> Sortear Falha
+            <Dices className="size-4 text-red-600 dark:text-red-400" /> Sortear
+            Falha
           </button>
         </div>
       </div>

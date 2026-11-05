@@ -1,3 +1,9 @@
+import type {
+  CategoriaItemCalafrio,
+  EspectroDeDano,
+  ItemNaFichaCalafrio,
+} from "@calafrio/core";
+import { X } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Modal,
@@ -9,14 +15,8 @@ import {
   TextInput,
   View,
 } from "react-native";
-import type {
-  CategoriaItemCalafrio,
-  EspectroDeDano,
-  ItemNaFichaCalafrio,
-} from "@calafrio/core";
-import { X } from "lucide-react-native";
-import { CartaoPapel, EtiquetaCalafrio } from "../ui";
 import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
+import { CartaoPapel, EtiquetaCalafrio } from "../ui";
 
 interface ModalItemMobileProps {
   visivel: boolean;
@@ -39,7 +39,8 @@ export function ModalItemMobile({
   onFechar,
 }: ModalItemMobileProps) {
   const [nome, setNome] = useState("");
-  const [categoria, setCategoria] = useState<CategoriaItemCalafrio>("bugiganga");
+  const [categoria, setCategoria] =
+    useState<CategoriaItemCalafrio>("bugiganga");
   const [paranormal, setParanormal] = useState(false);
   const [dano, setDano] = useState("");
   const [descricao, setDescricao] = useState("");
@@ -174,10 +175,7 @@ export function ModalItemMobile({
             <Pressable
               onPress={salvar}
               disabled={!nome.trim()}
-              style={[
-                styles.botaoSalvar,
-                { opacity: nome.trim() ? 1 : 0.5 },
-              ]}
+              style={[styles.botaoSalvar, { opacity: nome.trim() ? 1 : 0.5 }]}
             >
               <Text style={styles.textoSalvar}>Adicionar à Mochila</Text>
             </Pressable>

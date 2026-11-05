@@ -8,9 +8,9 @@ import type {
   FichaDerivadaCalafrio,
   HabilidadeUnicaCalafrio,
 } from "@calafrio/core";
-import type { NivelZoomFicha } from "./fichas-tipos";
 import { AlertTriangle, Sparkles } from "lucide-react";
 import { useState } from "react";
+import type { NivelZoomFicha } from "./fichas-tipos";
 import { FolhaPapel } from "./papel/folha-papel";
 import { LegendaBonusPapel } from "./papel/legenda-bonus-papel";
 import {

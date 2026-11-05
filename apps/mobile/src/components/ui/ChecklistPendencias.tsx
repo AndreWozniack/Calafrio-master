@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
 import type { FichaCalafrio } from "@calafrio/core";
 import { AlertCircle, ChevronDown, ChevronUp } from "lucide-react-native";
+import React, { useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 
 interface ChecklistPendenciasProps {
@@ -19,7 +19,10 @@ export function ChecklistPendencias({
     [];
 
   if (!ficha.retratoUrl) {
-    pendencias.push({ rotulo: "Adicionar retrato do investigador", aba: "ficha" });
+    pendencias.push({
+      rotulo: "Adicionar retrato do investigador",
+      aba: "ficha",
+    });
   }
 
   if (ficha.palavrasChave.length < 3) {
@@ -47,10 +50,7 @@ export function ChecklistPendencias({
 
   return (
     <View style={styles.container}>
-      <Pressable
-        onPress={() => setExpandido((v) => !v)}
-        style={styles.header}
-      >
+      <Pressable onPress={() => setExpandido((v) => !v)} style={styles.header}>
         <View style={styles.tituloLinha}>
           <AlertCircle size={16} color={CORES_BASE_CALAFRIO.tintaPreta} />
           <Text style={styles.titulo}>

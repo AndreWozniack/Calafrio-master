@@ -1,7 +1,7 @@
-import React from "react";
-import { Pressable, StyleSheet } from "react-native";
 import * as Haptics from "expo-haptics";
 import { Minus, Plus } from "lucide-react-native";
+import React from "react";
+import { Pressable, StyleSheet } from "react-native";
 import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 
 interface BotaoPassoProps {
