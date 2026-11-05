@@ -42,9 +42,9 @@ export function baixarArquivoPdfNoNavegador(
 
   link.click();
 
-  // Limpeza de recursos
+  // Limpeza de recursos com tempo seguro para processamento de download no browser
   setTimeout(() => {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  }, 100);
+  }, 1500);
 }

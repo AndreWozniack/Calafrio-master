@@ -1,7 +1,8 @@
-import type {
-  CatalogoCalafrio,
-  FichaCalafrio,
-  FichaDerivadaCalafrio,
+import {
+  type CatalogoCalafrio,
+  type FichaCalafrio,
+  type FichaDerivadaCalafrio,
+  carregarCatalogoCalafrio,
 } from "@calafrio/core";
 import { PDFDocument, type PDFForm, type PDFPage, rgb } from "pdf-lib";
 import {
@@ -19,6 +20,17 @@ const CATEGORIAS_FIXAS = [
   { categoria: "talento", rotulo: "Talento" },
   { categoria: "falha", rotulo: "Falha" },
 ] as const;
+
+/**
+ * Remove caracteres incompatíveis com a tabela WinAnsi (padrão Helvetica do PDF)
+ * como emojis ou símbolos fora da faixa Windows-1252, preservando acentos em português.
+ */
+export function sanitizarTextoWinAnsi(texto: string): string {
+  return texto.replace(
+    /[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF\u2013\u2014\u2018\u2019\u201C\u201D\u2022\u2026\u20AC]/g,
+    "",
+  );
+}
 
 function distribuirLinhasPalavrasChave(
   palavras: FichaDerivadaCalafrio["palavrasChaveAtivas"],
@@ -62,7 +74,7 @@ function criarCampoTexto(
     textColor: rgb(0.08, 0.08, 0.08),
   });
   campo.setFontSize(fontSize);
-  campo.setText(valor);
+  campo.setText(sanitizarTextoWinAnsi(valor));
   return campo;
 }
 
@@ -86,14 +98,19 @@ async function carregarBufferTemplate(
     return await resposta.arrayBuffer();
   }
 
-  // No Node / Ambiente de teste
+  // No Node / Ambiente de teste com resolução resiliente
   try {
     const fs = await import("node:fs");
     const path = await import("node:path");
-    const caminho = path.resolve(
+    const caminhoWeb = path.resolve(
       process.cwd(),
       "public/assets/calafrio/2e-V1_FichaPersonagem_Calafrio.pdf",
     );
+    const caminhoMonorepo = path.resolve(
+      process.cwd(),
+      "apps/web/public/assets/calafrio/2e-V1_FichaPersonagem_Calafrio.pdf",
+    );
+    const caminho = fs.existsSync(caminhoWeb) ? caminhoWeb : caminhoMonorepo;
     return fs.readFileSync(caminho);
   } catch (err) {
     throw new Error(`Não foi possível carregar o template PDF no Node: ${err}`);
@@ -225,14 +242,33 @@ export async function gerarPdfFichaEditavel(
     11,
   );
 
-  // Retrato do Investigador (se houver e for data URL válida)
-  if (ficha.retratoUrl?.startsWith("data:image/")) {
+  // Retrato do Investigador (suporta data URL em base64 ou URL HTTP/HTTPS externa)
+  if (ficha.retratoUrl) {
     try {
-      const virgulaIndex = ficha.retratoUrl.indexOf(",");
-      if (virgulaIndex !== -1) {
-        const base64 = ficha.retratoUrl.slice(virgulaIndex + 1);
-        const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
-        const imagem = ficha.retratoUrl.includes("image/png")
+      let bytes: Uint8Array | null = null;
+      let isPng = false;
+
+      if (ficha.retratoUrl.startsWith("data:image/")) {
+        const virgulaIndex = ficha.retratoUrl.indexOf(",");
+        if (virgulaIndex !== -1) {
+          const base64 = ficha.retratoUrl.slice(virgulaIndex + 1);
+          bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
+          isPng = ficha.retratoUrl.includes("image/png");
+        }
+      } else if (/^https?:\/\//i.test(ficha.retratoUrl)) {
+        const resp = await fetch(ficha.retratoUrl);
+        if (resp.ok) {
+          bytes = new Uint8Array(await resp.arrayBuffer());
+          const ctype = resp.headers.get("content-type");
+          isPng = Boolean(
+            ctype?.includes("image/png") ||
+              ficha.retratoUrl.toLowerCase().endsWith(".png"),
+          );
+        }
+      }
+
+      if (bytes) {
+        const imagem = isPng
           ? await pdfDoc.embedPng(bytes)
           : await pdfDoc.embedJpg(bytes);
 
@@ -245,7 +281,7 @@ export async function gerarPdfFichaEditavel(
         });
       }
     } catch {
-      // Ignora erro de parsing do retrato
+      // Ignora erro de download ou parsing do retrato para não bloquear o PDF
     }
   }
 
@@ -291,6 +327,7 @@ export async function gerarPdfFichaEditavel(
   );
 
   // --- PÁGINA 2: Matriz de 9 Slots de Habilidades e Anotações ---
+  const cat = catalogo ?? carregarCatalogoCalafrio();
 
   for (let slot = 0; slot < 9; slot++) {
     const coords = COORDENADAS_FICHA_PAGINA_2.slots_matriz[slot];
@@ -301,14 +338,14 @@ export async function gerarPdfFichaEditavel(
 
     if (alocacao) {
       if (alocacao.tipo === "unica") {
-        const unica = ficha.habilidadesUnicas.find((u) => u.id === alocacao.id);
+        const unica = ficha.habilidadesUnicas?.find((u) => u.id === alocacao.id);
         if (unica) {
           titulo = unica.nome;
-          const custo = `${unica.custo} ${unica.recurso.toUpperCase()}`;
+          const custo = `${unica.custo} ${unica.recurso?.toUpperCase() ?? ""}`.trim();
           descricao = `[${unica.tipoAcao} | ${custo}]\n${unica.descricao}`;
         }
-      } else if (alocacao.tipo === "paranormal" && catalogo) {
-        const hab = catalogo.habilidadesParanormais.find(
+      } else if (alocacao.tipo === "paranormal") {
+        const hab = cat.habilidadesParanormais.find(
           (h) => h.id === alocacao.id,
         );
         if (hab) {

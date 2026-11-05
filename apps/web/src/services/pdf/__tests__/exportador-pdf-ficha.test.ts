@@ -185,4 +185,34 @@ describe("Exportador de Ficha para PDF Editável (AcroForm)", () => {
       expect(campoTitulo.isReadOnly()).toBe(false);
     }
   });
+
+  it("sanitiza emojis e símbolos fora de WinAnsi sem quebrar a geração", async () => {
+    const ficha = criarFichaCalafrioVazia("ficha-3", "Detetive Flamejante 🗡️");
+    ficha.anotacoes = "Investigando com dados 🎲 e pistas ✨.";
+    const derivada = montarFichaCalafrio(ficha, catalogo);
+
+    const pdfBytes = await gerarPdfFichaEditavel(ficha, derivada, catalogo, {
+      bufferTemplate,
+    });
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+    const form = pdfDoc.getForm();
+
+    expect(form.getTextField("nome").getText()).toBe("Detetive Flamejante ");
+    expect(form.getTextField("anotacoes").getText()).toContain("Investigando com dados  e pistas .");
+  });
+
+  it("resolve catálogo automaticamente quando omitido nos parâmetros", async () => {
+    const ficha = criarFichaCalafrioVazia("ficha-4", "Ocultista");
+    ficha.matrizHabilidades = [{ slot: 0, tipo: "paranormal", id: "frenesi" }];
+    const derivada = montarFichaCalafrio(ficha, catalogo);
+
+    // Invocado sem passar o catalogo (undefined)
+    const pdfBytes = await gerarPdfFichaEditavel(ficha, derivada, undefined, {
+      bufferTemplate,
+    });
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+    const form = pdfDoc.getForm();
+
+    expect(form.getTextField("slot_matriz_0_titulo").getText()).toBe("Frenesi");
+  });
 });

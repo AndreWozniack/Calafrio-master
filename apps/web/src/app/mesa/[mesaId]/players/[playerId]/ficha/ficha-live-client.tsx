@@ -75,6 +75,7 @@ export function FichaLiveClient({
       baixarArquivoPdfNoNavegador(buffer, nomeArquivo);
     } catch (erro) {
       console.error("Erro ao exportar PDF:", erro);
+      alert("Não foi possível gerar o PDF. Verifique os dados e tente novamente.");
     } finally {
       setExportandoPdf(false);
     }
