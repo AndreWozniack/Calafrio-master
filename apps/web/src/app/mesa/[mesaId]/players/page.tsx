@@ -1,8 +1,11 @@
 import { ArrowLeft, BookOpen, Users } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { auth } from "@/auth";
 import { listarPlayers, obterMesa } from "@/services/armazenamento-calafrio";
+import { ehMestreDaMesa } from "@/services/convite-regras";
 import { excluirPlayerAction } from "./actions";
+import { ConviteMesaPopover } from "./convite-mesa-popover";
 import { PlayerRow } from "./player-row";
 import { ZonaGeradorAleatorio } from "./zona-gerador-aleatorio";
 
@@ -16,6 +19,9 @@ export default async function PlayersPage({
   if (!mesa) notFound();
 
   const players = await listarPlayers(mesaId);
+  const session = await auth();
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  const mestre = ehMestreDaMesa(mesa, userId);
 
   return (
     <main className="mx-auto max-w-4xl p-4 sm:p-6 md:p-8 space-y-6">
@@ -40,7 +46,13 @@ export default async function PlayersPage({
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end">
+        <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end flex-wrap">
+          {mestre && (
+            <ConviteMesaPopover
+              mesaId={mesaId}
+              codigoConvite={mesa.codigoConvite}
+            />
+          )}
           <Link
             href={`/mesa/${mesaId}/players/novo`}
             className="flex items-center gap-1.5 px-4 py-2 bg-amber-400 hover:bg-amber-300 text-black font-black text-xs uppercase tracking-wider rounded-lg shadow-sm cursor-pointer transition-colors"
