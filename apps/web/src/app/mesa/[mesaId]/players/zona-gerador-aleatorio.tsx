@@ -25,7 +25,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { criarPlayerAction } from "./actions";
 
 interface ZonaGeradorAleatorioProps {
@@ -36,18 +36,34 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
   const router = useRouter();
   const catalogo = useMemo(() => carregarCatalogoCalafrio(), []);
 
-  const [fichaSorteada, setFichaSorteada] = useState<FichaCalafrio | null>(null);
+  const [fichaSorteada, setFichaSorteada] = useState<FichaCalafrio | null>(
+    null,
+  );
   const [derivada, setDerivada] = useState<FichaDerivadaCalafrio | null>(null);
   const [sorteando, setSorteando] = useState(false);
   const [salvando, setSalvando] = useState(false);
   const [sucesso, setSucesso] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    const timeouts = timeoutsRef.current;
+    return () => {
+      for (const t of timeouts) clearTimeout(t);
+    };
+  }, []);
+
+  const agendar = (fn: () => void, ms: number) => {
+    timeoutsRef.current.push(setTimeout(fn, ms));
+  };
 
   const executarSorteio = () => {
     setSorteando(true);
     setSucesso(false);
+    setErro(null);
 
     // Pequeno delay para animação de dados
-    setTimeout(() => {
+    agendar(() => {
       const novaFicha = gerarFichaAleatoria(catalogo, { apt: 1 });
       const novaDerivada = montarFichaCalafrio(novaFicha, catalogo);
       setFichaSorteada(novaFicha);
@@ -59,6 +75,7 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
   const handleSalvar = async (redirecionarParaFicha: boolean) => {
     if (!fichaSorteada || salvando) return;
     setSalvando(true);
+    setErro(null);
     try {
       const novo = await criarPlayerAction(mesaId, fichaSorteada);
       setSucesso(true);
@@ -66,7 +83,7 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
         router.push(`/mesa/${mesaId}/players/${novo.id}/ficha`);
       } else {
         router.refresh();
-        setTimeout(() => {
+        agendar(() => {
           setFichaSorteada(null);
           setDerivada(null);
           setSucesso(false);
@@ -74,7 +91,7 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
       }
     } catch (e) {
       console.error("Erro ao salvar personagem aleatório:", e);
-      alert("Não foi possível adicionar o personagem à mesa.");
+      setErro("Não foi possível adicionar o personagem à mesa.");
     } finally {
       setSalvando(false);
     }
@@ -95,7 +112,9 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
     return catalogo.habilidadesParanormais.find((h) => h.id === slot0.id);
   }, [fichaSorteada, catalogo]);
 
-  const armaEquipada = fichaSorteada?.inventario.find((i) => i.categoria.startsWith("arma") || i.categoria === "consumivel");
+  const armaEquipada = fichaSorteada?.inventario.find((i) =>
+    i.categoria.startsWith("arma"),
+  );
   const bugigangaItem = fichaSorteada?.inventario.find(
     (i) => i.categoria === "bugiganga",
   );
@@ -106,9 +125,7 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <div className="size-9 rounded-lg bg-amber-400 text-black flex items-center justify-center shadow-xs">
-            <Dices
-              className={`size-5 ${sorteando ? "animate-spin" : ""}`}
-            />
+            <Dices className={`size-5 ${sorteando ? "animate-spin" : ""}`} />
           </div>
           <div>
             <h2 className="text-base font-black uppercase tracking-wide text-foreground flex items-center gap-2">
@@ -118,7 +135,8 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
               </span>
             </h2>
             <p className="text-xs text-muted-foreground">
-              Sorteie uma ficha completa (ocupação d100, traços, matriz de domínio consistente, arma e bugiganga) com 1 clique.
+              Sorteie uma ficha completa (ocupação d100, traços, matriz de
+              domínio consistente, arma e bugiganga) com 1 clique.
             </p>
           </div>
         </div>
@@ -218,7 +236,9 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
             <div className="bg-card p-3 rounded-xl border border-border space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-black text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="size-3.5 text-accent-ink" /> Habilidade Memorizada (Matriz #{fichaSorteada.matrizHabilidades[0]?.slot ?? 4})
+                  <Sparkles className="size-3.5 text-accent-ink" /> Habilidade
+                  Memorizada (Matriz #
+                  {fichaSorteada.matrizHabilidades[0]?.slot ?? 4})
                 </span>
                 {habilidadeInfo && (
                   <span
@@ -228,7 +248,8 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
                         : "bg-purple-100 text-purple-900 border-purple-300 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800"
                     }`}
                   >
-                    Domínio {habilidadeInfo.dominio} · {habilidadeInfo.personalidade}
+                    Domínio {habilidadeInfo.dominio} ·{" "}
+                    {habilidadeInfo.personalidade}
                   </span>
                 )}
               </div>
@@ -238,7 +259,8 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
                   <div className="font-black text-sm text-foreground">
                     {habilidadeInfo.nome}
                     <span className="ml-2 text-xs font-semibold text-muted-foreground">
-                      (Custo: {habilidadeInfo.custoPA} PA · Ação {habilidadeInfo.tipoAcao})
+                      (Custo: {habilidadeInfo.custoPA} PA · Ação{" "}
+                      {habilidadeInfo.tipoAcao})
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
@@ -255,7 +277,8 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
             {/* Traços e Palavras-chave */}
             <div className="bg-card p-3 rounded-xl border border-border space-y-2">
               <span className="text-[11px] font-black text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                <Tag className="size-3.5 text-accent-ink" /> Traços & Palavras-Chave (d100)
+                <Tag className="size-3.5 text-accent-ink" /> Traços &
+                Palavras-Chave (d100)
               </span>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-900 dark:text-amber-300 border border-amber-500/30">
@@ -280,7 +303,9 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
               <span className="font-bold text-foreground">Equipamentos:</span>
               {armaEquipada && (
                 <span className="px-2 py-0.5 rounded bg-card border border-border font-medium">
-                  🗡️ {armaEquipada.nome} (Dano {armaEquipada.dano})
+                  🗡️ {armaEquipada.nome}
+                  {armaEquipada.dano !== undefined &&
+                    ` (Dano ${armaEquipada.dano})`}
                 </span>
               )}
               {bugigangaItem && (
@@ -294,6 +319,15 @@ export function ZonaGeradorAleatorio({ mesaId }: ZonaGeradorAleatorioProps) {
               Tudo pronto para desbravar o submundo de Curitiba.
             </div>
           </div>
+
+          {erro && (
+            <p
+              role="alert"
+              className="text-xs font-bold text-red-700 dark:text-red-400"
+            >
+              {erro}
+            </p>
+          )}
 
           {/* Ações da Prévia */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
