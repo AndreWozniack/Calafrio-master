@@ -1,7 +1,13 @@
-import React from "react";
-import { ActivityIndicator, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useGerenciadorPersonagensAsync } from "@calafrio/ficha-app";
 import { StatusBar } from "expo-status-bar";
+import React from "react";
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { FichaPlayerScreen } from "./src/screens/FichaPlayerScreen";
 import { HubPersonagensScreen } from "./src/screens/HubPersonagensScreen";
 import { mobileStorageAdapter } from "./src/storage/async-storage-adapter";

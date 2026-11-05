@@ -152,10 +152,18 @@ export function EditorEfeitos({ efeitos, onChange }: Props) {
           className={classeControle}
           aria-label="Tipo de efeito"
         >
-          <option value="modificador" className="bg-white text-black font-bold">Modificador de atributo</option>
-          <option value="palavra" className="bg-white text-black font-bold">Conceder palavra-chave</option>
-          <option value="resistencia" className="bg-white text-black font-bold">Resistência / vulnerabilidade</option>
-          <option value="regra" className="bg-white text-black font-bold">Regra especial</option>
+          <option value="modificador" className="bg-white text-black font-bold">
+            Modificador de atributo
+          </option>
+          <option value="palavra" className="bg-white text-black font-bold">
+            Conceder palavra-chave
+          </option>
+          <option value="resistencia" className="bg-white text-black font-bold">
+            Resistência / vulnerabilidade
+          </option>
+          <option value="regra" className="bg-white text-black font-bold">
+            Regra especial
+          </option>
         </select>
         {tipo === "modificador" && (
           <>
@@ -165,7 +173,11 @@ export function EditorEfeitos({ efeitos, onChange }: Props) {
               className={classeControle}
             >
               {ALVOS.map((a) => (
-                <option key={a.id} value={a.id} className="bg-white text-black font-bold">
+                <option
+                  key={a.id}
+                  value={a.id}
+                  className="bg-white text-black font-bold"
+                >
                   {a.rotulo}
                 </option>
               ))}
@@ -203,7 +215,11 @@ export function EditorEfeitos({ efeitos, onChange }: Props) {
               className={classeControle}
             >
               {ESPECTROS.map((x) => (
-                <option key={x} value={x} className="bg-white text-black font-bold">
+                <option
+                  key={x}
+                  value={x}
+                  className="bg-white text-black font-bold"
+                >
                   {x}
                 </option>
               ))}
@@ -213,9 +229,21 @@ export function EditorEfeitos({ efeitos, onChange }: Props) {
               onChange={(e) => setGrau(e.target.value as typeof grau)}
               className={classeControle}
             >
-              <option value="resistente" className="bg-white text-black font-bold">Resistente</option>
-              <option value="vulneravel" className="bg-white text-black font-bold">Vulnerável</option>
-              <option value="imune" className="bg-white text-black font-bold">Imune</option>
+              <option
+                value="resistente"
+                className="bg-white text-black font-bold"
+              >
+                Resistente
+              </option>
+              <option
+                value="vulneravel"
+                className="bg-white text-black font-bold"
+              >
+                Vulnerável
+              </option>
+              <option value="imune" className="bg-white text-black font-bold">
+                Imune
+              </option>
             </select>
           </>
         )}
@@ -226,10 +254,28 @@ export function EditorEfeitos({ efeitos, onChange }: Props) {
               onChange={(e) => setRegra(e.target.value as RegraEspecialId)}
               className={classeControle}
             >
-              <option value="customizada" className="bg-white text-black font-bold">Customizada</option>
-              <option value="permitirDominioMisto" className="bg-white text-black font-bold">Domínio misto</option>
-              <option value="pvUnificadoComPa" className="bg-white text-black font-bold">PV e PA unificados</option>
-              <option value="habilidadeUnicaContaParaAlinhamento" className="bg-white text-black font-bold">
+              <option
+                value="customizada"
+                className="bg-white text-black font-bold"
+              >
+                Customizada
+              </option>
+              <option
+                value="permitirDominioMisto"
+                className="bg-white text-black font-bold"
+              >
+                Domínio misto
+              </option>
+              <option
+                value="pvUnificadoComPa"
+                className="bg-white text-black font-bold"
+              >
+                PV e PA unificados
+              </option>
+              <option
+                value="habilidadeUnicaContaParaAlinhamento"
+                className="bg-white text-black font-bold"
+              >
                 Única conta p/ alinhamento
               </option>
             </select>

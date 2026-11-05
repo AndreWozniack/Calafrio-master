@@ -53,7 +53,8 @@ export default async function LoginPage({
               Investigação Paranormal
             </h1>
             <p className="text-xs sm:text-sm text-neutral-600 font-serif leading-relaxed px-2">
-              Entre com sua conta Google para gerenciar suas mesas e fichas de investigação.
+              Entre com sua conta Google para gerenciar suas mesas e fichas de
+              investigação.
             </p>
           </div>
         </div>
@@ -61,18 +62,28 @@ export default async function LoginPage({
         {/* Alerta de Erro se houver */}
         {error && (
           <div className="p-3 bg-red-50 border-2 border-red-300 text-red-900 text-xs font-medium space-y-1">
-            <p className="font-bold flex items-center gap-1">⚠️ Falha no login:</p>
+            <p className="font-bold flex items-center gap-1">
+              ⚠️ Falha no login:
+            </p>
             {error === "Configuration" ? (
               <div className="text-[11px] leading-relaxed space-y-1">
                 <p>
-                  Erro de configuração de autenticação (<strong>Configuration</strong>). Possíveis causas:
+                  Erro de configuração de autenticação (
+                  <strong>Configuration</strong>). Possíveis causas:
                 </p>
                 <ul className="list-disc list-inside space-y-0.5 text-neutral-800">
                   <li>
-                    Variáveis <code>AUTH_SECRET</code>, <code>AUTH_GOOGLE_ID</code> ou <code>AUTH_GOOGLE_SECRET</code> não preenchidas no Dokploy/VPS.
+                    Variáveis <code>AUTH_SECRET</code>,{" "}
+                    <code>AUTH_GOOGLE_ID</code> ou{" "}
+                    <code>AUTH_GOOGLE_SECRET</code> não preenchidas no
+                    Dokploy/VPS.
                   </li>
                   <li>
-                    Falta da URI de redirecionamento no Google Cloud Console: adicione <code>https://seu-dominio/api/auth/callback/google</code> (e <code>http://localhost:3001/api/auth/callback/google</code> para local).
+                    Falta da URI de redirecionamento no Google Cloud Console:
+                    adicione{" "}
+                    <code>https://seu-dominio/api/auth/callback/google</code> (e{" "}
+                    <code>http://localhost:3001/api/auth/callback/google</code>{" "}
+                    para local).
                   </li>
                 </ul>
               </div>

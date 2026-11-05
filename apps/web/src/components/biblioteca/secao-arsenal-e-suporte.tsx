@@ -27,7 +27,10 @@ export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
             </thead>
             <tbody className="divide-y divide-border/60">
               {catalogo.armasMundanas.map((arma) => (
-                <tr key={arma.id} className="hover:bg-muted/40 transition-colors">
+                <tr
+                  key={arma.id}
+                  className="hover:bg-muted/40 transition-colors"
+                >
                   <td className="py-3 font-black text-foreground">
                     {arma.categoria}
                   </td>
@@ -37,7 +40,9 @@ export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
                   <td className="py-3 font-black text-amber-600 dark:text-amber-400">
                     {arma.precoFundos} F$
                   </td>
-                  <td className="py-3 font-black text-foreground">{arma.dano}</td>
+                  <td className="py-3 font-black text-foreground">
+                    {arma.dano}
+                  </td>
                   <td className="py-3 text-muted-foreground font-medium">
                     {arma.exemplos}
                   </td>
@@ -53,7 +58,9 @@ export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div className="calafrio-card p-5 space-y-3">
-          <span className="calafrio-tag text-xs sm:text-sm">FAMILIARES (1d6)</span>
+          <span className="calafrio-tag text-xs sm:text-sm">
+            FAMILIARES (1d6)
+          </span>
           <div className="space-y-2.5 text-sm">
             {catalogo.familiares.map((f) => (
               <div
@@ -83,7 +90,8 @@ export function SecaoArsenalESuporte({ catalogo }: SecaoArsenalESuporteProps) {
                   {l.dado}. {l.nome}
                 </div>
                 <div className="text-xs sm:text-sm text-muted-foreground font-bold mt-0.5">
-                  {l.pv} PV · {l.pd} PD · +{l.aptBonus} APT · {l.velocidade}m VEL
+                  {l.pv} PV · {l.pd} PD · +{l.aptBonus} APT · {l.velocidade}m
+                  VEL
                 </div>
                 <p className="text-xs sm:text-sm text-foreground/90 mt-1.5 leading-relaxed font-medium">
                   {l.propriedades}

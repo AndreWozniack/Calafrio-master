@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
+import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 import type { FichaViva } from "../../types/ficha";
 import { CartaoPapel, EtiquetaCalafrio, TituloSecao } from "../ui";
-import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
 
 interface CarteiraMobileProps {
   f: FichaViva;
@@ -36,7 +36,9 @@ export function CarteiraMobile({ f }: CarteiraMobileProps) {
         </CartaoPapel>
 
         <CartaoPapel style={styles.blocoMoeda}>
-          <EtiquetaCalafrio variante="amarelo">E$P (Espírions)</EtiquetaCalafrio>
+          <EtiquetaCalafrio variante="amarelo">
+            E$P (Espírions)
+          </EtiquetaCalafrio>
           <TextInput
             keyboardType="numeric"
             value={String(espirions)}

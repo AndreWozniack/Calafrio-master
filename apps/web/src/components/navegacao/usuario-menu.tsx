@@ -51,7 +51,11 @@ export function UsuarioMenu({ user }: UsuarioMenuProps) {
           />
         ) : (
           <div className="size-6 rounded-full bg-black text-white flex items-center justify-center text-xs font-bold">
-            {user.name ? user.name.charAt(0).toUpperCase() : <User className="size-3" />}
+            {user.name ? (
+              user.name.charAt(0).toUpperCase()
+            ) : (
+              <User className="size-3" />
+            )}
           </div>
         )}
         <span className="text-xs font-bold text-black max-w-[100px] truncate hidden md:inline">
@@ -62,7 +66,9 @@ export function UsuarioMenu({ user }: UsuarioMenuProps) {
       {aberto && (
         <div className="absolute right-0 mt-2 w-56 border-2 border-black bg-white shadow-[4px_4px_0px_#000] p-3 text-black z-50 space-y-3">
           <div className="border-b border-black/10 pb-2">
-            <p className="text-xs font-black truncate">{user.name || "Investigador"}</p>
+            <p className="text-xs font-black truncate">
+              {user.name || "Investigador"}
+            </p>
             {user.email && (
               <p className="text-[10px] text-black/60 truncate font-mono">
                 {user.email}

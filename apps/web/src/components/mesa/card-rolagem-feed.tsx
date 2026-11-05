@@ -54,7 +54,9 @@ export function CardRolagemFeed({ rolagem }: { rolagem: RolagemMesa }) {
           {rolagem.autor} · {rolagem.acao}
         </div>
         <div className="text-muted-foreground">{rolagem.detalhe}</div>
-        <div className={`uppercase tracking-wide text-xs font-bold ${estilo.veredito}`}>
+        <div
+          className={`uppercase tracking-wide text-xs font-bold ${estilo.veredito}`}
+        >
           {rolagem.veredito}
         </div>
       </div>

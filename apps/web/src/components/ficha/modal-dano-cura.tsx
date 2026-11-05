@@ -3,7 +3,11 @@
 import { type EspectroDeDano, TOKENS_ESPECTRO_DANO } from "@calafrio/tema";
 import { Heart, Skull, Zap } from "lucide-react";
 import { useState } from "react";
-import { BotaoPrincipal, BotaoSecundario, CascaModal } from "./modais/casca-modal";
+import {
+  BotaoPrincipal,
+  BotaoSecundario,
+  CascaModal,
+} from "./modais/casca-modal";
 
 type Modo = "dano" | "pv" | "pa";
 
@@ -134,7 +138,6 @@ export function ModalDanoCura({
             </label>
           </div>
         )}
-
       </div>
     </CascaModal>
   );

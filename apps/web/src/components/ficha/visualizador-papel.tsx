@@ -5,8 +5,8 @@ import {
   type FichaViva,
   type ModoVisualizacao,
   type NivelZoomFicha,
-  type PaginaFicha,
   obterConfigZoomFicha,
+  type PaginaFicha,
 } from "./fichas-tipos";
 import { PaginaEcosAprimoramentos } from "./pagina-ecos-aprimoramentos";
 import { PaginaFrenteFicha } from "./pagina-frente-ficha";
@@ -78,7 +78,8 @@ export function VisualizadorPapel({
 
   useEffect(() => {
     const aoTeclar = (e: KeyboardEvent) => {
-      if (digitando(e.target) || document.querySelector(".fixed.inset-0")) return;
+      if (digitando(e.target) || document.querySelector(".fixed.inset-0"))
+        return;
       if (e.key === "ArrowRight") {
         if (pagina === "frente") virar("verso");
         else if (pagina === "verso") virar("ecos");
@@ -326,9 +327,7 @@ export function VisualizadorPapel({
                     : "pointer-events-none shadow-md"
                 }`}
               >
-                <div
-                  className={`relative w-full rounded-sm ${animacaoVerso}`}
-                >
+                <div className={`relative w-full rounded-sm ${animacaoVerso}`}>
                   {renderPagina("verso")}
 
                   {/* Borda superior clicável da Folha 2 exposta quando estiver na Folha 3 */}
@@ -356,9 +355,7 @@ export function VisualizadorPapel({
                     : "pointer-events-none shadow-md"
                 }`}
               >
-                <div
-                  className={`relative w-full rounded-sm ${animacaoEcos}`}
-                >
+                <div className={`relative w-full rounded-sm ${animacaoEcos}`}>
                   {renderPagina("ecos")}
                 </div>
               </div>

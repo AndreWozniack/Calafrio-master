@@ -1,8 +1,5 @@
 import type { ReactNode } from "react";
-import {
-  type NivelZoomFicha,
-  obterConfigZoomFicha,
-} from "../fichas-tipos";
+import { type NivelZoomFicha, obterConfigZoomFicha } from "../fichas-tipos";
 import { ALTURA_FOLHA, LARGURA_FOLHA } from "./unidades";
 
 /** Folha A4 escalável: filhos posicionam-se com `unidades.ts` (cqw). */

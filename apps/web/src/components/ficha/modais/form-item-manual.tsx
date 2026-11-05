@@ -2,11 +2,16 @@
 
 import type { CategoriaItemCalafrio, EspectroDeDano } from "@calafrio/core";
 import { EditorEfeitos } from "../editor-efeitos";
-import { Alternancia, Campo, classeCampo, numeroOuIndefinido } from "./campos-modal";
+import {
+  Alternancia,
+  Campo,
+  classeCampo,
+  numeroOuIndefinido,
+} from "./campos-modal";
 import {
   CATEGORIAS_ITEM,
-  ehArma,
   ESPECTROS_DANO,
+  ehArma,
   type FormItem,
 } from "./form-item";
 

@@ -3,7 +3,7 @@
  */
 
 export function formatarNomeArquivoPdf(nome?: string): string {
-  if (!nome || !nome.trim()) {
+  if (!nome?.trim()) {
     return "Ficha_Investigador_Calafrio2e.pdf";
   }
 

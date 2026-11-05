@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { criarNovoPersonagemPadrao } from "../gerenciador-personagens-core";
 import {
   gravarPersonagemAtivoIdAsync,
   gravarPersonagensAsync,
@@ -7,6 +6,7 @@ import {
   lerPersonagensAsync,
   type StorageAdapterAsync,
 } from "../armazenamento-async";
+import { criarNovoPersonagemPadrao } from "../gerenciador-personagens-core";
 
 function criarMockAdapter(): StorageAdapterAsync {
   const store = new Map<string, string>();

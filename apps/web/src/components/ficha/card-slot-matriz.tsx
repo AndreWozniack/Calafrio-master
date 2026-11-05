@@ -47,9 +47,7 @@ export function CardSlotMatriz({
         <div className="text-center py-4 text-xs text-muted-foreground/70 italic">
           Espaço livre da matriz
         </div>
-        <div className="text-xs text-muted-foreground/50 text-right">
-          3×3
-        </div>
+        <div className="text-xs text-muted-foreground/50 text-right">3×3</div>
       </div>
     );
   }

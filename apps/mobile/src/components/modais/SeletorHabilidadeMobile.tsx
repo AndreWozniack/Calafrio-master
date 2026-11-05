@@ -1,13 +1,3 @@
-import React, { useState } from "react";
-import {
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
 import type {
   AlocacaoSlotMatriz,
   CatalogoCalafrio,
@@ -18,8 +8,18 @@ import {
   TOKENS_PERSONALIDADE,
 } from "@calafrio/tema";
 import { Search, Sparkles, UserCheck, X } from "lucide-react-native";
-import { CartaoPapel, EtiquetaCalafrio } from "../ui";
+import React, { useState } from "react";
+import {
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
+import { CartaoPapel, EtiquetaCalafrio } from "../ui";
+import { styles } from "./SeletorHabilidadeMobile.styles";
 
 interface SeletorHabilidadeMobileProps {
   visivel: boolean;
@@ -42,8 +42,9 @@ export function SeletorHabilidadeMobile({
 }: SeletorHabilidadeMobileProps) {
   const [origem, setOrigem] = useState<OrigemHabilidade>("paranormal");
   const [busca, setBusca] = useState("");
-  const [filtroPersonalidade, setFiltroPersonalidade] =
-    useState<PersonalidadeCalafrio | "todas">("todas");
+  const [filtroPersonalidade, setFiltroPersonalidade] = useState<
+    PersonalidadeCalafrio | "todas"
+  >("todas");
 
   const habilidadesParanormaisFiltradas =
     catalogo.habilidadesParanormais.filter((h) => {
@@ -269,7 +270,9 @@ export function SeletorHabilidadeMobile({
                 >
                   <View style={styles.itemHeader}>
                     <Text style={styles.nomeHabilidade}>{u.nome}</Text>
-                    <EtiquetaCalafrio variante="amarelo">Única</EtiquetaCalafrio>
+                    <EtiquetaCalafrio variante="amarelo">
+                      Única
+                    </EtiquetaCalafrio>
                   </View>
 
                   <Text style={styles.detalhesHabilidade}>
@@ -289,157 +292,3 @@ export function SeletorHabilidadeMobile({
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  fundo: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.75)",
-    justifyContent: "flex-end",
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    height: "85%",
-    padding: 16,
-    borderTopWidth: 3,
-    borderTopColor: CORES_BASE_CALAFRIO.tintaPreta,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  headerTitulo: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  titulo: {
-    fontSize: 18,
-    fontWeight: "900",
-    color: CORES_BASE_CALAFRIO.tintaPreta,
-    textTransform: "uppercase",
-  },
-  abasOrigem: {
-    flexDirection: "row",
-    borderWidth: 1.5,
-    borderColor: CORES_BASE_CALAFRIO.tintaPreta,
-    marginBottom: 10,
-  },
-  abaOrigemItem: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 6,
-    paddingVertical: 8,
-    backgroundColor: "#FFFFFF",
-  },
-  abaOrigemItemAtiva: {
-    backgroundColor: CORES_BASE_CALAFRIO.tintaPreta,
-  },
-  abaOrigemTexto: {
-    fontSize: 11,
-    fontWeight: "800",
-    color: CORES_BASE_CALAFRIO.tintaPreta,
-    textTransform: "uppercase",
-  },
-  abaOrigemTextoAtiva: {
-    color: "#FFFFFF",
-  },
-  buscaContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    borderWidth: 1.5,
-    borderColor: CORES_BASE_CALAFRIO.tintaPreta,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    marginBottom: 10,
-    backgroundColor: "#FFFFFF",
-  },
-  buscaInput: {
-    flex: 1,
-    fontSize: 13,
-    color: CORES_BASE_CALAFRIO.tintaPreta,
-  },
-  filtrosScroll: {
-    maxHeight: 38,
-    marginBottom: 10,
-  },
-  filtrosContent: {
-    flexDirection: "row",
-    gap: 6,
-  },
-  filtroTag: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    borderWidth: 1.5,
-    borderColor: "rgba(17, 17, 19, 0.25)",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 20,
-    backgroundColor: "#FFFFFF",
-  },
-  filtroTagAtiva: {
-    borderColor: CORES_BASE_CALAFRIO.tintaPreta,
-    backgroundColor: CORES_BASE_CALAFRIO.tintaPreta,
-  },
-  emoji: {
-    fontSize: 12,
-  },
-  filtroTexto: {
-    fontSize: 11,
-    fontWeight: "700",
-    color: CORES_BASE_CALAFRIO.tintaPreta,
-  },
-  filtroTextoAtivo: {
-    color: "#FFFFFF",
-  },
-  listaScroll: {
-    flex: 1,
-  },
-  itemHabilidade: {
-    padding: 12,
-    borderWidth: 1.5,
-    borderColor: "rgba(17, 17, 19, 0.2)",
-    marginBottom: 8,
-    backgroundColor: "#FFFFFF",
-  },
-  itemHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 4,
-  },
-  nomeHabilidade: {
-    fontSize: 15,
-    fontWeight: "800",
-    color: CORES_BASE_CALAFRIO.tintaPreta,
-    flex: 1,
-  },
-  detalhesHabilidade: {
-    fontSize: 10,
-    fontWeight: "700",
-    color: "rgba(17, 17, 19, 0.6)",
-    textTransform: "uppercase",
-    marginBottom: 4,
-  },
-  descricaoHabilidade: {
-    fontSize: 12,
-    color: "rgba(17, 17, 19, 0.75)",
-    lineHeight: 16,
-  },
-  vazioContainer: {
-    padding: 24,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  vazioTexto: {
-    fontSize: 12,
-    color: "rgba(17, 17, 19, 0.5)",
-    textAlign: "center",
-    fontStyle: "italic",
-  },
-});

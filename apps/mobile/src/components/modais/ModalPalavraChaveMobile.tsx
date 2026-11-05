@@ -1,3 +1,8 @@
+import type {
+  CategoriaPalavraChave,
+  PalavraChaveNaFicha,
+} from "@calafrio/core";
+import { X } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Modal,
@@ -8,10 +13,8 @@ import {
   TextInput,
   View,
 } from "react-native";
-import type { CategoriaPalavraChave, PalavraChaveNaFicha } from "@calafrio/core";
-import { X } from "lucide-react-native";
-import { CartaoPapel } from "../ui";
 import { CORES_BASE_CALAFRIO } from "../../theme/tokens";
+import { CartaoPapel } from "../ui";
 
 interface ModalPalavraChaveMobileProps {
   visivel: boolean;
@@ -125,10 +128,7 @@ export function ModalPalavraChaveMobile({
             <Pressable
               onPress={salvar}
               disabled={!nome.trim()}
-              style={[
-                styles.botaoSalvar,
-                { opacity: nome.trim() ? 1 : 0.5 },
-              ]}
+              style={[styles.botaoSalvar, { opacity: nome.trim() ? 1 : 0.5 }]}
             >
               <Text style={styles.textoSalvar}>Adicionar Palavra-Chave</Text>
             </Pressable>

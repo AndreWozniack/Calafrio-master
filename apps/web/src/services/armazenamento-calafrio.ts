@@ -1,121 +1,25 @@
-import fs from "node:fs/promises";
-import path from "node:path";
 import type { FichaCalafrio } from "@calafrio/core";
 import { eq, isNull, or } from "drizzle-orm";
 import { db, schema } from "@/db";
+import {
+  type AnotacaoMesa,
+  carregarStore,
+  type DadosStore,
+  gerarCodigoConvite,
+  type MesaCalafrio,
+  type PlayerCalafrio,
+  type RolagemMesa,
+  salvarStore,
+} from "./armazenamento-store";
 
-export interface MesaCalafrio {
-  id: string;
-  userId?: string | null;
-  nome: string;
-  codigoConvite: string;
-  criadaEm: string;
-}
-
-export interface PlayerCalafrio {
-  id: string;
-  mesaId: string;
-  userId?: string | null;
-  nome: string;
-  jogador?: string;
-  aptBase: number;
-  pvMax: number;
-  paMax: number;
-  pd: number;
-  velocidade: number;
-  carteira: { fundos: number; espirions: number };
-  ficha: FichaCalafrio;
-  criadaEm: string;
-}
-
-export interface RolagemMesa {
-  id: string;
-  mesaId: string;
-  autor: string;
-  acao: string;
-  tipo: "acao" | "contestacao";
-  total: number;
-  detalhe: string;
-  veredito: string;
-  desfecho: "sucesso" | "falha" | "critico" | "desastre";
-  criadaEm: string;
-}
-
-export interface AnotacaoMesa {
-  id: string;
-  mesaId: string;
-  titulo: string;
-  texto: string;
-  fixada: boolean;
-  criadaEm: string;
-}
-
-export interface DadosStore {
-  mesas: MesaCalafrio[];
-  players: PlayerCalafrio[];
-  rolagens: RolagemMesa[];
-  anotacoes: AnotacaoMesa[];
-}
-
-const CAMINHO_ARQUIVO = path.join(process.cwd(), "data", "calafrio-store.json");
-
-function gerarCodigoConvite(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let res = "";
-  for (let i = 0; i < 6; i++) {
-    res += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return res;
-}
-
-let storeEmMemoria: DadosStore | null = null;
-
-export async function carregarStore(): Promise<DadosStore> {
-  if (storeEmMemoria) return storeEmMemoria;
-
-  try {
-    const conteudo = await fs.readFile(CAMINHO_ARQUIVO, "utf-8");
-    const lido = JSON.parse(conteudo) as Partial<DadosStore>;
-    storeEmMemoria = {
-      mesas: lido.mesas ?? [],
-      players: lido.players ?? [],
-      rolagens: lido.rolagens ?? [],
-      anotacoes: lido.anotacoes ?? [],
-    };
-    return storeEmMemoria;
-  } catch {
-    storeEmMemoria = {
-      mesas: [
-        {
-          id: "mesa-curitiba-1",
-          nome: "Investigações Paranormais — Curitiba",
-          codigoConvite: "CALA26",
-          criadaEm: new Date().toISOString(),
-        },
-      ],
-      players: [],
-      rolagens: [],
-      anotacoes: [],
-    };
-    await salvarStore(storeEmMemoria);
-    return storeEmMemoria;
-  }
-}
-
-export async function salvarStore(dados: DadosStore): Promise<void> {
-  storeEmMemoria = dados;
-  try {
-    const dir = path.dirname(CAMINHO_ARQUIVO);
-    await fs.mkdir(dir, { recursive: true });
-    await fs.writeFile(
-      CAMINHO_ARQUIVO,
-      JSON.stringify(dados, null, 2),
-      "utf-8",
-    );
-  } catch (err) {
-    console.error("Erro ao persistir store local:", err);
-  }
-}
+export type {
+  AnotacaoMesa,
+  DadosStore,
+  MesaCalafrio,
+  PlayerCalafrio,
+  RolagemMesa,
+};
+export { carregarStore, salvarStore };
 
 // === MESAS ===
 
@@ -126,7 +30,9 @@ export async function listarMesas(userId?: string): Promise<MesaCalafrio[]> {
         const mesasMestre = await db
           .select()
           .from(schema.mesas)
-          .where(or(eq(schema.mesas.userId, userId), isNull(schema.mesas.userId)));
+          .where(
+            or(eq(schema.mesas.userId, userId), isNull(schema.mesas.userId)),
+          );
 
         const mesasJogador = await db
           .select({
@@ -178,7 +84,10 @@ export async function listarMesas(userId?: string): Promise<MesaCalafrio[]> {
 export async function obterMesa(id: string): Promise<MesaCalafrio | null> {
   if (db) {
     try {
-      const res = await db.select().from(schema.mesas).where(eq(schema.mesas.id, id));
+      const res = await db
+        .select()
+        .from(schema.mesas)
+        .where(eq(schema.mesas.id, id));
       const m = res[0];
       if (m) {
         return {
@@ -197,7 +106,10 @@ export async function obterMesa(id: string): Promise<MesaCalafrio | null> {
   return s.mesas.find((m) => m.id === id) ?? null;
 }
 
-export async function criarMesa(nome: string, userId?: string): Promise<MesaCalafrio> {
+export async function criarMesa(
+  nome: string,
+  userId?: string,
+): Promise<MesaCalafrio> {
   const nova: MesaCalafrio = {
     id: `mesa-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     userId: userId ?? null,

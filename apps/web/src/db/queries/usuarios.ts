@@ -4,7 +4,9 @@ import { users } from "@/db/schema";
 
 export type UsuarioRow = typeof users.$inferSelect;
 
-export async function buscarUsuarioPorId(id: string): Promise<UsuarioRow | null> {
+export async function buscarUsuarioPorId(
+  id: string,
+): Promise<UsuarioRow | null> {
   if (!db) return null;
   const usuario = await db.query.users.findFirst({
     where: eq(users.id, id),

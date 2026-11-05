@@ -17,7 +17,9 @@ import {
 
 export function useGerenciadorPersonagensAsync(adapter: StorageAdapterAsync) {
   const [personagens, setPersonagens] = useState<FichaCalafrio[]>([]);
-  const [personagemAtivoId, setPersonagemAtivoId] = useState<string | null>(null);
+  const [personagemAtivoId, setPersonagemAtivoId] = useState<string | null>(
+    null,
+  );
   const [carregando, setCarregando] = useState(true);
 
   // Carrega inicial

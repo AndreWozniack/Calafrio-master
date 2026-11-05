@@ -83,7 +83,9 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
 
         {/* Palavras-chave Genéricas */}
         <div className="calafrio-card p-5 space-y-3">
-          <span className="calafrio-tag text-xs sm:text-sm">100 PALAVRAS-CHAVE</span>
+          <span className="calafrio-tag text-xs sm:text-sm">
+            100 PALAVRAS-CHAVE
+          </span>
           <div className="max-h-96 overflow-y-auto space-y-1.5 text-sm sm:text-base pr-2">
             {catalogo.palavrasChaveGenericas.map((item) => (
               <div
@@ -101,7 +103,9 @@ export function SecaoTabelasD100({ catalogo }: SecaoTabelasD100Props) {
 
         {/* Bugigangas */}
         <div className="calafrio-card p-5 space-y-3">
-          <span className="calafrio-tag text-xs sm:text-sm">100 BUGIGANGAS</span>
+          <span className="calafrio-tag text-xs sm:text-sm">
+            100 BUGIGANGAS
+          </span>
           <div className="max-h-96 overflow-y-auto space-y-1.5 text-sm sm:text-base pr-2">
             {catalogo.bugigangas.map((item) => (
               <div

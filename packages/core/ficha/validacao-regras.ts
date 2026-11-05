@@ -24,7 +24,9 @@ export function validarAvisosDeRegra(
     });
   }
 
-  if (params.habilidadesMemorizadasCount > params.limiteHabilidadesMemorizadas) {
+  if (
+    params.habilidadesMemorizadasCount > params.limiteHabilidadesMemorizadas
+  ) {
     avisos.push({
       codigo: "LIMITE_HABILIDADES_EXCEDIDO",
       mensagem: `Você alocou ${params.habilidadesMemorizadasCount} habilidades na matriz, mas seu limite atual é ${params.limiteHabilidadesMemorizadas} (= APT).`,

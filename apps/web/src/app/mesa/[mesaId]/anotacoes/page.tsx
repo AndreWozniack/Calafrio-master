@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { PainelAnotacoesMesa } from "@/components/mesa/painel-anotacoes-mesa";
-import { obterMesa } from "@/services/armazenamento-calafrio";
 import { listarAnotacoes } from "@/services/anotacoes-mesa";
+import { obterMesa } from "@/services/armazenamento-calafrio";
 
 export default async function MesaAnotacoesPage({
   params,

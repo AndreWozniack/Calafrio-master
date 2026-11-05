@@ -117,7 +117,10 @@ export function PalavrasChavePapel({
                       onClick={() => onRemover(p.id)}
                       className="cursor-pointer text-black/35 hover:text-red-700"
                     >
-                      <X style={{ width: u(11), height: u(11) }} strokeWidth={3} />
+                      <X
+                        style={{ width: u(11), height: u(11) }}
+                        strokeWidth={3}
+                      />
                     </button>
                   )}
                 </span>

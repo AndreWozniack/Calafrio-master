@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
-  canvasParaPdf,
   COORDENADAS_FICHA_PAGINA_1,
   COORDENADAS_FICHA_PAGINA_2,
+  canvasParaPdf,
 } from "../coordenadas-ficha-pdf";
 
 describe("Coordenadas e Conversão de Canvas A4 para PDF Points", () => {

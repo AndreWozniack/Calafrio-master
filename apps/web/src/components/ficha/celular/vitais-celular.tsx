@@ -88,7 +88,10 @@ export function VitaisCelular({
           texto={
             <>
               {derivada.pvAtual}
-              <span className="text-base text-black/50"> /{derivada.pvMax}</span>
+              <span className="text-base text-black/50">
+                {" "}
+                /{derivada.pvMax}
+              </span>
             </>
           }
         />
@@ -101,7 +104,10 @@ export function VitaisCelular({
           texto={
             <>
               {derivada.paAtual}
-              <span className="text-base text-black/50"> /{derivada.paMax}</span>
+              <span className="text-base text-black/50">
+                {" "}
+                /{derivada.paMax}
+              </span>
             </>
           }
         />

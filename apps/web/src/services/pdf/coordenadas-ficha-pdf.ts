@@ -65,7 +65,12 @@ const SLOTS_MATRIZ_PAGINA_2: CoordenadaSlotMatrizPdf[] = Array.from(
     return {
       slot,
       titulo: canvasParaPdf(x + 4, y + 4, MATRIZ_LARGURA - 8, 20),
-      descricao: canvasParaPdf(x + 4, y + 28, MATRIZ_LARGURA - 8, MATRIZ_ALTURA - 32),
+      descricao: canvasParaPdf(
+        x + 4,
+        y + 28,
+        MATRIZ_LARGURA - 8,
+        MATRIZ_ALTURA - 32,
+      ),
     };
   },
 );

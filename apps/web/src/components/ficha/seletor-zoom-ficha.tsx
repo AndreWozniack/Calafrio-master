@@ -1,10 +1,7 @@
 "use client";
 
 import { ZoomIn } from "lucide-react";
-import {
-  NIVEIS_ZOOM_FICHA,
-  type NivelZoomFicha,
-} from "./fichas-tipos";
+import { NIVEIS_ZOOM_FICHA, type NivelZoomFicha } from "./fichas-tipos";
 
 interface SeletorZoomFichaProps {
   zoom: NivelZoomFicha;

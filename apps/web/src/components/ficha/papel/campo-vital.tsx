@@ -73,7 +73,10 @@ export function NumeroFixo({ children }: { children: React.ReactNode }) {
       className="w-full text-center font-extrabold"
       style={{ fontSize: u(20) }}
     >
-      <span key={String(Array.isArray(children) ? children[0] : children)} className="valor-pulso">
+      <span
+        key={String(Array.isArray(children) ? children[0] : children)}
+        className="valor-pulso"
+      >
         {children}
       </span>
     </span>

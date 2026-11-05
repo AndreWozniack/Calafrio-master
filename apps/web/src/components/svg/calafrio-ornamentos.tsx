@@ -1,6 +1,10 @@
 import Image from "next/image";
 
-export function CalafrioLogo({ className = "h-7 sm:h-8" }: { className?: string }) {
+export function CalafrioLogo({
+  className = "h-7 sm:h-8",
+}: {
+  className?: string;
+}) {
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
       <Image
