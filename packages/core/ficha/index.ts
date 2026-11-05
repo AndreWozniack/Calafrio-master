@@ -1,6 +1,7 @@
 export * from "./coletor-efeitos";
 export * from "./efeitos";
 export * from "./estado-jogo";
+export * from "./gerador-aleatorio";
 export * from "./matriz-alinhamento";
 export * from "./modelo";
 export * from "./montar-ficha";
