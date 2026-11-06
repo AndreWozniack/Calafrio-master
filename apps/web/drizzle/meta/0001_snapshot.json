@@ -41,12 +41,8 @@
           "name": "anotacoes_mesa_mesa_id_mesas_id_fk",
           "tableFrom": "anotacoes_mesa",
           "tableTo": "mesas",
-          "columnsFrom": [
-            "mesa_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["mesa_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -56,9 +52,7 @@
         "anotacoes_mesa_mesa_id_unique": {
           "name": "anotacoes_mesa_mesa_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "mesa_id"
-          ]
+          "columns": ["mesa_id"]
         }
       },
       "policies": {},
@@ -121,12 +115,8 @@
           "name": "mesas_user_id_users_id_fk",
           "tableFrom": "mesas",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -136,9 +126,7 @@
         "mesas_codigo_convite_unique": {
           "name": "mesas_codigo_convite_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "codigo_convite"
-          ]
+          "columns": ["codigo_convite"]
         }
       },
       "policies": {},
@@ -248,12 +236,8 @@
           "name": "players_mesa_id_mesas_id_fk",
           "tableFrom": "players",
           "tableTo": "mesas",
-          "columnsFrom": [
-            "mesa_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["mesa_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -261,12 +245,8 @@
           "name": "players_user_id_users_id_fk",
           "tableFrom": "players",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -319,12 +299,8 @@
           "name": "rolagens_mesa_mesa_id_mesas_id_fk",
           "tableFrom": "rolagens_mesa",
           "tableTo": "mesas",
-          "columnsFrom": [
-            "mesa_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["mesa_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -391,16 +367,12 @@
         "users_google_id_unique": {
           "name": "users_google_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "google_id"
-          ]
+          "columns": ["google_id"]
         },
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},

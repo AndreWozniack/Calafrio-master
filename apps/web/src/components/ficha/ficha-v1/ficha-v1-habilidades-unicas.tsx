@@ -6,6 +6,7 @@ import { useState } from "react";
 
 interface FichaV1HabilidadesUnicasProps {
   ficha: FichaCalafrioV1;
+  semEco: boolean;
   adicionarHabilidadeUnica: (unica: HabilidadeUnicaV1) => void;
   aprimorarHabilidadeUnica: (id: string, descricao: string) => void;
   removerHabilidadeUnica: (id: string) => void;
@@ -13,6 +14,7 @@ interface FichaV1HabilidadesUnicasProps {
 
 export function FichaV1HabilidadesUnicas({
   ficha,
+  semEco,
   adicionarHabilidadeUnica,
   aprimorarHabilidadeUnica,
   removerHabilidadeUnica,
@@ -53,7 +55,9 @@ export function FichaV1HabilidadesUnicas({
           <button
             type="button"
             onClick={() => setCriando(true)}
-            className="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer bg-amber-500/10 hover:bg-amber-500/20 px-3 py-1.5 rounded-lg border border-amber-500/30 transition-colors"
+            disabled={semEco}
+            title={semEco ? "Sem EP livre" : undefined}
+            className="disabled:opacity-40 disabled:cursor-not-allowed text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer bg-amber-500/10 hover:bg-amber-500/20 px-3 py-1.5 rounded-lg border border-amber-500/30 transition-colors"
           >
             <Plus className="size-3.5" /> Criar Habilidade Única
           </button>
@@ -164,6 +168,7 @@ export function FichaV1HabilidadesUnicas({
                       <button
                         key={idx}
                         type="button"
+                        disabled={!tem && semEco}
                         onClick={() => {
                           if (!tem) {
                             const desc = prompt(
@@ -173,7 +178,7 @@ export function FichaV1HabilidadesUnicas({
                               aprimorarHabilidadeUnica(hu.id, desc.trim());
                           }
                         }}
-                        className={`size-4 rotate-45 border transition-colors cursor-pointer ${
+                        className={`size-4 rotate-45 border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                           tem
                             ? "bg-amber-400 border-amber-400"
                             : "border-border hover:border-amber-400/50 bg-background"
@@ -181,7 +186,9 @@ export function FichaV1HabilidadesUnicas({
                         title={
                           tem
                             ? hu.aprimoramentos[idx]?.descricao || "Aprimorado"
-                            : "Clique para aprimorar (+1 EP)"
+                            : semEco
+                              ? "Sem EP livre"
+                              : "Clique para aprimorar (+1 EP)"
                         }
                       />
                     );

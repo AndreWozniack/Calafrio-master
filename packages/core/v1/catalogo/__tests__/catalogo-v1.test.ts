@@ -19,9 +19,9 @@ describe("Catálogo 1e", () => {
     expect(new Set(HABILIDADES_1E.map((h) => h.id)).size).toBe(60);
     for (const a of ARVORES) {
       const g = listarHabilidadesPorArvore1e(a).map((h) => h.grau);
-      expect(
-        [0, 1, 2, 3].map((x) => g.filter((y) => y === x).length)
-      ).toEqual([1, 4, 5, 2]);
+      expect([0, 1, 2, 3].map((x) => g.filter((y) => y === x).length)).toEqual([
+        1, 4, 5, 2,
+      ]);
     }
   });
 
@@ -41,7 +41,10 @@ describe("Catálogo 1e", () => {
     expect(req("levitacao")).toEqual(["impeto"]);
     expect(req("manifestacao-castanha")).toEqual(["impeto", "ectobalistica"]);
     expect(req("ressonancia")).toEqual(["ectobalistica", "campo-de-forca"]);
-    expect(req("fluxo-anti-animatico")).toEqual(["campo-de-forca", "telecinese"]);
+    expect(req("fluxo-anti-animatico")).toEqual([
+      "campo-de-forca",
+      "telecinese",
+    ]);
     expect(req("absorcao-eterea")).toEqual(["telecinese"]);
     expect(req("modo-divino")).toEqual(["levitacao", "manifestacao-castanha"]);
     expect(req("conduite")).toEqual(["ressonancia", "fluxo-anti-animatico"]);
@@ -70,7 +73,7 @@ describe("Catálogo 1e", () => {
       permitePmExtra: true,
     });
     expect(
-      HABILIDADES_1E.filter((h) => h.permitePmExtra).map((h) => h.id)
+      HABILIDADES_1E.filter((h) => h.permitePmExtra).map((h) => h.id),
     ).toEqual(["familiar"]);
   });
 

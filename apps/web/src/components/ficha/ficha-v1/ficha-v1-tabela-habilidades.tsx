@@ -35,6 +35,7 @@ export function FichaV1TabelaHabilidades({
 }: FichaV1TabelaHabilidadesProps) {
   const [modalAberto, setModalAberto] = useState(false);
   const linhas = linhasHabilidadesV1(ficha, derivada);
+  const semEco = derivada.ecosGastos >= derivada.ecosMax;
 
   const tentarEsquecer = (linha: LinhaHabilidadeV1Visual) => {
     const apos = esquecerHabilidadeV1(ficha, linha.id);
@@ -160,6 +161,7 @@ export function FichaV1TabelaHabilidades({
                         <button
                           key={idx}
                           type="button"
+                          disabled={!tem && semEco}
                           onClick={() => {
                             if (!tem) {
                               const desc = prompt(
@@ -178,7 +180,7 @@ export function FichaV1TabelaHabilidades({
                                 );
                             }
                           }}
-                          className={`size-4 rotate-45 border transition-colors cursor-pointer ${
+                          className={`size-4 rotate-45 border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                             tem
                               ? "bg-amber-400 border-amber-400"
                               : "border-border hover:border-amber-400/50 bg-background"
@@ -186,7 +188,9 @@ export function FichaV1TabelaHabilidades({
                           title={
                             tem
                               ? `${aprim.descricao} (clique para remover)`
-                              : "Clique para aprimorar (+1 EP)"
+                              : semEco
+                                ? "Sem EP livre"
+                                : "Clique para aprimorar (+1 EP)"
                           }
                         />
                       );

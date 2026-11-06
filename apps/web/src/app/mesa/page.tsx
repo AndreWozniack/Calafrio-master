@@ -40,10 +40,7 @@ export default async function MesaPage() {
       </BannerEscudo>
 
       {/* Formulário de Criação de Nova Mesa */}
-      <form
-        action={criarMesaAction}
-        className="calafrio-card p-4 space-y-3"
-      >
+      <form action={criarMesaAction} className="calafrio-card p-4 space-y-3">
         <div className="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center">
           <input
             type="text"

@@ -38,7 +38,7 @@ describe("criarMesaAction", () => {
     [{ nome: "D", sistemaVersao: "3e" }, "2e"],
   ])("%o → %s", async (campos, esperado) => {
     await expect(criarMesaAction(form(campos))).rejects.toThrow(
-      "NEXT_REDIRECT /mesa/mesa-x"
+      "NEXT_REDIRECT /mesa/mesa-x",
     );
     expect(h.criarMesa).toHaveBeenCalledWith(campos.nome, "user-1", esperado);
   });

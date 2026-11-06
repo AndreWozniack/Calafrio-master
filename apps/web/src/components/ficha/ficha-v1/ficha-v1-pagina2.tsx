@@ -53,6 +53,7 @@ export function FichaV1Pagina2({
       {/* Habilidades Únicas */}
       <FichaV1HabilidadesUnicas
         ficha={ficha}
+        semEco={derivada.ecosGastos >= derivada.ecosMax}
         adicionarHabilidadeUnica={adicionarHabilidadeUnica}
         aprimorarHabilidadeUnica={aprimorarHabilidadeUnica}
         removerHabilidadeUnica={removerHabilidadeUnica}

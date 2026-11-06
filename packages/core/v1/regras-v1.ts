@@ -3,9 +3,7 @@ import { HABILIDADES_1E, obterHabilidade1e } from "./catalogo";
 import type { FichaCalafrioV1, HabilidadeMemorizadaV1 } from "./modelo-v1";
 import { CUSTO_PM_POR_GRAU } from "./modelo-v1";
 
-export function habilidadesValidasV1(
-  habs: HabilidadeMemorizadaV1[]
-): string[] {
+export function habilidadesValidasV1(habs: HabilidadeMemorizadaV1[]): string[] {
   const memorizadas = new Set(habs.map((h) => h.id));
   const validas = new Set<string>();
   for (const grau of [1, 2, 3] as const) {
@@ -23,13 +21,13 @@ export function habilidadesValidasV1(
 export function grauZeroMemorizadosV1(validas: string[]): string[] {
   const arvores = new Set(validas.map((id) => obterHabilidade1e(id)?.arvore));
   return HABILIDADES_1E.filter(
-    (h) => h.grau === 0 && arvores.has(h.arvore)
+    (h) => h.grau === 0 && arvores.has(h.arvore),
   ).map((h) => h.id);
 }
 
 export function podeMemorizarV1(
   ficha: FichaCalafrioV1,
-  id: string
+  id: string,
 ): { ok: boolean; motivo?: string } {
   const c = obterHabilidade1e(id);
   if (!c) return { ok: false, motivo: "Habilidade desconhecida." };
@@ -50,14 +48,14 @@ export function podeMemorizarV1(
 
 export function esquecerHabilidadeV1(
   ficha: FichaCalafrioV1,
-  id: string
+  id: string,
 ): FichaCalafrioV1 {
   const resto = ficha.habilidades.filter((h) => h.id !== id);
   const validas = new Set(habilidadesValidasV1(resto));
   return {
     ...ficha,
     habilidades: resto.filter(
-      (h) => validas.has(h.id) || !obterHabilidade1e(h.id)
+      (h) => validas.has(h.id) || !obterHabilidade1e(h.id),
     ),
   };
 }

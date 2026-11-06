@@ -1,6 +1,6 @@
+import { criarFichaV1Vazia } from "@calafrio/core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { DadosStore } from "../armazenamento-store";
-import { criarFichaV1Vazia } from "@calafrio/core";
 
 const h = vi.hoisted(() => ({ store: null as unknown as DadosStore }));
 vi.mock("@/db", () => ({ db: null, schema: {} }));
@@ -14,8 +14,8 @@ vi.mock("../armazenamento-store", async (orig) => ({
 
 import {
   criarPlayer,
-  salvarFichaPlayer,
   obterPlayer,
+  salvarFichaPlayer,
 } from "../armazenamento-calafrio";
 
 beforeEach(() => {

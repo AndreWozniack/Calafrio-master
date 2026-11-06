@@ -124,11 +124,7 @@ export async function entrarPorConvite(
     mesa.sistemaVersao === "1e"
       ? criarFichaV1Vazia(id, NOME_RASCUNHO)
       : criarFichaCalafrioVazia(id, NOME_RASCUNHO);
-  const novo = await criarPlayer(
-    mesa.id,
-    fichaInicial,
-    userId,
-  );
+  const novo = await criarPlayer(mesa.id, fichaInicial, userId);
   return { mesaId: mesa.id, playerId: novo.id };
 }
 

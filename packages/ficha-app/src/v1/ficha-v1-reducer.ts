@@ -1,13 +1,15 @@
 import {
-  MAX_APRIMORAMENTOS_V1,
-  NIVEL_MAX_V1,
-  NIVEL_MIN_V1,
+  calcularFichaV1,
   esquecerHabilidadeV1,
-  podeMemorizarV1,
   type FichaCalafrioV1,
   type HabilidadeUnicaV1,
   type ItemV1,
+  MAX_APRIMORAMENTOS_V1,
+  NIVEL_MAX_V1,
+  NIVEL_MIN_V1,
+  obterHabilidade1e,
   type PalavraChaveV1,
+  podeMemorizarV1,
 } from "@calafrio/core";
 
 export type AcaoFichaV1 =
@@ -43,9 +45,27 @@ export type AcaoFichaV1 =
   | { tipo: "definirAnotacoes"; texto: string }
   | { tipo: "definirIlustracaoUrl"; url?: string };
 
+function temEcoLivre(state: FichaCalafrioV1): boolean {
+  const d = calcularFichaV1(state);
+  return d.ecosGastos < d.ecosMax;
+}
+
+function pmExtraPermitido(
+  state: FichaCalafrioV1,
+  id: string,
+  pmExtra: number,
+): boolean {
+  const h = state.habilidades.find((x) => x.id === id);
+  if (!h || !obterHabilidade1e(id)?.permitePmExtra) return false;
+  if (!Number.isInteger(pmExtra) || pmExtra < 0 || pmExtra % 3 !== 0)
+    return false;
+  const d = calcularFichaV1(state);
+  return pmExtra - (h.pmExtra ?? 0) <= d.pmRestante;
+}
+
 export function fichaCalafrioV1Reducer(
   state: FichaCalafrioV1,
-  action: AcaoFichaV1
+  action: AcaoFichaV1,
 ): FichaCalafrioV1 {
   switch (action.tipo) {
     case "carregarFicha":
@@ -60,7 +80,7 @@ export function fichaCalafrioV1Reducer(
     case "definirNivel": {
       const nivel = Math.max(
         NIVEL_MIN_V1,
-        Math.min(NIVEL_MAX_V1, Math.round(action.nivel))
+        Math.min(NIVEL_MAX_V1, Math.round(action.nivel)),
       );
       const pvMax = nivel * 6;
       return {
@@ -108,6 +128,7 @@ export function fichaCalafrioV1Reducer(
       return esquecerHabilidadeV1(state, action.id);
 
     case "aprimorarHabilidade": {
+      if (!temEcoLivre(state)) return state;
       return {
         ...state,
         habilidades: state.habilidades.map((h) => {
@@ -133,7 +154,7 @@ export function fichaCalafrioV1Reducer(
           return {
             ...h,
             aprimoramentos: h.aprimoramentos.filter(
-              (a) => a.id !== action.aprimoramentoId
+              (a) => a.id !== action.aprimoramentoId,
             ),
           };
         }),
@@ -141,21 +162,24 @@ export function fichaCalafrioV1Reducer(
     }
 
     case "definirPmExtra": {
+      if (!pmExtraPermitido(state, action.id, action.pmExtra)) return state;
       return {
         ...state,
         habilidades: state.habilidades.map((h) =>
-          h.id === action.id ? { ...h, pmExtra: action.pmExtra } : h
+          h.id === action.id ? { ...h, pmExtra: action.pmExtra } : h,
         ),
       };
     }
 
     case "adicionarHabilidadeUnica":
+      if (!temEcoLivre(state)) return state;
       return {
         ...state,
         habilidadesUnicas: [...state.habilidadesUnicas, action.unica],
       };
 
     case "aprimorarHabilidadeUnica": {
+      if (!temEcoLivre(state)) return state;
       return {
         ...state,
         habilidadesUnicas: state.habilidadesUnicas.map((u) => {
@@ -177,7 +201,7 @@ export function fichaCalafrioV1Reducer(
       return {
         ...state,
         habilidadesUnicas: state.habilidadesUnicas.filter(
-          (u) => u.id !== action.id
+          (u) => u.id !== action.id,
         ),
       };
 

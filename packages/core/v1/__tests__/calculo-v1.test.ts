@@ -30,7 +30,7 @@ describe("calcularFichaV1 — derivados", () => {
 
   it.each([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])("nível %i", (nivel) => {
     const d = calcularFichaV1(
-      base({ nivel, atributos: { corpo: nivel, mente: 2, alma: 2 } })
+      base({ nivel, atributos: { corpo: nivel, mente: 2, alma: 2 } }),
     );
     expect(d.pvMax).toBe(nivel * 6);
     expect(d.ba).toBe(nivel);
@@ -42,13 +42,13 @@ describe("calcularFichaV1 — derivados", () => {
 
   it("atributos: pendente, excedido, < 1, nível inválido", () => {
     expect(
-      codigos(base({ atributos: { corpo: 1, mente: 1, alma: 1 } }))
+      codigos(base({ atributos: { corpo: 1, mente: 1, alma: 1 } })),
     ).toContain("PONTOS_ATRIBUTO_PENDENTES");
     expect(
-      codigos(base({ atributos: { corpo: 3, mente: 1, alma: 1 } }))
+      codigos(base({ atributos: { corpo: 3, mente: 1, alma: 1 } })),
     ).toContain("PONTOS_ATRIBUTO_INVALIDOS");
     expect(
-      codigos(base({ atributos: { corpo: 4, mente: 0, alma: 0 } }))
+      codigos(base({ atributos: { corpo: 4, mente: 0, alma: 0 } })),
     ).toContain("PONTOS_ATRIBUTO_INVALIDOS");
     expect(codigos(base({ nivel: 11 }))).toContain("NIVEL_INVALIDO");
     expect(codigos(base({ nivel: 0 }))).toContain("NIVEL_INVALIDO");
@@ -63,7 +63,7 @@ describe("calcularFichaV1 — PM", () => {
           { id: "impeto", aprimoramentos: [] }, // I = 3
           { id: "levitacao", aprimoramentos: [] }, // II = 6
         ],
-      })
+      }),
     );
     expect(d.pmGasto).toBe(9);
     expect(d.pmRestante).toBe(-3);
@@ -72,14 +72,14 @@ describe("calcularFichaV1 — PM", () => {
 
   it("Grau 0 é derivado, grátis e não pode ser gravado", () => {
     const d = calcularFichaV1(
-      base({ habilidades: [{ id: "impeto", aprimoramentos: [] }] })
+      base({ habilidades: [{ id: "impeto", aprimoramentos: [] }] }),
     );
     expect(d.grauZeroMemorizados).toEqual(["arsenal-psionico"]);
     expect(d.pmGasto).toBe(3);
     expect(
       codigos(
-        base({ habilidades: [{ id: "arsenal-psionico", aprimoramentos: [] }] })
-      )
+        base({ habilidades: [{ id: "arsenal-psionico", aprimoramentos: [] }] }),
+      ),
     ).toContain("GRAU_ZERO_EXPLICITO");
   });
 
@@ -97,7 +97,7 @@ describe("calcularFichaV1 — PM", () => {
 
   it("habilidade desconhecida avisa e não soma", () => {
     const d = calcularFichaV1(
-      base({ habilidades: [{ id: "nao-existe", aprimoramentos: [] }] })
+      base({ habilidades: [{ id: "nao-existe", aprimoramentos: [] }] }),
     );
     expect(d.pmGasto).toBe(0);
     expect(d.avisos.map((a) => a.codigo)).toContain("HABILIDADE_DESCONHECIDA");
@@ -123,7 +123,7 @@ describe("calcularFichaV1 — Ecos e palavras-chave", () => {
             aprimoramentos: apr(1),
           },
         ],
-      })
+      }),
     );
     expect(d.ecosGastos).toBe(3);
     expect(d.avisos).toEqual([]);
@@ -132,7 +132,10 @@ describe("calcularFichaV1 — Ecos e palavras-chave", () => {
   it("acusa EP acima do nível e mais de 2 aprimoramentos", () => {
     const f = base({ habilidades: [{ id: "impeto", aprimoramentos: apr(3) }] });
     expect(codigos(f)).toEqual(
-      expect.arrayContaining(["LIMITE_ECOS_EXCEDIDO", "APRIMORAMENTOS_EXCEDIDOS"])
+      expect.arrayContaining([
+        "LIMITE_ECOS_EXCEDIDO",
+        "APRIMORAMENTOS_EXCEDIDOS",
+      ]),
     );
   });
 
@@ -143,7 +146,7 @@ describe("calcularFichaV1 — Ecos e palavras-chave", () => {
       categoria: "livre" as const,
     }));
     expect(codigos(base({ palavrasChave: pcs }))).toContain(
-      "PALAVRAS_CHAVE_EXCEDIDAS"
+      "PALAVRAS_CHAVE_EXCEDIDAS",
     );
   });
 });

@@ -18,7 +18,7 @@ export function FichaV1EcosBanner({ derivada }: FichaV1EcosBannerProps) {
           </div>
           <div>
             <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-              Ecos Paranormais (EP)
+              Ecos Psíquicos (EP)
             </div>
             <div className="text-xl font-black text-amber-300">
               {derivada.ecosGastos}{" "}

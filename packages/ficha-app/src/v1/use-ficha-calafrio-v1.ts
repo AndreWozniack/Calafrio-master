@@ -10,19 +10,16 @@ import {
   type PalavraChaveV1,
 } from "@calafrio/core";
 import { useEffect, useMemo, useReducer, useRef } from "react";
-import {
-  type AcaoFichaV1,
-  fichaCalafrioV1Reducer,
-} from "./ficha-v1-reducer";
+import { type AcaoFichaV1, fichaCalafrioV1Reducer } from "./ficha-v1-reducer";
 
 export function useFichaCalafrioV1(
   fichaParam?: FichaCalafrioV1,
-  onSalvar?: (ficha: FichaCalafrioV1) => void
+  onSalvar?: (ficha: FichaCalafrioV1) => void,
 ) {
   const [ficha, dispatch] = useReducer(
     fichaCalafrioV1Reducer,
     fichaParam,
-    (inicial) => inicial ?? criarFichaV1Vazia("sem-ficha", "")
+    (inicial) => inicial ?? criarFichaV1Vazia("sem-ficha", ""),
   );
 
   // Sincronizar se a fichaParam mudar externamente
@@ -49,7 +46,7 @@ export function useFichaCalafrioV1(
 
   const derivada: FichaDerivadaV1 = useMemo(
     () => calcularFichaV1(ficha),
-    [ficha]
+    [ficha],
   );
 
   return {
@@ -59,8 +56,7 @@ export function useFichaCalafrioV1(
     definirNome: (nome: string) => dispatch({ tipo: "definirNome", nome }),
     definirJogador: (jogador: string) =>
       dispatch({ tipo: "definirJogador", jogador }),
-    definirNivel: (nivel: number) =>
-      dispatch({ tipo: "definirNivel", nivel }),
+    definirNivel: (nivel: number) => dispatch({ tipo: "definirNivel", nivel }),
     definirAtributo: (atributo: "corpo" | "mente" | "alma", valor: number) =>
       dispatch({ tipo: "definirAtributo", atributo, valor }),
     definirPvAtual: (valor: number) =>

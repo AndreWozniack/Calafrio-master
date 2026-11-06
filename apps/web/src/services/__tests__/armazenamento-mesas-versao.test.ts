@@ -35,7 +35,7 @@ describe("sistemaVersao da mesa", () => {
         nome: "x",
         codigoConvite: "X",
         criadaEm: "",
-      }).sistemaVersao
+      }).sistemaVersao,
     ).toBe("2e");
   });
 });

@@ -45,13 +45,22 @@ describe("fichaCalafrioV1Reducer", () => {
     state = fichaCalafrioV1Reducer(state, { tipo: "definirPvAtual", valor: 4 });
     expect(state.pvAtual).toBe(4);
 
-    state = fichaCalafrioV1Reducer(state, { tipo: "definirPvAtual", valor: 10 });
+    state = fichaCalafrioV1Reducer(state, {
+      tipo: "definirPvAtual",
+      valor: 10,
+    });
     expect(state.pvAtual).toBe(6);
 
-    state = fichaCalafrioV1Reducer(state, { tipo: "definirPvAtual", valor: -2 });
+    state = fichaCalafrioV1Reducer(state, {
+      tipo: "definirPvAtual",
+      valor: -2,
+    });
     expect(state.pvAtual).toBe(0);
 
-    state = fichaCalafrioV1Reducer(state, { tipo: "definirPaAtual", valor: 20 });
+    state = fichaCalafrioV1Reducer(state, {
+      tipo: "definirPaAtual",
+      valor: 20,
+    });
     expect(state.paAtual).toBe(9);
   });
 
@@ -87,7 +96,7 @@ describe("fichaCalafrioV1Reducer", () => {
   });
 
   it("aprimorar e remover aprimoramento respeita máximo de 2", () => {
-    let state = base();
+    let state = { ...base(), nivel: 3 };
     state = fichaCalafrioV1Reducer(state, {
       tipo: "memorizarHabilidade",
       id: "impeto",
@@ -122,22 +131,83 @@ describe("fichaCalafrioV1Reducer", () => {
     expect(state.habilidades[0].aprimoramentos).toHaveLength(1);
   });
 
-  it("definirPmExtra atualiza a habilidade", () => {
-    let state = base();
+  it("definirPmExtra só aceita múltiplo de 3 em habilidade que permite e dentro do PM livre", () => {
+    // Mente 2 → PM máx. 12; Familiar (Grau I) custa 3 → 9 livres.
+    let state = fichaCalafrioV1Reducer(base(), {
+      tipo: "memorizarHabilidade",
+      id: "familiar",
+    });
     state = fichaCalafrioV1Reducer(state, {
+      tipo: "definirPmExtra",
+      id: "familiar",
+      pmExtra: 6,
+    });
+    expect(state.habilidades[0].pmExtra).toBe(6);
+
+    for (const pmExtra of [4, -3, 12]) {
+      const r = fichaCalafrioV1Reducer(state, {
+        tipo: "definirPmExtra",
+        id: "familiar",
+        pmExtra,
+      });
+      expect(r.habilidades[0].pmExtra).toBe(6);
+    }
+
+    state = fichaCalafrioV1Reducer(state, {
+      tipo: "definirPmExtra",
+      id: "familiar",
+      pmExtra: 9,
+    });
+    expect(state.habilidades[0].pmExtra).toBe(9);
+
+    // Habilidade sem permitePmExtra recusa.
+    state = fichaCalafrioV1Reducer(base(), {
       tipo: "memorizarHabilidade",
       id: "impeto",
     });
     state = fichaCalafrioV1Reducer(state, {
       tipo: "definirPmExtra",
       id: "impeto",
-      pmExtra: 6,
+      pmExtra: 3,
     });
-    expect(state.habilidades[0].pmExtra).toBe(6);
+    expect(state.habilidades[0].pmExtra).toBeUndefined();
+  });
+
+  it("não gasta mais EP que o nível", () => {
+    // Nível 1 → 1 EP.
+    let state = fichaCalafrioV1Reducer(base(), {
+      tipo: "memorizarHabilidade",
+      id: "impeto",
+    });
+    state = fichaCalafrioV1Reducer(state, {
+      tipo: "aprimorarHabilidade",
+      id: "impeto",
+      descricao: "Primeiro",
+    });
+    expect(state.habilidades[0].aprimoramentos).toHaveLength(1);
+
+    state = fichaCalafrioV1Reducer(state, {
+      tipo: "aprimorarHabilidade",
+      id: "impeto",
+      descricao: "Sem EP",
+    });
+    expect(state.habilidades[0].aprimoramentos).toHaveLength(1);
+
+    state = fichaCalafrioV1Reducer(state, {
+      tipo: "adicionarHabilidadeUnica",
+      unica: {
+        id: "u1",
+        nome: "Sem EP",
+        descricao: "",
+        passiva: false,
+        aprimoramentos: [],
+      },
+    });
+    expect(state.habilidadesUnicas).toHaveLength(0);
   });
 
   it("adicionar, aprimorar e remover habilidade única", () => {
-    let state = base();
+    let state = { ...base(), nivel: 2 };
     state = fichaCalafrioV1Reducer(state, {
       tipo: "adicionarHabilidadeUnica",
       unica: {

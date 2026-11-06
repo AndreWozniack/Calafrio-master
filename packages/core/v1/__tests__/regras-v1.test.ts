@@ -17,32 +17,32 @@ const ids = (f: FichaCalafrioV1) => f.habilidades.map((h) => h.id).sort();
 
 describe("requisitos por ligação", () => {
   it("Grau II exige um Grau I ligado (Levitação ← Ímpeto)", () => {
-    expect(habilidadesValidasV1(comHabs(["levitacao"]).habilidades)).not.toContain(
-      "levitacao"
-    );
     expect(
-      habilidadesValidasV1(comHabs(["impeto", "levitacao"]).habilidades)
+      habilidadesValidasV1(comHabs(["levitacao"]).habilidades),
+    ).not.toContain("levitacao");
+    expect(
+      habilidadesValidasV1(comHabs(["impeto", "levitacao"]).habilidades),
     ).toContain("levitacao");
     // Telecinese (I₄) não liga em Levitação (II₁)
     expect(
-      habilidadesValidasV1(comHabs(["telecinese", "levitacao"]).habilidades)
+      habilidadesValidasV1(comHabs(["telecinese", "levitacao"]).habilidades),
     ).not.toContain("levitacao");
   });
 
   it("Grau III exige um Grau II ligado e válido (Modo divino ← Levitação/Manifestação castanha)", () => {
     expect(
-      habilidadesValidasV1(comHabs(["levitacao", "modo-divino"]).habilidades)
+      habilidadesValidasV1(comHabs(["levitacao", "modo-divino"]).habilidades),
     ).toEqual([]);
     expect(
       habilidadesValidasV1(
-        comHabs(["impeto", "levitacao", "modo-divino"]).habilidades
-      )
+        comHabs(["impeto", "levitacao", "modo-divino"]).habilidades,
+      ),
     ).toContain("modo-divino");
     // Ressonância (II₃) não liga em Modo divino (III₁)
     expect(
       habilidadesValidasV1(
-        comHabs(["ectobalistica", "ressonancia", "modo-divino"]).habilidades
-      )
+        comHabs(["ectobalistica", "ressonancia", "modo-divino"]).habilidades,
+      ),
     ).not.toContain("modo-divino");
   });
 
@@ -59,7 +59,7 @@ describe("esquecerHabilidadeV1 (cascata)", () => {
   it("remove dependentes sem outro requisito", () => {
     const f = esquecerHabilidadeV1(
       comHabs(["impeto", "levitacao", "modo-divino"]),
-      "impeto"
+      "impeto",
     );
     expect(ids(f)).toEqual([]);
   });
@@ -68,7 +68,7 @@ describe("esquecerHabilidadeV1 (cascata)", () => {
     // Manifestação castanha (II₂) ← Ímpeto (I₁) ou Ectobalística (I₂)
     const f = esquecerHabilidadeV1(
       comHabs(["impeto", "ectobalistica", "manifestacao-castanha"]),
-      "impeto"
+      "impeto",
     );
     expect(ids(f)).toEqual(["ectobalistica", "manifestacao-castanha"]);
   });

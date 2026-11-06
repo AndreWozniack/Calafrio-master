@@ -100,5 +100,5 @@ const CARTAS: CartasArvoreV1 = {
 
 export const HABILIDADES_ESQUISITAS: HabilidadeCatalogoV1[] = montarArvoreV1(
   "esquisitas",
-  CARTAS
+  CARTAS,
 );

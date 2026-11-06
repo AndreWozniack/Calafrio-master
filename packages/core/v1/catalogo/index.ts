@@ -14,17 +14,17 @@ export const HABILIDADES_1E: HabilidadeCatalogoV1[] = [
 ];
 
 const MAPA_HABILIDADES_1E = new Map<string, HabilidadeCatalogoV1>(
-  HABILIDADES_1E.map((h) => [h.id, h])
+  HABILIDADES_1E.map((h) => [h.id, h]),
 );
 
 export function obterHabilidade1e(
-  id: string
+  id: string,
 ): HabilidadeCatalogoV1 | undefined {
   return MAPA_HABILIDADES_1E.get(id);
 }
 
 export function listarHabilidadesPorArvore1e(
-  arvore: ArvoreV1
+  arvore: ArvoreV1,
 ): HabilidadeCatalogoV1[] {
   return HABILIDADES_1E.filter((h) => h.arvore === arvore);
 }
