@@ -4,6 +4,7 @@ import { obterAcessoMesa } from "@/lib/auth/acesso-mesa";
 import { obterMesa, obterPlayer } from "@/services/armazenamento-calafrio";
 import { podeEditarPlayer } from "@/services/convite-regras";
 import { FichaLiveClient } from "./ficha-live-client";
+import { FichaLiveClientV1 } from "./ficha-live-client-v1";
 
 export default async function FichaPage({
   params,
@@ -29,9 +30,11 @@ export default async function FichaPage({
   return (
     <div className="w-full">
       {ehFichaV1(player.ficha) ? (
-        <div className="p-8 text-center text-muted-foreground">
-          Ficha da 1ª Edição (em carregamento...)
-        </div>
+        <FichaLiveClientV1
+          mesaId={mesaId}
+          playerId={playerId}
+          fichaInicial={player.ficha}
+        />
       ) : (
         <FichaLiveClient
           mesaId={mesaId}

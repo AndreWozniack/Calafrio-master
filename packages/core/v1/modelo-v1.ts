@@ -5,6 +5,14 @@ export type ArvoreV1 =
   | "agradaveis"
   | "racionais";
 
+export const ARVORES_1E: ArvoreV1[] = [
+  "maneiras",
+  "caoticas",
+  "esquisitas",
+  "agradaveis",
+  "racionais",
+];
+
 export type GrauV1 = 0 | 1 | 2 | 3;
 
 export interface AtributosV1 {
