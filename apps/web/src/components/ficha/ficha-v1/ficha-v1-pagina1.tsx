@@ -1,6 +1,10 @@
 "use client";
 
-import type { FichaCalafrioV1, FichaDerivadaV1 } from "@calafrio/core";
+import {
+  type FichaCalafrioV1,
+  type FichaDerivadaV1,
+  ROTULO_CATEGORIA_PALAVRA_CHAVE_V1,
+} from "@calafrio/core";
 import { Coins, Heart, Plus, Shield, Trash2, Zap } from "lucide-react";
 import { FichaV1Triade } from "./ficha-v1-triade";
 import { resumoVitaisV1 } from "./modelo-visual-v1";
@@ -277,7 +281,7 @@ export function FichaV1Pagina1({
                 <div>
                   <span className="font-bold text-foreground">{pc.nome}</span>
                   <span className="text-[10px] text-muted-foreground uppercase ml-2 px-1.5 py-0.5 rounded bg-muted">
-                    {pc.categoria}
+                    {ROTULO_CATEGORIA_PALAVRA_CHAVE_V1[pc.categoria]}
                   </span>
                 </div>
                 <button

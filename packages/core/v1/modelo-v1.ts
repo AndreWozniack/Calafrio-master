@@ -46,6 +46,16 @@ export type CategoriaPalavraChaveV1 =
   | "miscelanea"
   | "livre";
 
+export const ROTULO_CATEGORIA_PALAVRA_CHAVE_V1: Record<
+  CategoriaPalavraChaveV1,
+  string
+> = {
+  ocupacao: "Ocupação",
+  personalidade: "Personalidade",
+  miscelanea: "Miscelânea",
+  livre: "Livre",
+};
+
 export interface PalavraChaveV1 {
   id: string;
   nome: string;

@@ -1,10 +1,11 @@
 "use client";
 
-import type {
-  CategoriaPalavraChaveV1,
-  FichaCalafrioV1,
-  FichaDerivadaV1,
-  PalavraChaveV1,
+import {
+  type CategoriaPalavraChaveV1,
+  type FichaCalafrioV1,
+  type FichaDerivadaV1,
+  type PalavraChaveV1,
+  ROTULO_CATEGORIA_PALAVRA_CHAVE_V1,
 } from "@calafrio/core";
 import { Check, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -149,7 +150,7 @@ export function Etapa3PalavrasChaveV1({
             <div>
               <span className="font-bold text-foreground">{pc.nome}</span>
               <span className="text-[10px] text-muted-foreground uppercase ml-2 px-1.5 py-0.5 rounded bg-muted font-bold">
-                {pc.categoria}
+                {ROTULO_CATEGORIA_PALAVRA_CHAVE_V1[pc.categoria]}
               </span>
             </div>
             <button
