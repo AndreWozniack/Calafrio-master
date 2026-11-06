@@ -9,7 +9,8 @@ import {
   rolarTesteAcao,
 } from "@calafrio/core";
 import { Dices } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { lancarD20s3D, preCarregarDados3D } from "../dados/dados-3d";
 import { Campo, classeCampo } from "./modais/campos-modal";
 import {
   BotaoPrincipal,
@@ -79,31 +80,46 @@ function ConteudoModal({
 
   const [numeroRolagem, setNumeroRolagem] = useState(0);
 
-  const rolar = () => {
-    setNumeroRolagem((n) => n + 1);
-    if (tipo === "acao") {
-      const res = rolarTesteAcao({
-        apt: derivada.apt,
-        bonusExtra: 0,
-        modo,
-        dificuldade,
-      });
-      setResultadoAcao(res);
-      setResultadoContestacao(null);
-      onRolou?.({ tipo: "acao", dados: res }, nomeAcao);
-      return;
-    }
-    const res = rolarContestacao({
-      aptAtacante: derivada.apt,
-      bonusAtacante: 0,
-      modoAtacante: modo,
-      aptVitima: aptOponente,
-      pdVitima: pdOponente,
-      modoVitima: "normal",
-    });
-    setResultadoContestacao(res);
+  const [rolando, setRolando] = useState(false);
+
+  useEffect(() => {
+    preCarregarDados3D();
+  }, []);
+
+  const rolar = async () => {
+    if (rolando) return;
+    setRolando(true);
     setResultadoAcao(null);
-    onRolou?.({ tipo: "contestacao", dados: res }, nomeAcao);
+    setResultadoContestacao(null);
+    try {
+      if (tipo === "acao") {
+        const res = rolarTesteAcao({
+          apt: derivada.apt,
+          bonusExtra: 0,
+          modo,
+          dificuldade,
+        });
+        await lancarD20s3D(res.dados);
+        setNumeroRolagem((n) => n + 1);
+        setResultadoAcao(res);
+        onRolou?.({ tipo: "acao", dados: res }, nomeAcao);
+        return;
+      }
+      const res = rolarContestacao({
+        aptAtacante: derivada.apt,
+        bonusAtacante: 0,
+        modoAtacante: modo,
+        aptVitima: aptOponente,
+        pdVitima: pdOponente,
+        modoVitima: "normal",
+      });
+      await lancarD20s3D([...res.dadosAtacante, ...res.dadosVitima]);
+      setNumeroRolagem((n) => n + 1);
+      setResultadoContestacao(res);
+      onRolou?.({ tipo: "contestacao", dados: res }, nomeAcao);
+    } finally {
+      setRolando(false);
+    }
   };
 
   return (
@@ -113,8 +129,9 @@ function ConteudoModal({
       rodape={
         <>
           <BotaoSecundario onClick={onFechar}>Fechar</BotaoSecundario>
-          <BotaoPrincipal onClick={rolar}>
-            <Dices className="size-5" /> Lançar d20
+          <BotaoPrincipal onClick={rolar} disabled={rolando}>
+            <Dices className={`size-5 ${rolando ? "animate-spin" : ""}`} />{" "}
+            {rolando ? "Rolando..." : "Lançar d20"}
           </BotaoPrincipal>
         </>
       }
