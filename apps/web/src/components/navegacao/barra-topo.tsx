@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, LogIn, Skull, Swords } from "lucide-react";
+import { BookOpen, Dices, LogIn, Skull, Swords } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { estaNaFicha } from "@/lib/rota-ficha";
@@ -23,6 +23,7 @@ export function BarraTopo({ user }: BarraTopoProps) {
 
   const links = [
     { href: "/mesa", label: "Suas Mesas", icon: Swords },
+    { href: "/gerador", label: "Gerador", icon: Dices },
     { href: "/biblioteca", label: "Biblioteca & PDFs", icon: BookOpen },
     { href: "/bestiario", label: "Bestiário", icon: Skull },
   ];

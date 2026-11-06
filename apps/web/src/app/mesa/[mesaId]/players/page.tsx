@@ -8,6 +8,7 @@ import { excluirPlayerAction } from "./actions";
 import { ConviteMesaPopover } from "./convite-mesa-popover";
 import { PlayerRow } from "./player-row";
 import { ZonaGeradorAleatorio } from "./zona-gerador-aleatorio";
+import { ZonaGeradorAleatorioV1 } from "./zona-gerador-aleatorio-v1";
 
 export default async function PlayersPage({
   params,
@@ -62,8 +63,12 @@ export default async function PlayersPage({
         </div>
       </div>
 
-      {/* Zona Especial de Geração Aleatória de Fichas (somente 2e) */}
-      {mesa.sistemaVersao === "2e" && <ZonaGeradorAleatorio mesaId={mesaId} />}
+      {/* Zona Especial de Geração Aleatória de Fichas para Ambas as Edições */}
+      {mesa.sistemaVersao === "1e" ? (
+        <ZonaGeradorAleatorioV1 mesaId={mesaId} />
+      ) : (
+        <ZonaGeradorAleatorio mesaId={mesaId} />
+      )}
 
       <div className="entrada-lista space-y-3">
         {players.map((p) => (

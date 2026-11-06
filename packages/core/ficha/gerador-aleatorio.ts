@@ -16,7 +16,7 @@ export interface OpcoesGeradorFicha {
   randomFn?: () => number; // Permite injeção de PRNG determinístico para testes
 }
 
-const PRENOMES_INVESTIGADORES: readonly string[] = [
+export const PRENOMES_INVESTIGADORES: readonly string[] = [
   "Aline",
   "Brendo",
   "Camila",
@@ -59,7 +59,7 @@ const PRENOMES_INVESTIGADORES: readonly string[] = [
   "Zeca",
 ];
 
-const SOBRENOMES_INVESTIGADORES: readonly string[] = [
+export const SOBRENOMES_INVESTIGADORES: readonly string[] = [
   "Silva",
   "Santos",
   "Oliveira",
