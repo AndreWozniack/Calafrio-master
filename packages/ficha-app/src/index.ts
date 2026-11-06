@@ -6,3 +6,5 @@ export * from "./use-bestiario-salvo";
 export * from "./use-ficha-calafrio";
 export * from "./use-gerenciador-personagens";
 export * from "./use-gerenciador-personagens-async";
+export * from "./v1/ficha-v1-reducer";
+export * from "./v1/use-ficha-calafrio-v1";
