@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { obterMesa, obterPlayer } from "@/services/armazenamento-calafrio";
 import { NovoPlayerClient } from "./novo-player-client";
+import { NovoPlayerClientV1 } from "./novo-player-client-v1";
 
 export default async function NovoPlayerPage({
   params,
@@ -29,6 +30,10 @@ export default async function NovoPlayerPage({
     ) {
       rascunhoId = player.id;
     }
+  }
+
+  if (mesa.sistemaVersao === "1e") {
+    return <NovoPlayerClientV1 mesaId={mesaId} rascunhoId={rascunhoId} />;
   }
 
   return <NovoPlayerClient mesaId={mesaId} rascunhoId={rascunhoId} />;
