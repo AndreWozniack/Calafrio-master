@@ -35,6 +35,11 @@ export type AcaoFichaV1 =
   | { tipo: "definirPmExtra"; id: string; pmExtra: number }
   | { tipo: "adicionarHabilidadeUnica"; unica: HabilidadeUnicaV1 }
   | { tipo: "aprimorarHabilidadeUnica"; id: string; descricao: string }
+  | {
+      tipo: "removerAprimoramentoHabilidadeUnica";
+      id: string;
+      aprimoramentoId: string;
+    }
   | { tipo: "removerHabilidadeUnica"; id: string }
   | { tipo: "adicionarPalavraChave"; palavra: PalavraChaveV1 }
   | { tipo: "removerPalavraChave"; id: string }
@@ -197,6 +202,20 @@ export function fichaCalafrioV1Reducer(
       };
     }
 
+    case "removerAprimoramentoHabilidadeUnica":
+      return {
+        ...state,
+        habilidadesUnicas: state.habilidadesUnicas.map((u) =>
+          u.id === action.id
+            ? {
+                ...u,
+                aprimoramentos: u.aprimoramentos.filter(
+                  (a) => a.id !== action.aprimoramentoId,
+                ),
+              }
+            : u,
+        ),
+      };
     case "removerHabilidadeUnica":
       return {
         ...state,

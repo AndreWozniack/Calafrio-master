@@ -81,6 +81,15 @@ export function useFichaCalafrioV1(
       dispatch({ tipo: "adicionarHabilidadeUnica", unica }),
     aprimorarHabilidadeUnica: (id: string, descricao: string) =>
       dispatch({ tipo: "aprimorarHabilidadeUnica", id, descricao }),
+    removerAprimoramentoHabilidadeUnica: (
+      id: string,
+      aprimoramentoId: string,
+    ) =>
+      dispatch({
+        tipo: "removerAprimoramentoHabilidadeUnica",
+        id,
+        aprimoramentoId,
+      }),
     removerHabilidadeUnica: (id: string) =>
       dispatch({ tipo: "removerHabilidadeUnica", id }),
     adicionarPalavraChave: (palavra: PalavraChaveV1) =>
@@ -99,3 +108,5 @@ export function useFichaCalafrioV1(
       dispatch({ tipo: "definirIlustracaoUrl", url }),
   };
 }
+
+export type FichaVivaV1 = ReturnType<typeof useFichaCalafrioV1>;
