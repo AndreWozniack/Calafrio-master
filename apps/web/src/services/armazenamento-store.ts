@@ -1,13 +1,27 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { FichaCalafrio } from "@calafrio/core";
+import {
+  type FichaPersonagem,
+  normalizarSistemaVersao,
+  type SistemaVersao,
+} from "@calafrio/core";
 
 export interface MesaCalafrio {
   id: string;
   userId?: string | null;
   nome: string;
   codigoConvite: string;
+  sistemaVersao: SistemaVersao;
   criadaEm: string;
+}
+
+export function normalizarMesa(
+  m: Omit<MesaCalafrio, "sistemaVersao"> & { sistemaVersao?: unknown },
+): MesaCalafrio {
+  return {
+    ...m,
+    sistemaVersao: normalizarSistemaVersao(m.sistemaVersao),
+  };
 }
 
 export interface PlayerCalafrio {
@@ -22,7 +36,7 @@ export interface PlayerCalafrio {
   pd: number;
   velocidade: number;
   carteira: { fundos: number; espirions: number };
-  ficha: FichaCalafrio;
+  ficha: FichaPersonagem;
   criadaEm: string;
 }
 
@@ -75,7 +89,7 @@ export async function carregarStore(): Promise<DadosStore> {
     const conteudo = await fs.readFile(CAMINHO_ARQUIVO, "utf-8");
     const lido = JSON.parse(conteudo) as Partial<DadosStore>;
     storeEmMemoria = {
-      mesas: lido.mesas ?? [],
+      mesas: (lido.mesas ?? []).map(normalizarMesa),
       players: lido.players ?? [],
       rolagens: lido.rolagens ?? [],
       anotacoes: lido.anotacoes ?? [],
@@ -88,6 +102,7 @@ export async function carregarStore(): Promise<DadosStore> {
           id: "mesa-curitiba-1",
           nome: "Investigações Paranormais — Curitiba",
           codigoConvite: "CALA26",
+          sistemaVersao: "2e",
           criadaEm: new Date().toISOString(),
         },
       ],

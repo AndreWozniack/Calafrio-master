@@ -21,7 +21,7 @@ const alegreyaSans = Alegreya_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Calafrio TTRPG (2e) — Master",
+  title: "Calafrio TTRPG — Master",
   description:
     "Ficha Viva, Criação de Personagens e Mesa de Combate para Calafrio 2e",
 };

@@ -19,7 +19,13 @@ const ABAS = [
   { sufixo: "/anotacoes", label: "Anotações", Icon: NotebookPen },
 ];
 
-export function NavegacaoMesa({ mesaId }: { mesaId: string }) {
+export function NavegacaoMesa({
+  mesaId,
+  mestre,
+}: {
+  mesaId: string;
+  mestre: boolean;
+}) {
   const pathname = usePathname();
   const base = `/mesa/${mesaId}`;
 
@@ -27,24 +33,26 @@ export function NavegacaoMesa({ mesaId }: { mesaId: string }) {
 
   return (
     <nav className="flex items-center gap-1.5 border-b border-border/80 pb-2.5 overflow-x-auto no-scrollbar">
-      {ABAS.map(({ sufixo, label, Icon }) => {
-        const href = base + sufixo;
-        const ativa =
-          sufixo === "" ? pathname === base : pathname.startsWith(href);
-        return (
-          <Link
-            key={label}
-            href={href}
-            className={`flex items-center gap-1.5 rounded-md px-3.5 py-1.5 text-xs font-bold transition-all whitespace-nowrap border ${
-              ativa
-                ? "bg-black text-white border-black shadow-[1px_1px_0px_#000] font-black"
-                : "bg-card border-border text-foreground hover:bg-muted shadow-xs"
-            }`}
-          >
-            <Icon className="size-3.5" /> {label}
-          </Link>
-        );
-      })}
+      {ABAS.filter((a) => mestre || a.sufixo !== "/anotacoes").map(
+        ({ sufixo, label, Icon }) => {
+          const href = base + sufixo;
+          const ativa =
+            sufixo === "" ? pathname === base : pathname.startsWith(href);
+          return (
+            <Link
+              key={label}
+              href={href}
+              className={`flex items-center gap-1.5 rounded-md px-3.5 py-1.5 text-xs font-bold transition-all whitespace-nowrap border ${
+                ativa
+                  ? "bg-black text-white border-black shadow-[1px_1px_0px_#000] font-black"
+                  : "bg-card border-border text-foreground hover:bg-muted shadow-xs"
+              }`}
+            >
+              <Icon className="size-3.5" /> {label}
+            </Link>
+          );
+        },
+      )}
     </nav>
   );
 }

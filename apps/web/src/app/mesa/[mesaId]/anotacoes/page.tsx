@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { PainelAnotacoesMesa } from "@/components/mesa/painel-anotacoes-mesa";
+import { obterAcessoMesa } from "@/lib/auth/acesso-mesa";
 import { listarAnotacoes } from "@/services/anotacoes-mesa";
-import { obterMesa } from "@/services/armazenamento-calafrio";
 
 export default async function MesaAnotacoesPage({
   params,
@@ -9,7 +9,9 @@ export default async function MesaAnotacoesPage({
   params: Promise<{ mesaId: string }>;
 }) {
   const { mesaId } = await params;
-  if (!(await obterMesa(mesaId))) notFound();
+  const { acesso } = await obterAcessoMesa(mesaId);
+  if (!acesso) notFound();
+  if (!acesso.mestre) redirect(`/mesa/${mesaId}`);
 
   return (
     <PainelAnotacoesMesa

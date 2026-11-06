@@ -1,14 +1,23 @@
-import { ArrowRight, BookOpen, Plus, Users } from "lucide-react";
+import { ehFichaV1 } from "@calafrio/core";
+import { ArrowRight, Plus, Users } from "lucide-react";
 import Link from "next/link";
 import { DivisorSeta } from "@/components/navegacao/divisor-seta";
 import type { PlayerCalafrio } from "@/services/armazenamento-calafrio";
+import { resumirPlayer } from "@/services/ficha-edicao";
 
 interface PlayersPanelProps {
   mesaId: string;
   players: PlayerCalafrio[];
+  mestre: boolean;
+  userId?: string;
 }
 
-export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
+export function PlayersPanel({
+  mesaId,
+  players,
+  mestre,
+  userId,
+}: PlayersPanelProps) {
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between gap-3">
@@ -32,23 +41,20 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
 
       <div className="entrada-lista grid grid-cols-1 md:grid-cols-2 gap-3">
         {players.map((p) => {
-          const ocupacao =
-            p.ficha.palavrasChave.find((pc) => pc.categoria === "ocupacao")
-              ?.nome ?? "Player";
+          const { ocupacao, totalHabilidades } = resumirPlayer(p.ficha);
 
-          return (
-            <Link
-              key={p.id}
-              href={`/mesa/${mesaId}/players/${p.id}/ficha`}
-              className="elevar p-4 rounded-xl border border-border bg-card hover:border-amber-400/60 transition-all flex flex-col justify-between space-y-3 group cursor-pointer shadow-sm"
-            >
+          const corpo = (
+            <>
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <div className="font-black text-base text-foreground group-hover:text-accent-ink transition-colors">
                     {p.nome}
                   </div>
                   <div className="text-xs text-muted-foreground mt-0.5">
-                    {ocupacao} · APT {p.aptBase}
+                    {ocupacao} ·{" "}
+                    {ehFichaV1(p.ficha)
+                      ? `BA ${p.aptBase}`
+                      : `APT ${p.aptBase}`}
                   </div>
                 </div>
                 <ArrowRight className="size-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-transform" />
@@ -66,10 +72,27 @@ export function PlayersPanel({ mesaId, players }: PlayersPanelProps) {
                   PD {p.pd}
                 </span>
                 <span className="text-xs text-muted-foreground ml-auto font-semibold">
-                  {p.ficha.matrizHabilidades.length} hab.
+                  {totalHabilidades} hab.
                 </span>
               </div>
+            </>
+          );
+
+          return mestre || p.userId === userId ? (
+            <Link
+              key={p.id}
+              href={`/mesa/${mesaId}/players/${p.id}/ficha`}
+              className="elevar p-4 rounded-xl border border-border bg-card hover:border-amber-400/60 transition-all flex flex-col justify-between space-y-3 group cursor-pointer shadow-sm"
+            >
+              {corpo}
             </Link>
+          ) : (
+            <div
+              key={p.id}
+              className="p-4 rounded-xl border border-border bg-card flex flex-col justify-between space-y-3 shadow-sm"
+            >
+              {corpo}
+            </div>
           );
         })}
 

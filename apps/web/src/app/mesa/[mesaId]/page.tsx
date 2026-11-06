@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { obterAcessoMesa } from "@/lib/auth/acesso-mesa";
 import { listarPlayers, obterMesa } from "@/services/armazenamento-calafrio";
 import { DashboardHeader } from "./dashboard-header";
 import { OperationsPanel } from "./operations-panel";
@@ -16,6 +17,8 @@ export default async function MesaDashboardPage({
   }
 
   const players = await listarPlayers(mesaId);
+  const { acesso } = await obterAcessoMesa(mesaId);
+  const mestre = acesso?.mestre ?? false;
 
   return (
     <main className="mx-auto w-full max-w-6xl space-y-7 p-4 sm:p-6 lg:p-8">
@@ -24,11 +27,18 @@ export default async function MesaDashboardPage({
         nome={mesa.nome}
         codigoConvite={mesa.codigoConvite}
         totalPlayers={players.length}
+        mestre={mestre}
+        sistemaVersao={mesa.sistemaVersao}
       />
 
       <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_19rem]">
         <div className="space-y-8 min-w-0">
-          <PlayersPanel mesaId={mesaId} players={players} />
+          <PlayersPanel
+            mesaId={mesaId}
+            players={players}
+            mestre={mestre}
+            userId={acesso?.userId}
+          />
         </div>
 
         <OperationsPanel mesaId={mesaId} />

@@ -1,8 +1,11 @@
 import { ArrowLeft, BookOpen, Users } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { obterAcessoMesa } from "@/lib/auth/acesso-mesa";
 import { listarPlayers, obterMesa } from "@/services/armazenamento-calafrio";
+import { podeEditarPlayer } from "@/services/convite-regras";
 import { excluirPlayerAction } from "./actions";
+import { ConviteMesaPopover } from "./convite-mesa-popover";
 import { PlayerRow } from "./player-row";
 import { ZonaGeradorAleatorio } from "./zona-gerador-aleatorio";
 
@@ -16,6 +19,9 @@ export default async function PlayersPage({
   if (!mesa) notFound();
 
   const players = await listarPlayers(mesaId);
+  const { acesso } = await obterAcessoMesa(mesaId);
+  const userId = acesso?.userId;
+  const mestre = acesso?.mestre ?? false;
 
   return (
     <main className="mx-auto max-w-4xl p-4 sm:p-6 md:p-8 space-y-6">
@@ -40,7 +46,13 @@ export default async function PlayersPage({
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end">
+        <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end flex-wrap">
+          {mestre && (
+            <ConviteMesaPopover
+              mesaId={mesaId}
+              codigoConvite={mesa.codigoConvite}
+            />
+          )}
           <Link
             href={`/mesa/${mesaId}/players/novo`}
             className="flex items-center gap-1.5 px-4 py-2 bg-amber-400 hover:bg-amber-300 text-black font-black text-xs uppercase tracking-wider rounded-lg shadow-sm cursor-pointer transition-colors"
@@ -50,8 +62,8 @@ export default async function PlayersPage({
         </div>
       </div>
 
-      {/* Zona Especial de Geração Aleatória de Fichas */}
-      <ZonaGeradorAleatorio mesaId={mesaId} />
+      {/* Zona Especial de Geração Aleatória de Fichas (somente 2e) */}
+      {mesa.sistemaVersao === "2e" && <ZonaGeradorAleatorio mesaId={mesaId} />}
 
       <div className="entrada-lista space-y-3">
         {players.map((p) => (
@@ -59,6 +71,7 @@ export default async function PlayersPage({
             key={p.id}
             player={p}
             mesaId={mesaId}
+            podeGerenciar={podeEditarPlayer(mesa, p, userId)}
             onExcluir={excluirPlayerAction}
           />
         ))}

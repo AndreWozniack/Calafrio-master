@@ -1,0 +1,1 @@
+ALTER TABLE "mesas" ADD COLUMN "sistema_versao" text DEFAULT '2e' NOT NULL;
