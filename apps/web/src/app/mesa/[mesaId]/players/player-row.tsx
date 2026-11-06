@@ -3,6 +3,7 @@
 import { BookOpen, Trash2, User } from "lucide-react";
 import Link from "next/link";
 import type { PlayerCalafrio } from "@/services/armazenamento-calafrio";
+import { resumirPlayer } from "@/services/ficha-edicao";
 
 interface PlayerRowProps {
   player: PlayerCalafrio;
@@ -17,9 +18,7 @@ export function PlayerRow({
   podeGerenciar,
   onExcluir,
 }: PlayerRowProps) {
-  const ocupacao =
-    p.ficha.palavrasChave.find((pc) => pc.categoria === "ocupacao")?.nome ??
-    "Player";
+  const { ocupacao, totalHabilidades } = resumirPlayer(p.ficha);
 
   return (
     <div className="calafrio-card p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -56,7 +55,7 @@ export function PlayerRow({
             PD {p.pd}
           </span>
           <span className="text-xs text-muted-foreground ml-1">
-            · {p.carteira.fundos} F$ · {p.ficha.matrizHabilidades.length} hab.
+            · {p.carteira.fundos} F$ · {totalHabilidades} hab.
           </span>
         </div>
       </div>

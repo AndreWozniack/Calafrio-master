@@ -1,4 +1,4 @@
-import type { FichaCalafrio, SistemaVersao } from "@calafrio/core";
+import type { FichaPersonagem, SistemaVersao } from "@calafrio/core";
 import { integer, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export type { SistemaVersao };
@@ -48,7 +48,7 @@ export const players = pgTable("players", {
   pd: integer("pd").notNull().default(3),
   velocidade: integer("velocidade").notNull().default(6),
   carteira: jsonb("carteira").notNull().default({ fundos: 6, espirions: 0 }),
-  ficha: jsonb("ficha").$type<FichaCalafrio>().notNull(),
+  ficha: jsonb("ficha").$type<FichaPersonagem>().notNull(),
   criadaEm: timestamp("criada_em", { withTimezone: true })
     .defaultNow()
     .notNull(),

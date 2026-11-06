@@ -1,4 +1,4 @@
-import { criarFichaCalafrioVazia } from "@calafrio/core";
+import { criarFichaCalafrioVazia, criarFichaV1Vazia } from "@calafrio/core";
 import { and, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { criarPlayer, obterMesa } from "./armazenamento-calafrio";
@@ -120,9 +120,13 @@ export async function entrarPorConvite(
   }
 
   const id = `player-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+  const fichaInicial =
+    mesa.sistemaVersao === "1e"
+      ? criarFichaV1Vazia(id, NOME_RASCUNHO)
+      : criarFichaCalafrioVazia(id, NOME_RASCUNHO);
   const novo = await criarPlayer(
     mesa.id,
-    criarFichaCalafrioVazia(id, NOME_RASCUNHO),
+    fichaInicial,
     userId,
   );
   return { mesaId: mesa.id, playerId: novo.id };

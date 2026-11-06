@@ -1,6 +1,6 @@
 "use server";
 
-import type { FichaCalafrio } from "@calafrio/core";
+import { edicaoDaFicha, type FichaPersonagem } from "@calafrio/core";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
@@ -22,11 +22,17 @@ async function exigirEdicaoDoPlayer(playerId: string, mesaId?: string) {
   if (!podeEditarPlayer(mesa, player, userId)) {
     throw new Error("Sem permissão para editar este player.");
   }
-  return player;
+  return { player, mesa };
 }
 
-export async function criarPlayerAction(mesaId: string, ficha: FichaCalafrio) {
-  const { userId, mestre } = await exigirAcessoMesa(mesaId);
+export async function criarPlayerAction(
+  mesaId: string,
+  ficha: FichaPersonagem,
+) {
+  const { userId, mestre, mesa } = await exigirAcessoMesa(mesaId);
+  if (edicaoDaFicha(ficha) !== mesa.sistemaVersao) {
+    throw new Error("Ficha de edição diferente da mesa.");
+  }
   // Jogador cria a própria ficha (vinculada a ele); mestre cria fichas avulsas.
   const player = await criarPlayer(mesaId, ficha, mestre ? undefined : userId);
   revalidatePath(`/mesa/${mesaId}`);
@@ -36,9 +42,13 @@ export async function criarPlayerAction(mesaId: string, ficha: FichaCalafrio) {
 
 export async function salvarFichaPlayerAction(
   playerId: string,
-  ficha: FichaCalafrio,
+  ficha: FichaPersonagem,
 ) {
-  if (!(await exigirEdicaoDoPlayer(playerId))) return null;
+  const ctx = await exigirEdicaoDoPlayer(playerId);
+  if (!ctx) return null;
+  if (edicaoDaFicha(ficha) !== ctx.mesa.sistemaVersao) {
+    throw new Error("Ficha de edição diferente da mesa.");
+  }
   const atualizado = await salvarFichaPlayer(playerId, ficha);
   if (atualizado) {
     revalidatePath(`/mesa/${atualizado.mesaId}`);

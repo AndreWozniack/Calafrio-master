@@ -1,4 +1,4 @@
-import type { FichaCalafrio, SistemaVersao } from "@calafrio/core";
+import type { FichaPersonagem, SistemaVersao } from "@calafrio/core";
 import { eq, isNull, or } from "drizzle-orm";
 import { db, schema } from "@/db";
 import {
@@ -12,6 +12,7 @@ import {
   salvarStore,
 } from "./armazenamento-store";
 import { filtrarMesasDoUsuario } from "./convite-regras";
+import { resumirVitais } from "./ficha-edicao";
 
 export type {
   AnotacaoMesa,
@@ -237,25 +238,25 @@ export async function obterPlayer(
 
 export async function criarPlayer(
   mesaId: string,
-  ficha: FichaCalafrio,
+  ficha: FichaPersonagem,
   userId?: string,
 ): Promise<PlayerCalafrio> {
-  const apt = ficha.aptBase || 1;
+  const vitais = resumirVitais(ficha);
   const novoId =
     ficha.id && ficha.id !== "sem-ficha"
       ? ficha.id
       : `player-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
-  const fichaFinal: FichaCalafrio = { ...ficha, id: novoId };
+  const fichaFinal: FichaPersonagem = { ...ficha, id: novoId };
   const novo: PlayerCalafrio = {
     id: novoId,
     mesaId,
     userId: userId ?? null,
     nome: ficha.nome?.trim() || "Novo Investigador",
     jogador: ficha.jogador,
-    aptBase: apt,
-    pvMax: 3 + 3 * apt,
-    paMax: 3 + 3 * apt,
-    pd: 3 * apt,
+    aptBase: vitais.aptBase,
+    pvMax: vitais.pvMax,
+    paMax: vitais.paMax,
+    pd: vitais.pd,
     velocidade: 6,
     carteira: ficha.carteira || { fundos: 6, espirions: 0 },
     ficha: fichaFinal,
@@ -294,9 +295,9 @@ export async function criarPlayer(
 
 export async function salvarFichaPlayer(
   playerId: string,
-  ficha: FichaCalafrio,
+  ficha: FichaPersonagem,
 ): Promise<PlayerCalafrio | null> {
-  const apt = ficha.aptBase || 1;
+  const vitais = resumirVitais(ficha);
 
   if (db) {
     try {
@@ -305,10 +306,10 @@ export async function salvarFichaPlayer(
         .set({
           nome: ficha.nome,
           jogador: ficha.jogador,
-          aptBase: apt,
-          pvMax: 3 + 3 * apt,
-          paMax: 3 + 3 * apt,
-          pd: 3 * apt,
+          aptBase: vitais.aptBase,
+          pvMax: vitais.pvMax,
+          paMax: vitais.paMax,
+          pd: vitais.pd,
           carteira: ficha.carteira,
           ficha,
           atualizadaEm: new Date(),
@@ -346,10 +347,10 @@ export async function salvarFichaPlayer(
     ...s.players[idx],
     nome: ficha.nome,
     jogador: ficha.jogador,
-    aptBase: apt,
-    pvMax: 3 + 3 * apt,
-    paMax: 3 + 3 * apt,
-    pd: 3 * apt,
+    aptBase: vitais.aptBase,
+    pvMax: vitais.pvMax,
+    paMax: vitais.paMax,
+    pd: vitais.pd,
     carteira: ficha.carteira,
     ficha,
   };

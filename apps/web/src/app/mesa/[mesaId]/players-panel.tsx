@@ -2,6 +2,7 @@ import { ArrowRight, BookOpen, Plus, Users } from "lucide-react";
 import Link from "next/link";
 import { DivisorSeta } from "@/components/navegacao/divisor-seta";
 import type { PlayerCalafrio } from "@/services/armazenamento-calafrio";
+import { resumirPlayer } from "@/services/ficha-edicao";
 
 interface PlayersPanelProps {
   mesaId: string;
@@ -39,9 +40,7 @@ export function PlayersPanel({
 
       <div className="entrada-lista grid grid-cols-1 md:grid-cols-2 gap-3">
         {players.map((p) => {
-          const ocupacao =
-            p.ficha.palavrasChave.find((pc) => pc.categoria === "ocupacao")
-              ?.nome ?? "Player";
+          const { ocupacao, totalHabilidades } = resumirPlayer(p.ficha);
 
           const corpo = (
             <>
@@ -69,7 +68,7 @@ export function PlayersPanel({
                   PD {p.pd}
                 </span>
                 <span className="text-xs text-muted-foreground ml-auto font-semibold">
-                  {p.ficha.matrizHabilidades.length} hab.
+                  {totalHabilidades} hab.
                 </span>
               </div>
             </>

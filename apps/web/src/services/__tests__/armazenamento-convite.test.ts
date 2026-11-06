@@ -80,6 +80,19 @@ describe("entrarPorConvite", () => {
     expect(b.playerId).toBe(a.playerId);
     expect(h.store.players).toHaveLength(1);
   });
+  it("em mesa 1e cria rascunho com ficha 1e", async () => {
+    h.store.mesas.push({
+      id: "mesa-1e",
+      userId: "mestre9",
+      nome: "M1E",
+      codigoConvite: "CONV1E",
+      sistemaVersao: "1e",
+      criadaEm: "",
+    });
+    const res = await entrarPorConvite("u2", "CONV1E");
+    const player = h.store.players.find((p) => p.id === res.playerId);
+    expect((player?.ficha as { edicao?: string })?.edicao).toBe("1e");
+  });
   it("rejeita mestre", async () => {
     await expect(entrarPorConvite("mestre1", "CALA26")).rejects.toMatchObject({
       codigo: "MESTRE",

@@ -1,3 +1,4 @@
+import { ehFichaV1 } from "@calafrio/core";
 import { redirect } from "next/navigation";
 import { obterAcessoMesa } from "@/lib/auth/acesso-mesa";
 import { obterMesa, obterPlayer } from "@/services/armazenamento-calafrio";
@@ -27,11 +28,17 @@ export default async function FichaPage({
 
   return (
     <div className="w-full">
-      <FichaLiveClient
-        mesaId={mesaId}
-        playerId={playerId}
-        fichaInicial={player.ficha}
-      />
+      {ehFichaV1(player.ficha) ? (
+        <div className="p-8 text-center text-muted-foreground">
+          Ficha da 1ª Edição (em carregamento...)
+        </div>
+      ) : (
+        <FichaLiveClient
+          mesaId={mesaId}
+          playerId={playerId}
+          fichaInicial={player.ficha}
+        />
+      )}
     </div>
   );
 }

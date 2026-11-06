@@ -1,6 +1,10 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { type FichaCalafrio, normalizarSistemaVersao, type SistemaVersao } from "@calafrio/core";
+import {
+  type FichaPersonagem,
+  normalizarSistemaVersao,
+  type SistemaVersao,
+} from "@calafrio/core";
 
 export interface MesaCalafrio {
   id: string;
@@ -32,7 +36,7 @@ export interface PlayerCalafrio {
   pd: number;
   velocidade: number;
   carteira: { fundos: number; espirions: number };
-  ficha: FichaCalafrio;
+  ficha: FichaPersonagem;
   criadaEm: string;
 }
 
