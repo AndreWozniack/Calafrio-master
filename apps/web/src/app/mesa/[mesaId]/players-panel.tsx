@@ -1,4 +1,5 @@
-import { ArrowRight, BookOpen, Plus, Users } from "lucide-react";
+import { ehFichaV1 } from "@calafrio/core";
+import { ArrowRight, Plus, Users } from "lucide-react";
 import Link from "next/link";
 import { DivisorSeta } from "@/components/navegacao/divisor-seta";
 import type { PlayerCalafrio } from "@/services/armazenamento-calafrio";
@@ -50,7 +51,10 @@ export function PlayersPanel({
                     {p.nome}
                   </div>
                   <div className="text-xs text-muted-foreground mt-0.5">
-                    {ocupacao} · APT {p.aptBase}
+                    {ocupacao} ·{" "}
+                    {ehFichaV1(p.ficha)
+                      ? `BA ${p.aptBase}`
+                      : `APT ${p.aptBase}`}
                   </div>
                 </div>
                 <ArrowRight className="size-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-transform" />

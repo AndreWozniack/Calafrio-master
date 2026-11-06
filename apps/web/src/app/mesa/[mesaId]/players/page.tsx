@@ -62,8 +62,8 @@ export default async function PlayersPage({
         </div>
       </div>
 
-      {/* Zona Especial de Geração Aleatória de Fichas */}
-      <ZonaGeradorAleatorio mesaId={mesaId} />
+      {/* Zona Especial de Geração Aleatória de Fichas (somente 2e) */}
+      {mesa.sistemaVersao === "2e" && <ZonaGeradorAleatorio mesaId={mesaId} />}
 
       <div className="entrada-lista space-y-3">
         {players.map((p) => (

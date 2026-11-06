@@ -1,5 +1,6 @@
 "use client";
 
+import { ehFichaV1 } from "@calafrio/core";
 import { BookOpen, Trash2, User } from "lucide-react";
 import Link from "next/link";
 import type { PlayerCalafrio } from "@/services/armazenamento-calafrio";
@@ -43,7 +44,7 @@ export function PlayerRow({
         {/* Vitais destacados em badges */}
         <div className="flex items-center gap-2 pt-1">
           <span className="h-6 px-2 rounded-md flex items-center justify-center text-xs font-black bg-muted text-foreground border border-border">
-            APT {p.aptBase}
+            {ehFichaV1(p.ficha) ? `BA ${p.aptBase}` : `APT ${p.aptBase}`}
           </span>
           <span className="h-6 px-2.5 rounded-md flex items-center justify-center text-xs font-black bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800/50">
             PV {p.pvMax}
