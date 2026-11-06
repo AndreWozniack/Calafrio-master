@@ -9,6 +9,7 @@ import {
   registrarRolagemAction,
 } from "@/app/mesa/[mesaId]/dados/actions";
 import type { RolagemMesa } from "@/services/armazenamento-calafrio";
+import { lancarD20s3D, preCarregarDados3D } from "../dados/dados-3d";
 import { CardRolagemFeed } from "./card-rolagem-feed";
 import { formatarTesteAcao } from "./formatar-rolagem";
 
@@ -28,6 +29,11 @@ export function CentralDadosMesa({
   const [apt, setApt] = useState(2);
   const [dificuldade, setDificuldade] = useState(15);
   const [modo, setModo] = useState<ModoRolagemD20>("normal");
+  const [rolando, setRolando] = useState(false);
+
+  useEffect(() => {
+    preCarregarDados3D();
+  }, []);
 
   const atualizar = useCallback(async () => {
     setRolagens(await listarRolagensAction(mesaId));
@@ -39,16 +45,23 @@ export function CentralDadosMesa({
   }, [atualizar]);
 
   const rolar = async () => {
-    const resultado = rolarTesteAcao({
-      apt,
-      bonusExtra: 0,
-      modo,
-      dificuldade,
-    });
-    await registrarRolagemAction(
-      formatarTesteAcao(resultado, { mesaId, autor, acao }),
-    );
-    await atualizar();
+    if (rolando) return;
+    setRolando(true);
+    try {
+      const resultado = rolarTesteAcao({
+        apt,
+        bonusExtra: 0,
+        modo,
+        dificuldade,
+      });
+      await lancarD20s3D(resultado.dados);
+      await registrarRolagemAction(
+        formatarTesteAcao(resultado, { mesaId, autor, acao }),
+      );
+      await atualizar();
+    } finally {
+      setRolando(false);
+    }
   };
 
   const limpar = async () => {
@@ -120,9 +133,11 @@ export function CentralDadosMesa({
         <button
           type="button"
           onClick={rolar}
-          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded bg-amber-400 py-2.5 text-sm font-black text-black transition-colors hover:bg-amber-300"
+          disabled={rolando}
+          className="flex w-full cursor-pointer disabled:cursor-wait disabled:opacity-70 items-center justify-center gap-2 rounded bg-amber-400 py-2.5 text-sm font-black text-black transition-colors hover:bg-amber-300"
         >
-          <Dices className="size-4" /> Lançar d20
+          <Dices className={`size-4 ${rolando ? "animate-spin" : ""}`} />{" "}
+          {rolando ? "Rolando..." : "Lançar d20"}
         </button>
       </section>
 

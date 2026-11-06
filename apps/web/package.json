@@ -13,6 +13,7 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@3d-dice/dice-box-threejs": "^0.0.12",
     "@aws-sdk/client-s3": "^3.1161.0",
     "@calafrio/core": "workspace:*",
     "@calafrio/ficha-app": "workspace:*",
