@@ -37,6 +37,7 @@ describe("filtrarMesasDoUsuario", () => {
     userId,
     nome: id,
     codigoConvite: id,
+    sistemaVersao: "2e" as const,
     criadaEm: "",
   });
   const m1 = mesa("m1", "u1");

@@ -38,6 +38,7 @@ export async function buscarMesaPorCodigoConvite(
             userId: m.userId,
             nome: m.nome,
             codigoConvite: m.codigoConvite,
+            sistemaVersao: m.sistemaVersao,
             criadaEm: m.criadaEm.toISOString(),
           }
         : null;

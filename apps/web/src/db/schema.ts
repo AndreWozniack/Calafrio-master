@@ -1,5 +1,7 @@
-import type { FichaCalafrio } from "@calafrio/core";
+import type { FichaCalafrio, SistemaVersao } from "@calafrio/core";
 import { integer, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+
+export type { SistemaVersao };
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -18,6 +20,10 @@ export const mesas = pgTable("mesas", {
   userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
   nome: text("nome").notNull(),
   codigoConvite: text("codigo_convite").notNull().unique(),
+  sistemaVersao: text("sistema_versao")
+    .$type<SistemaVersao>()
+    .notNull()
+    .default("2e"),
   criadaEm: timestamp("criada_em", { withTimezone: true })
     .defaultNow()
     .notNull(),

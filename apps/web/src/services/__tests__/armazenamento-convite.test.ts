@@ -35,6 +35,7 @@ beforeEach(() => {
         userId: "mestre1",
         nome: "M1",
         codigoConvite: "CALA26",
+        sistemaVersao: "2e",
         criadaEm: "",
       },
       {
@@ -42,6 +43,7 @@ beforeEach(() => {
         userId: "mestre1",
         nome: "M2",
         codigoConvite: "OUTRA2",
+        sistemaVersao: "2e",
         criadaEm: "",
       },
     ],

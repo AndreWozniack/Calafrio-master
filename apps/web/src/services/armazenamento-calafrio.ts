@@ -1,4 +1,4 @@
-import type { FichaCalafrio } from "@calafrio/core";
+import type { FichaCalafrio, SistemaVersao } from "@calafrio/core";
 import { eq, isNull, or } from "drizzle-orm";
 import { db, schema } from "@/db";
 import {
@@ -41,6 +41,7 @@ export async function listarMesas(userId?: string): Promise<MesaCalafrio[]> {
             userId: schema.mesas.userId,
             nome: schema.mesas.nome,
             codigoConvite: schema.mesas.codigoConvite,
+            sistemaVersao: schema.mesas.sistemaVersao,
             criadaEm: schema.mesas.criadaEm,
             atualizadaEm: schema.mesas.atualizadaEm,
           })
@@ -62,6 +63,7 @@ export async function listarMesas(userId?: string): Promise<MesaCalafrio[]> {
           userId: m.userId,
           nome: m.nome,
           codigoConvite: m.codigoConvite,
+          sistemaVersao: m.sistemaVersao,
           criadaEm: m.criadaEm.toISOString(),
         }));
       }
@@ -72,6 +74,7 @@ export async function listarMesas(userId?: string): Promise<MesaCalafrio[]> {
         userId: m.userId,
         nome: m.nome,
         codigoConvite: m.codigoConvite,
+        sistemaVersao: m.sistemaVersao,
         criadaEm: m.criadaEm.toISOString(),
       }));
     } catch (e) {
@@ -96,6 +99,7 @@ export async function obterMesa(id: string): Promise<MesaCalafrio | null> {
           userId: m.userId,
           nome: m.nome,
           codigoConvite: m.codigoConvite,
+          sistemaVersao: m.sistemaVersao,
           criadaEm: m.criadaEm.toISOString(),
         };
       }
@@ -110,12 +114,14 @@ export async function obterMesa(id: string): Promise<MesaCalafrio | null> {
 export async function criarMesa(
   nome: string,
   userId?: string,
+  versao: SistemaVersao = "2e",
 ): Promise<MesaCalafrio> {
   const nova: MesaCalafrio = {
     id: `mesa-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     userId: userId ?? null,
     nome: nome.trim(),
     codigoConvite: gerarCodigoConvite(),
+    sistemaVersao: versao,
     criadaEm: new Date().toISOString(),
   };
 
@@ -126,6 +132,7 @@ export async function criarMesa(
         userId: nova.userId ?? null,
         nome: nova.nome,
         codigoConvite: nova.codigoConvite,
+        sistemaVersao: nova.sistemaVersao,
         criadaEm: new Date(nova.criadaEm),
         atualizadaEm: new Date(nova.criadaEm),
       });
