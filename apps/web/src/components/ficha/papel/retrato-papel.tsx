@@ -4,7 +4,7 @@ import { ImagePlus, Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { uploadRetratoAction } from "@/app/actions/upload";
 import { Losango, Posicionado } from "./primitivos-papel";
-import { u } from "./unidades";
+import { type Retangulo, u } from "./unidades";
 
 const LADO_MAXIMO = 640;
 
@@ -34,13 +34,20 @@ export function lerImagemRedimensionada(arquivo: File): Promise<string> {
   });
 }
 
+const AREA_PADRAO: Retangulo = { x: 58, y: 28, w: 98, h: 132 };
+
 export function RetratoPapel({
   retratoUrl,
   onDefinir,
+  area = AREA_PADRAO,
 }: {
   retratoUrl?: string;
   onDefinir: (url: string) => void;
+  /** Posição da moldura na folha; o pontilhado e o losango seguem abaixo dela. */
+  area?: Retangulo;
 }) {
+  const centro = area.x + area.w / 2;
+  const base = area.y + area.h;
   const entrada = useRef<HTMLInputElement>(null);
   const [enviando, setEnviando] = useState(false);
 
@@ -71,7 +78,7 @@ export function RetratoPapel({
 
   return (
     <>
-      <Posicionado area={{ x: 58, y: 28, w: 98, h: 132 }}>
+      <Posicionado area={area}>
         <button
           type="button"
           onClick={() => entrada.current?.click()}
@@ -113,13 +120,13 @@ export function RetratoPapel({
         />
       </Posicionado>
       <Posicionado
-        area={{ x: 78, y: 158, w: 58, h: 4 }}
+        area={{ x: centro - 29, y: base - 2, w: 58, h: 4 }}
         style={{
           backgroundImage: "radial-gradient(circle, #000 45%, transparent 50%)",
           backgroundSize: `${u(5)} ${u(4)}`,
         }}
       />
-      <Losango cx={107} cy={159} lado={9} />
+      <Losango cx={centro} cy={base - 1} lado={9} />
     </>
   );
 }

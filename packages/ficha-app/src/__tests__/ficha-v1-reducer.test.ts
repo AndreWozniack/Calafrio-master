@@ -227,6 +227,15 @@ describe("fichaCalafrioV1Reducer", () => {
     });
     expect(state.habilidadesUnicas[0].aprimoramentos).toHaveLength(1);
 
+    const semAprimoramento = fichaCalafrioV1Reducer(state, {
+      tipo: "removerAprimoramentoHabilidadeUnica",
+      id: "u1",
+      aprimoramentoId: state.habilidadesUnicas[0].aprimoramentos[0].id,
+    });
+    expect(semAprimoramento.habilidadesUnicas[0].aprimoramentos).toHaveLength(
+      0,
+    );
+
     state = fichaCalafrioV1Reducer(state, {
       tipo: "removerHabilidadeUnica",
       id: "u1",
