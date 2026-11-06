@@ -28,6 +28,7 @@ export default async function MesaDashboardPage({
         codigoConvite={mesa.codigoConvite}
         totalPlayers={players.length}
         mestre={mestre}
+        sistemaVersao={mesa.sistemaVersao}
       />
 
       <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_19rem]">

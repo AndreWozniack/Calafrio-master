@@ -42,21 +42,66 @@ export default async function MesaPage() {
       {/* Formulário de Criação de Nova Mesa */}
       <form
         action={criarMesaAction}
-        className="calafrio-card p-4 flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center"
+        className="calafrio-card p-4 space-y-3"
       >
-        <input
-          type="text"
-          name="nome"
-          placeholder="Nome da nova mesa (ex: Mistérios do Batel)..."
-          required
-          className="flex-1 bg-muted/60 text-sm p-2.5 rounded-lg border border-border focus:border-amber-400 outline-none"
-        />
-        <button
-          type="submit"
-          className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-black font-black text-sm uppercase tracking-wider rounded-lg cursor-pointer transition-colors shadow-sm"
-        >
-          <Plus className="size-4" /> Criar Mesa
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center">
+          <input
+            type="text"
+            name="nome"
+            placeholder="Nome da nova mesa (ex: Mistérios do Batel)..."
+            required
+            className="flex-1 bg-muted/60 text-sm p-2.5 rounded-lg border border-border focus:border-amber-400 outline-none"
+          />
+          <button
+            type="submit"
+            className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-black font-black text-sm uppercase tracking-wider rounded-lg cursor-pointer transition-colors shadow-sm"
+          >
+            <Plus className="size-4" /> Criar Mesa
+          </button>
+        </div>
+
+        {/* Seletor de Edição */}
+        <div className="pt-2 border-t border-border/40 space-y-1.5">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+            Sistema & Regras da Mesa
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <label className="flex items-start gap-2.5 p-2.5 rounded-lg border border-border bg-muted/30 hover:border-amber-400/50 cursor-pointer transition-colors has-[:checked]:border-amber-400 has-[:checked]:bg-amber-400/10">
+              <input
+                type="radio"
+                name="sistemaVersao"
+                value="2e"
+                defaultChecked
+                className="mt-0.5 accent-amber-400 cursor-pointer"
+              />
+              <div className="space-y-0.5">
+                <div className="font-black text-foreground">
+                  2ª Edição (Padrão)
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-tight">
+                  Matriz 3×3, Aptidão Base (APT) e polaridade de Domínio.
+                </p>
+              </div>
+            </label>
+
+            <label className="flex items-start gap-2.5 p-2.5 rounded-lg border border-border bg-muted/30 hover:border-amber-400/50 cursor-pointer transition-colors has-[:checked]:border-amber-400 has-[:checked]:bg-amber-400/10">
+              <input
+                type="radio"
+                name="sistemaVersao"
+                value="1e"
+                className="mt-0.5 accent-amber-400 cursor-pointer"
+              />
+              <div className="space-y-0.5">
+                <div className="font-black text-foreground">
+                  1ª Edição Clássica
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-tight">
+                  Corpo, Mente, Alma, Pontos de Memória (PM) e Graus 0–III.
+                </p>
+              </div>
+            </label>
+          </div>
+        </div>
       </form>
 
       <FormEntrarComCodigo />

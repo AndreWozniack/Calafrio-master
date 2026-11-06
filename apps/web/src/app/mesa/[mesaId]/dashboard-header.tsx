@@ -8,6 +8,7 @@ interface DashboardHeaderProps {
   codigoConvite: string;
   totalPlayers: number;
   mestre: boolean;
+  sistemaVersao?: "1e" | "2e";
 }
 
 export function DashboardHeader({
@@ -15,6 +16,7 @@ export function DashboardHeader({
   codigoConvite,
   totalPlayers,
   mestre,
+  sistemaVersao = "2e",
 }: DashboardHeaderProps) {
   return (
     <BannerEscudo>
@@ -29,6 +31,9 @@ export function DashboardHeader({
           <h1 className="text-2xl sm:text-3xl font-black font-heading text-white uppercase tracking-wide">
             {nome}
           </h1>
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs font-extrabold uppercase bg-purple-400/20 text-purple-200 border border-purple-400/40">
+            {sistemaVersao === "1e" ? "Calafrio 1e" : "Calafrio 2e"}
+          </span>
           {mestre ? (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs font-extrabold uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40">
               <Shield className="size-3.5" /> Mestre

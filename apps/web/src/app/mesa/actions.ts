@@ -1,5 +1,6 @@
 "use server";
 
+import { normalizarSistemaVersao } from "@calafrio/core";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
@@ -21,8 +22,9 @@ export async function criarMesaAction(formData: FormData) {
   const nome = String(formData.get("nome") ?? "").trim();
   if (!nome) return;
 
+  const versao = normalizarSistemaVersao(formData.get("sistemaVersao"));
   const userId = (session.user as { id?: string }).id;
-  const nova = await criarMesa(nome, userId);
+  const nova = await criarMesa(nome, userId, versao);
   revalidatePath("/mesa");
   redirect(`/mesa/${nova.id}`);
 }
